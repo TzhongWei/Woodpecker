@@ -1,0 +1,72 @@
+Object: GH_LoadGeometry (level 1)
+{
+  Exception has been thrown by the target of an invocation.
+  TargetInvocationException
+  System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.IO.IOException: Read-only file system : '/data'
+   at System.IO.FileSystem.CreateDirectory(String fullPath, UnixFileMode unixCreateMode)
+   at System.IO.Directory.CreateDirectory(String path)
+   at Woodpecker.Animation.Util.IO.RhinoJson.SetDefaultGeometryData(String path)
+   at Woodpecker.Animation.GHComponents.GH_LoadGeometry.SetSelectionList(String path)
+   at Woodpecker.Animation.GHComponents.GH_LoadGeometry.CreateAttributes()
+   at Grasshopper.Kernel.GH_Component.PostConstructor() in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 170
+   at Grasshopper.Kernel.GH_Component..ctor(String name, String nickname, String description, String category, String subCategory) in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 159
+   at Woodpecker.Animation.GHComponents.GH_LoadGeometry..ctor()
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)
+   at Grasshopper.Kernel.GH_ComponentServer.LoadDocObject(Type T, GH_AssemblyInfo assembly, GH_GuidConflictSolution& conflictSolution) in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_ComponentServerAddInLoading.vb:line 1395
+}
+
+Object: GH_LoadGeometry (level 2)
+{
+  Read-only file system : '/data'
+  IOException
+  System.IO.IOException: Read-only file system : '/data'
+   at System.IO.FileSystem.CreateDirectory(String fullPath, UnixFileMode unixCreateMode)
+   at System.IO.Directory.CreateDirectory(String path)
+   at Woodpecker.Animation.Util.IO.RhinoJson.SetDefaultGeometryData(String path)
+   at Woodpecker.Animation.GHComponents.GH_LoadGeometry.SetSelectionList(String path)
+   at Woodpecker.Animation.GHComponents.GH_LoadGeometry.CreateAttributes()
+   at Grasshopper.Kernel.GH_Component.PostConstructor() in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 170
+   at Grasshopper.Kernel.GH_Component..ctor(String name, String nickname, String description, String category, String subCategory) in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 159
+   at Woodpecker.Animation.GHComponents.GH_LoadGeometry..ctor()
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)
+}
+
+Object: GH_SelectedColour (level 1)
+{
+  Exception has been thrown by the target of an invocation.
+  TargetInvocationException
+  System.Reflection.TargetInvocationException: Exception has been thrown by the target of an invocation.
+ ---> System.IO.IOException: Read-only file system : '/data'
+   at System.IO.FileSystem.CreateDirectory(String fullPath, UnixFileMode unixCreateMode)
+   at System.IO.Directory.CreateDirectory(String path)
+   at Woodpecker.Animation.Util.IO.ColourCode.SetDefaultColourCode(String path)
+   at Woodpecker.Animation.GHComponents.GH_SelectedColour.SetSelectionList(String path)
+   at Woodpecker.Animation.GHComponents.GH_SelectedColour.CreateAttributes()
+   at Grasshopper.Kernel.GH_Component.PostConstructor() in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 170
+   at Grasshopper.Kernel.GH_Component..ctor(String name, String nickname, String description, String category, String subCategory) in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 159
+   at Woodpecker.Animation.GHComponents.GH_SelectedColour..ctor()
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)
+   --- End of inner exception stack trace ---
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)
+   at Grasshopper.Kernel.GH_ComponentServer.LoadDocObject(Type T, GH_AssemblyInfo assembly, GH_GuidConflictSolution& conflictSolution) in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_ComponentServerAddInLoading.vb:line 1395
+}
+
+Object: GH_SelectedColour (level 2)
+{
+  Read-only file system : '/data'
+  IOException
+  System.IO.IOException: Read-only file system : '/data'
+   at System.IO.FileSystem.CreateDirectory(String fullPath, UnixFileMode unixCreateMode)
+   at System.IO.Directory.CreateDirectory(String path)
+   at Woodpecker.Animation.Util.IO.ColourCode.SetDefaultColourCode(String path)
+   at Woodpecker.Animation.GHComponents.GH_SelectedColour.SetSelectionList(String path)
+   at Woodpecker.Animation.GHComponents.GH_SelectedColour.CreateAttributes()
+   at Grasshopper.Kernel.GH_Component.PostConstructor() in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 170
+   at Grasshopper.Kernel.GH_Component..ctor(String name, String nickname, String description, String category, String subCategory) in /Users/bozo/TeamCity/buildAgent/work/96e64af5b81c6f85/src4/rhino4/Plug-ins/Grasshopper/Grasshopper/GH_Component.vb:line 159
+   at Woodpecker.Animation.GHComponents.GH_SelectedColour..ctor()
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)
+}
+

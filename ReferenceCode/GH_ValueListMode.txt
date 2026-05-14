@@ -1,0 +1,19 @@
+public enum GH_ValueListMode
+{
+	/// <summary>
+	/// ValueList is displayed as a single value with a dropdown menu button.
+	/// </summary>
+	DropDown = 1,
+	/// <summary>
+	/// ValueList is displayed as single value with Prev/Next buttons. 
+	/// </summary>
+	Sequence = 2,
+	/// <summary>
+	/// ValueList is displayed as single value with cyclical Prev/Next buttons. 
+	/// </summary>
+	Cycle = 3,
+	/// <summary>
+	/// ValueList is displayed as a vertical list of values with a checkbox for selected values.
+	/// </summary>
+	CheckList = 0
+}

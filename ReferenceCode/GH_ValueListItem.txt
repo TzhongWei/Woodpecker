@@ -1,0 +1,129 @@
+public class GH_ValueListItem
+{
+	private IGH_Goo m_value;
+
+	private const int BoxWidth = 22;
+
+	/// <summary>
+	/// Gets or sets whether this item is selected.
+	/// </summary>
+	public bool Selected { get; set; }
+
+	/// <summary>
+	/// Gets or sets the name of this constant.
+	/// </summary>
+	public string Name { get; set; }
+
+	/// <summary>
+	/// Gets or sets the expression of this constant. 
+	/// If you set the expression through this property you must also expire the Value.
+	/// </summary>
+	public string Expression { get; set; }
+
+	/// <summary>
+	/// Gets or sets the bounds for the name of this item. 
+	/// Item bounds are used and maintained by the Attributes of the ValueList object.
+	/// </summary>
+	public RectangleF BoxName { get; set; }
+
+	/// <summary>
+	/// Gets or sets the bounds for the U area to the left of this item. 
+	/// Item bounds are used and maintained by the Attributes of the ValueList object.
+	/// </summary>
+	public RectangleF BoxLeft { get; set; }
+
+	/// <summary>
+	/// Gets or sets the bounds for the U area to the right of this item. 
+	/// Item bounds are used and maintained by the Attributes of the ValueList object.
+	/// </summary>
+	public RectangleF BoxRight { get; set; }
+
+	/// <summary>
+	/// Gets the (cached) result of this constant
+	/// </summary>
+	[Browsable(false)]
+	public IGH_Goo Value
+	{
+		get
+		{
+			if (string.IsNullOrWhiteSpace(Expression))
+			{
+				return null;
+			}
+			if (m_value == null)
+			{
+				try
+				{
+					GH_ExpressionParser gH_ExpressionParser = new GH_ExpressionParser();
+					string expression = GH_ExpressionSyntaxWriter.RewriteAll(Expression);
+					GH_Variant gH_Variant = gH_ExpressionParser.Evaluate(expression);
+					if (gH_Variant != null)
+					{
+						m_value = gH_Variant.ToGoo();
+					}
+				}
+				catch (Exception ex)
+				{
+					ProjectData.SetProjectError(ex);
+					Exception ex2 = ex;
+					ProjectData.ClearProjectError();
+				}
+			}
+			return m_value;
+		}
+	}
+
+	/// <summary>
+	/// Gets whether this item is visible, i.e. if the NameBox has a height larger than zero.
+	/// </summary>
+	public bool IsVisible => BoxName.Height > 0f;
+
+	public GH_ValueListItem()
+	{
+		Name = string.Empty;
+		Expression = string.Empty;
+	}
+
+	public GH_ValueListItem(string name, string expression)
+	{
+		Name = name;
+		Expression = expression;
+	}
+
+	/// <summary>
+	/// Expires the cached value. Call this method if you have reason to believe 
+	/// that the current value is no longer valid.
+	/// </summary>
+	public void ExpireValue()
+	{
+		m_value = null;
+	}
+
+	internal void SetCheckListBounds(RectangleF bounds)
+	{
+		BoxLeft = new RectangleF(bounds.X, bounds.Y, 22f, bounds.Height);
+		BoxName = new RectangleF(bounds.X + 22f, bounds.Y, bounds.Width - 22f, bounds.Height);
+		BoxRight = new RectangleF(bounds.Right, bounds.Y, 0f, bounds.Height);
+	}
+
+	internal void SetDropdownBounds(RectangleF bounds)
+	{
+		BoxLeft = new RectangleF(bounds.X, bounds.Y, 0f, bounds.Height);
+		BoxName = new RectangleF(bounds.X, bounds.Y, bounds.Width - 22f, bounds.Height);
+		BoxRight = new RectangleF(bounds.Right - 22f, bounds.Y, 22f, bounds.Height);
+	}
+
+	internal void SetSequenceBounds(RectangleF bounds)
+	{
+		BoxLeft = new RectangleF(bounds.X, bounds.Y, 22f, bounds.Height);
+		BoxName = new RectangleF(bounds.X + 22f, bounds.Y, bounds.Width - 44f, bounds.Height);
+		BoxRight = new RectangleF(bounds.Right - 22f, bounds.Y, 22f, bounds.Height);
+	}
+
+	internal void SetEmptyBounds(RectangleF bounds)
+	{
+		BoxLeft = new RectangleF(bounds.X, bounds.Y, 0f, 0f);
+		BoxName = new RectangleF(bounds.X, bounds.Y, 0f, 0f);
+		BoxRight = new RectangleF(bounds.X, bounds.Y, 0f, 0f);
+	}
+}

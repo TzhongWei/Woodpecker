@@ -1,0 +1,17 @@
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/bin/Debug/net7.0/IBOIS.Animation.deps.json
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/bin/Debug/net7.0/IBOIS.Animation.runtimeconfig.json
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/bin/Debug/net7.0/IBOIS.Animation.gha
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/bin/Debug/net7.0/IBOIS.Animation.pdb
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.csproj.AssemblyReference.cache
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.GeneratedMSBuildEditorConfig.editorconfig
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.AssemblyInfoInputs.cache
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.AssemblyInfo.cs
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.csproj.CoreCompileInputs.cache
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.An.60E98628.Up2Date
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.gha
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/refint/IBOIS.Animation.gha
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.pdb
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/IBOIS.Animation.genruntimeconfig.cache
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net7.0/ref/IBOIS.Animation.gha
+/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/bin/Debug/net7.0/AnimationCompile.py

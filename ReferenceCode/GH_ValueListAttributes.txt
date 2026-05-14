@@ -1,0 +1,388 @@
+public class GH_ValueListAttributes : GH_Attributes<GH_ValueList>
+{
+	public const int ItemHeight = 22;
+
+	private const int ArrowRadius = 6;
+
+	public override bool AllowMessageBalloon => false;
+
+	public override bool HasInputGrip => false;
+
+	public override bool HasOutputGrip => true;
+
+	private RectangleF ItemBounds { get; set; }
+
+	private RectangleF NameBounds { get; set; }
+
+	public GH_ValueListAttributes(GH_ValueList owner)
+		: base(owner)
+	{
+	}
+
+	public override GH_ObjectResponse RespondToMouseDown(GH_Canvas sender, GH_CanvasMouseEvent e)
+	{
+		checked
+		{
+			if (e.Button == MouseButtons.Left)
+			{
+				switch (base.Owner.ListMode)
+				{
+				case GH_ValueListMode.CheckList:
+				{
+					int num = base.Owner.ListItems.Count - 1;
+					for (int i = 0; i <= num; i++)
+					{
+						if (base.Owner.ListItems[i].BoxLeft.Contains(e.CanvasLocation))
+						{
+							base.Owner.ToggleItem(i);
+							return GH_ObjectResponse.Handled;
+						}
+					}
+					break;
+				}
+				case GH_ValueListMode.DropDown:
+				{
+					GH_ValueListItem firstSelectedItem = base.Owner.FirstSelectedItem;
+					if (firstSelectedItem == null || !firstSelectedItem.BoxRight.Contains(e.CanvasLocation))
+					{
+						break;
+					}
+					ToolStripDropDownMenu toolStripDropDownMenu = new ToolStripDropDownMenu();
+					GH_ValueListItem firstSelectedItem2 = base.Owner.FirstSelectedItem;
+					foreach (GH_ValueListItem listItem in base.Owner.ListItems)
+					{
+						ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem(listItem.Name);
+						toolStripMenuItem.Click += ValueMenuItem_Click;
+						if (listItem == firstSelectedItem2)
+						{
+							toolStripMenuItem.Checked = true;
+						}
+						toolStripMenuItem.Tag = listItem;
+						toolStripDropDownMenu.Items.Add(toolStripMenuItem);
+					}
+					toolStripDropDownMenu.Show(sender, e.ControlLocation);
+					return GH_ObjectResponse.Handled;
+				}
+				case GH_ValueListMode.Sequence:
+				case GH_ValueListMode.Cycle:
+					foreach (GH_ValueListItem listItem2 in base.Owner.ListItems)
+					{
+						if (listItem2.IsVisible)
+						{
+							if (listItem2.BoxLeft.Contains(e.CanvasLocation))
+							{
+								base.Owner.PrevItem();
+								return GH_ObjectResponse.Handled;
+							}
+							if (listItem2.BoxRight.Contains(e.CanvasLocation))
+							{
+								base.Owner.NextItem();
+								return GH_ObjectResponse.Handled;
+							}
+						}
+					}
+					break;
+				}
+			}
+			return base.RespondToMouseDown(sender, e);
+		}
+	}
+
+	private void ValueMenuItem_Click(object sender, EventArgs e)
+	{
+		ToolStripMenuItem toolStripMenuItem = (ToolStripMenuItem)sender;
+		if (!toolStripMenuItem.Checked && toolStripMenuItem.Tag is GH_ValueListItem item)
+		{
+			base.Owner.SelectItem(base.Owner.ListItems.IndexOf(item));
+		}
+	}
+
+	public override GH_ObjectResponse RespondToMouseDoubleClick(GH_Canvas sender, GH_CanvasMouseEvent e)
+	{
+		if (e.Button == MouseButtons.Left)
+		{
+			foreach (GH_ValueListItem listItem in base.Owner.ListItems)
+			{
+				if (listItem.IsVisible && listItem.BoxName.Contains(e.CanvasLocation))
+				{
+					base.Owner.ShowListEditor(sender.FindForm());
+					return GH_ObjectResponse.Handled;
+				}
+			}
+		}
+		return base.RespondToMouseDoubleClick(sender, e);
+	}
+
+	protected override void Layout()
+	{
+		switch (base.Owner.ListMode)
+		{
+		case GH_ValueListMode.CheckList:
+			LayoutCheckList();
+			break;
+		case GH_ValueListMode.DropDown:
+			LayoutDropDown();
+			break;
+		default:
+			LayoutSequence();
+			break;
+		}
+		ItemBounds = Bounds;
+		NameBounds = new RectangleF(Bounds.X, Bounds.Y, 0f, Bounds.Height);
+		if (base.Owner.DisplayName != null)
+		{
+			int num = checked(GH_FontServer.StringWidth(base.Owner.DisplayName, GH_FontServer.Standard) + 10);
+			NameBounds = new RectangleF(Bounds.X - (float)num, Bounds.Y, num, Bounds.Height);
+			Bounds = RectangleF.Union(NameBounds, ItemBounds);
+		}
+	}
+
+	private void LayoutCheckList()
+	{
+		checked
+		{
+			int num = ItemMaximumWidth() + 22;
+			int num2 = 22 * Math.Max(1, base.Owner.ListItems.Count);
+			Pivot = GH_Convert.ToPoint(Pivot);
+			Bounds = new RectangleF(Pivot.X, Pivot.Y, num, num2);
+			int num3 = base.Owner.ListItems.Count - 1;
+			for (int i = 0; i <= num3; i++)
+			{
+				RectangleF checkListBounds = new RectangleF(Bounds.X, Bounds.Y + (float)(i * 22), num, 22f);
+				base.Owner.ListItems[i].SetCheckListBounds(checkListBounds);
+			}
+		}
+	}
+
+	private void LayoutDropDown()
+	{
+		int num = checked(ItemMaximumWidth() + 22);
+		int num2 = 22;
+		Pivot = GH_Convert.ToPoint(Pivot);
+		Bounds = new RectangleF(Pivot.X, Pivot.Y, num, num2);
+		GH_ValueListItem firstSelectedItem = base.Owner.FirstSelectedItem;
+		foreach (GH_ValueListItem listItem in base.Owner.ListItems)
+		{
+			if (listItem == firstSelectedItem)
+			{
+				listItem.SetDropdownBounds(Bounds);
+			}
+			else
+			{
+				listItem.SetEmptyBounds(Bounds);
+			}
+		}
+	}
+
+	private void LayoutSequence()
+	{
+		int num = checked(ItemMaximumWidth() + 44);
+		int num2 = 22;
+		Pivot = GH_Convert.ToPoint(Pivot);
+		Bounds = new RectangleF(Pivot.X, Pivot.Y, num, num2);
+		GH_ValueListItem firstSelectedItem = base.Owner.FirstSelectedItem;
+		foreach (GH_ValueListItem listItem in base.Owner.ListItems)
+		{
+			if (listItem == firstSelectedItem)
+			{
+				listItem.SetSequenceBounds(Bounds);
+			}
+			else
+			{
+				listItem.SetEmptyBounds(Bounds);
+			}
+		}
+	}
+
+	private int ItemMaximumWidth()
+	{
+		int num = 20;
+		foreach (GH_ValueListItem listItem in base.Owner.ListItems)
+		{
+			int val = GH_FontServer.StringWidth(listItem.Name, GH_FontServer.Standard);
+			num = Math.Max(num, val);
+		}
+		return checked(num + 10);
+	}
+
+	protected override void Render(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
+	{
+		GH_CanvasChannel gH_CanvasChannel = channel;
+		if (gH_CanvasChannel != GH_CanvasChannel.Objects)
+		{
+			return;
+		}
+		_ = base.Owner.InstanceGuid == new Guid("d539c866-4d42-4efa-9f9d-236e8c63656a");
+		GH_Capsule gH_Capsule = GH_Capsule.CreateCapsule(Bounds, GH_Palette.Normal);
+		gH_Capsule.AddOutputGrip(OutputGrip.Y);
+		gH_Capsule.Render(canvas.Graphics, Selected, base.Owner.Locked, base.Owner.Hidden);
+		gH_Capsule.Dispose();
+		int zoomFadeLow = GH_Canvas.ZoomFadeLow;
+		if (zoomFadeLow > 0)
+		{
+			canvas.SetSmartTextRenderingHint();
+			GH_PaletteStyle impliedStyle = GH_CapsuleRenderEngine.GetImpliedStyle(GH_Palette.Normal, this);
+			Color color = Color.FromArgb(zoomFadeLow, impliedStyle.Text);
+			if (NameBounds.Width > 0f)
+			{
+				SolidBrush solidBrush = new SolidBrush(color);
+				graphics.DrawString(base.Owner.NickName, GH_FontServer.StandardAdjusted, solidBrush, NameBounds, GH_TextRenderingConstants.CenterCenter);
+				solidBrush.Dispose();
+				int x = Convert.ToInt32(NameBounds.Right);
+				int y = Convert.ToInt32(NameBounds.Top);
+				int y2 = Convert.ToInt32(NameBounds.Bottom);
+				GH_GraphicsUtil.EtchFadingVertical(graphics, y, y2, x, Convert.ToInt32(0.8 * (double)zoomFadeLow), Convert.ToInt32(0.3 * (double)zoomFadeLow));
+			}
+			switch (base.Owner.ListMode)
+			{
+			case GH_ValueListMode.CheckList:
+				RenderCheckList(canvas, graphics, color);
+				break;
+			case GH_ValueListMode.DropDown:
+				RenderDropDown(canvas, graphics, color);
+				break;
+			case GH_ValueListMode.Sequence:
+			case GH_ValueListMode.Cycle:
+				RenderSequence(canvas, graphics, color);
+				break;
+			}
+		}
+	}
+
+	private void RenderCheckList(GH_Canvas canvas, Graphics graphics, Color color)
+	{
+		if (base.Owner.ListItems.Count == 0)
+		{
+			return;
+		}
+		Convert.ToInt32(Bounds.Y);
+		Convert.ToInt32(Bounds.Bottom);
+		Convert.ToInt32(base.Owner.ListItems[0].BoxLeft.Right);
+		foreach (GH_ValueListItem listItem in base.Owner.ListItems)
+		{
+			graphics.DrawString(listItem.Name, GH_FontServer.StandardAdjusted, Brushes.Black, listItem.BoxName, GH_TextRenderingConstants.CenterCenter);
+			if (listItem.Selected)
+			{
+				RenderCheckMark(canvas, graphics, listItem.BoxLeft, color);
+			}
+		}
+	}
+
+	private void RenderDropDown(GH_Canvas canvas, Graphics graphics, Color color)
+	{
+		GH_ValueListItem firstSelectedItem = base.Owner.FirstSelectedItem;
+		if (firstSelectedItem != null)
+		{
+			graphics.DrawString(firstSelectedItem.Name, GH_FontServer.StandardAdjusted, Brushes.Black, firstSelectedItem.BoxName, GH_TextRenderingConstants.CenterCenter);
+			RenderDownArrow(canvas, graphics, firstSelectedItem.BoxRight, color);
+		}
+	}
+
+	private void RenderSequence(GH_Canvas canvas, Graphics graphics, Color color)
+	{
+		GH_ValueListItem firstSelectedItem = base.Owner.FirstSelectedItem;
+		if (firstSelectedItem != null)
+		{
+			graphics.DrawString(firstSelectedItem.Name, GH_FontServer.StandardAdjusted, Brushes.Black, firstSelectedItem.BoxName, GH_TextRenderingConstants.CenterCenter);
+			RenderLeftArrow(canvas, graphics, firstSelectedItem.BoxLeft, color);
+			RenderRightArrow(canvas, graphics, firstSelectedItem.BoxRight, color);
+		}
+	}
+
+	private static void RenderDownArrow(GH_Canvas canvas, Graphics graphics, RectangleF bounds, Color color)
+	{
+		int num = Convert.ToInt32(bounds.X + 0.5f * bounds.Width);
+		int num2 = Convert.ToInt32(bounds.Y + 0.5f * bounds.Height);
+		PointF[] points = checked(new PointF[3]
+		{
+			new PointF(num, num2 + 6),
+			new PointF(num + 6, num2 - 6),
+			new PointF(num - 6, num2 - 6)
+		});
+		RenderShape(canvas, graphics, points, color);
+	}
+
+	private static void RenderLeftArrow(GH_Canvas canvas, Graphics graphics, RectangleF bounds, Color color)
+	{
+		int num = Convert.ToInt32(bounds.X + 0.5f * bounds.Width);
+		int num2 = Convert.ToInt32(bounds.Y + 0.5f * bounds.Height);
+		PointF[] points = checked(new PointF[3]
+		{
+			new PointF(num - 6, num2),
+			new PointF(num + 6, num2 + 6),
+			new PointF(num + 6, num2 - 6)
+		});
+		RenderShape(canvas, graphics, points, color);
+	}
+
+	private static void RenderRightArrow(GH_Canvas canvas, Graphics graphics, RectangleF bounds, Color color)
+	{
+		int num = Convert.ToInt32(bounds.X + 0.5f * bounds.Width);
+		int num2 = Convert.ToInt32(bounds.Y + 0.5f * bounds.Height);
+		PointF[] points = checked(new PointF[3]
+		{
+			new PointF(num + 6, num2),
+			new PointF(num - 6, num2 - 6),
+			new PointF(num - 6, num2 + 6)
+		});
+		RenderShape(canvas, graphics, points, color);
+	}
+
+	private static void RenderCheckMark(GH_Canvas canvas, Graphics graphics, RectangleF bounds, Color color)
+	{
+		int num = checked(Convert.ToInt32(bounds.X + 0.5f * bounds.Width) - 2);
+		int num2 = Convert.ToInt32(bounds.Y + 0.5f * bounds.Height);
+		PointF[] points = new PointF[6]
+		{
+			new PointF(num, num2),
+			new PointF((float)num - 3.5f, (float)num2 - 3.5f),
+			new PointF((float)num - 6.5f, (float)num2 - 0.5f),
+			new PointF(num, (float)num2 + 6f),
+			new PointF((float)num + 9.5f, (float)num2 - 3.5f),
+			new PointF((float)num + 6.5f, (float)num2 - 6.5f)
+		};
+		RenderShape(canvas, graphics, points, color);
+	}
+
+	private static void RenderShape(GH_Canvas canvas, Graphics graphics, PointF[] points, Color color)
+	{
+		int zoomFadeMedium = GH_Canvas.ZoomFadeMedium;
+		float num = points[0].X;
+		float num2 = num;
+		float num3 = points[0].Y;
+		float num4 = num3;
+		checked
+		{
+			int num5 = points.Length - 1;
+			for (int i = 1; i <= num5; i++)
+			{
+				num = Math.Min(num, points[i].X);
+				num2 = Math.Max(num2, points[i].X);
+				num3 = Math.Min(num3, points[i].Y);
+				num4 = Math.Max(num4, points[i].Y);
+			}
+			RectangleF rect = RectangleF.FromLTRB(num, num3, num2, num4);
+			rect.Inflate(1f, 1f);
+			LinearGradientBrush linearGradientBrush = new LinearGradientBrush(rect, color, GH_GraphicsUtil.OffsetColour(color, 50), LinearGradientMode.Vertical);
+			linearGradientBrush.WrapMode = WrapMode.TileFlipXY;
+			graphics.FillPolygon(linearGradientBrush, points);
+			linearGradientBrush.Dispose();
+			if (zoomFadeMedium > 0)
+			{
+				Color color2 = Color.FromArgb(Convert.ToInt32(0.5 * (double)zoomFadeMedium), Color.White);
+				Color color3 = Color.FromArgb(0, Color.White);
+				LinearGradientBrush linearGradientBrush2 = new LinearGradientBrush(rect, color2, color3, LinearGradientMode.Vertical);
+				linearGradientBrush2.WrapMode = WrapMode.TileFlipXY;
+				Pen pen = new Pen(linearGradientBrush2, 3f);
+				pen.LineJoin = LineJoin.Round;
+				pen.CompoundArray = new float[2] { 0f, 0.5f };
+				graphics.DrawPolygon(pen, points);
+				linearGradientBrush2.Dispose();
+				pen.Dispose();
+			}
+			Pen pen2 = new Pen(color, 1f);
+			pen2.LineJoin = LineJoin.Round;
+			graphics.DrawPolygon(pen2, points);
+		}
+	}
+}

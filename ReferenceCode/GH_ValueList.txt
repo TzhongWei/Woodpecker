@@ -1,0 +1,569 @@
+public class GH_ValueList : GH_Param<IGH_Goo>, IGH_PreviewObject, IGH_BakeAwareObject, IGH_StateAwareObject
+{
+	private GH_ValueListMode m_listMode;
+
+	private readonly List<GH_ValueListItem> m_userItems;
+
+	private bool m_hidden;
+
+	public override GH_Exposure Exposure => GH_Exposure.secondary;
+
+	public override Guid ComponentGuid => new Guid("{00027467-0D24-4fa7-B178-8DC0AC5F42EC}");
+
+	protected override Bitmap Icon => Res_ObjectIcons.Obj_ValueList_24x24;
+
+	public string DisplayName
+	{
+		get
+		{
+			if (string.IsNullOrWhiteSpace(NickName))
+			{
+				return null;
+			}
+			if (NickName.Equals("List", StringComparison.OrdinalIgnoreCase))
+			{
+				return null;
+			}
+			return NickName;
+		}
+	}
+
+	public GH_ValueListMode ListMode
+	{
+		get
+		{
+			return m_listMode;
+		}
+		set
+		{
+			m_listMode = value;
+			if (m_attributes != null)
+			{
+				m_attributes.ExpireLayout();
+			}
+		}
+	}
+
+	public List<GH_ValueListItem> ListItems => m_userItems;
+
+	[Obsolete("This property has been replaced by ListItems")]
+	[EditorBrowsable(EditorBrowsableState.Never)]
+	public List<GH_ValueListItem> Values => m_userItems;
+
+	/// <summary>
+	/// Gets the selected value list items. If the ListMode only supports a single selected item 
+	/// then only the first selected item will be included.
+	/// </summary>
+	public List<GH_ValueListItem> SelectedItems
+	{
+		get
+		{
+			List<GH_ValueListItem> list = new List<GH_ValueListItem>();
+			if (m_userItems.Count == 0)
+			{
+				return list;
+			}
+			if (ListMode == GH_ValueListMode.CheckList)
+			{
+				foreach (GH_ValueListItem userItem in m_userItems)
+				{
+					if (userItem.Selected)
+					{
+						list.Add(userItem);
+					}
+				}
+			}
+			else
+			{
+				foreach (GH_ValueListItem userItem2 in m_userItems)
+				{
+					if (userItem2.Selected)
+					{
+						list.Add(userItem2);
+						return list;
+					}
+				}
+				m_userItems[0].Selected = true;
+				list.Add(m_userItems[0]);
+			}
+			return list;
+		}
+	}
+
+	/// <summary>
+	/// Gets the first selected item in this list, or the first item if there are no selected items.
+	/// </summary>
+	public GH_ValueListItem FirstSelectedItem
+	{
+		get
+		{
+			if (m_userItems.Count == 0)
+			{
+				return null;
+			}
+			foreach (GH_ValueListItem userItem in m_userItems)
+			{
+				if (userItem.Selected)
+				{
+					return userItem;
+				}
+			}
+			return m_userItems[0];
+		}
+	}
+
+	public bool Hidden
+	{
+		get
+		{
+			return m_hidden;
+		}
+		set
+		{
+			m_hidden = value;
+		}
+	}
+
+	public bool IsPreviewCapable => true;
+
+	public BoundingBox ClippingBox => Preview_ComputeClippingBox();
+
+	public bool IsBakeCapable => !m_data.IsEmpty;
+
+	public GH_ValueList()
+		: base((IGH_InstanceDescription)new GH_InstanceDescription("Value List", "List", "Provides a list of preset values to choose from", "Params", "Input"))
+	{
+		m_listMode = GH_ValueListMode.DropDown;
+		m_userItems = new List<GH_ValueListItem>();
+		m_hidden = false;
+		m_userItems.Add(new GH_ValueListItem("One", "1"));
+		m_userItems.Add(new GH_ValueListItem("Two", "2"));
+		m_userItems.Add(new GH_ValueListItem("Three", "2² - 1"));
+		m_userItems.Add(new GH_ValueListItem("Four", "Sqrt(16)"));
+	}
+
+	public override void CreateAttributes()
+	{
+		m_attributes = new GH_ValueListAttributes(this);
+	}
+
+	/// <summary>
+	/// Safe method of toggling the item at the specified index.
+	/// </summary>
+	/// <param name="index">Index of item to toggle.</param>
+	public void ToggleItem(int index)
+	{
+		if (index >= 0 && index < m_userItems.Count)
+		{
+			RecordUndoEvent("Toggle: " + m_userItems[index].Name);
+			m_userItems[index].Selected = !m_userItems[index].Selected;
+			ExpireSolution(recompute: true);
+		}
+	}
+
+	/// <summary>
+	/// Safe method to select a single item.
+	/// </summary>
+	/// <param name="index">Index of item to select.</param>
+	public void SelectItem(int index)
+	{
+		if (index < 0 || index >= m_userItems.Count)
+		{
+			return;
+		}
+		bool flag = false;
+		checked
+		{
+			int num = m_userItems.Count - 1;
+			for (int i = 0; i <= num; i++)
+			{
+				if (i == index)
+				{
+					if (!m_userItems[i].Selected)
+					{
+						flag = true;
+						break;
+					}
+				}
+				else if (m_userItems[i].Selected)
+				{
+					flag = true;
+					break;
+				}
+			}
+			if (flag)
+			{
+				RecordUndoEvent("Select: " + m_userItems[index].Name);
+				int num2 = m_userItems.Count - 1;
+				for (int j = 0; j <= num2; j++)
+				{
+					m_userItems[j].Selected = j == index;
+				}
+				ExpireSolution(recompute: true);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Safe method of selecting the next item. 
+	/// The select next logic depends on the ListMode, in that only Cycle and Sequence support NextItem()
+	/// </summary>
+	public void NextItem()
+	{
+		if (ListMode == GH_ValueListMode.CheckList || ListMode == GH_ValueListMode.DropDown || m_userItems.Count < 2)
+		{
+			return;
+		}
+		int num = 0;
+		checked
+		{
+			int num2 = m_userItems.Count - 1;
+			for (int i = 0; i <= num2; i++)
+			{
+				if (m_userItems[i].Selected)
+				{
+					num = i;
+					break;
+				}
+			}
+			num++;
+			if (num == m_userItems.Count)
+			{
+				switch (ListMode)
+				{
+				case GH_ValueListMode.Sequence:
+					num = m_userItems.Count - 1;
+					break;
+				case GH_ValueListMode.Cycle:
+					num = 0;
+					break;
+				}
+			}
+			RecordUndoEvent("Select: " + m_userItems[num].Name);
+			int num3 = m_userItems.Count - 1;
+			for (int j = 0; j <= num3; j++)
+			{
+				m_userItems[j].Selected = j == num;
+			}
+			ExpireSolution(recompute: true);
+		}
+	}
+
+	/// <summary>
+	/// Safe method of selecting the previous item. 
+	/// The select prev logic depends on the ListMode, in that only Cycle and Sequence support PrevItem()
+	/// </summary>
+	public void PrevItem()
+	{
+		if (ListMode == GH_ValueListMode.CheckList || ListMode == GH_ValueListMode.DropDown || m_userItems.Count < 2)
+		{
+			return;
+		}
+		int num = 0;
+		checked
+		{
+			int num2 = m_userItems.Count - 1;
+			for (int i = 0; i <= num2; i++)
+			{
+				if (m_userItems[i].Selected)
+				{
+					num = i;
+					break;
+				}
+			}
+			num--;
+			if (num == -1)
+			{
+				switch (ListMode)
+				{
+				case GH_ValueListMode.Sequence:
+					num = 0;
+					break;
+				case GH_ValueListMode.Cycle:
+					num = m_userItems.Count - 1;
+					break;
+				}
+			}
+			RecordUndoEvent("Select: " + m_userItems[num].Name);
+			int num3 = m_userItems.Count - 1;
+			for (int j = 0; j <= num3; j++)
+			{
+				m_userItems[j].Selected = j == num;
+			}
+			ExpireSolution(recompute: true);
+		}
+	}
+
+	/// <summary>
+	/// Display the list name/value editor.
+	/// </summary>
+	/// <param name="owner">Owner window.</param>
+	public void ShowListEditor(IWin32Window owner)
+	{
+		List<bool> list = new List<bool>();
+		foreach (GH_ValueListItem userItem in m_userItems)
+		{
+			list.Add(userItem.Selected);
+		}
+		GH_ValueListEditor gH_ValueListEditor = new GH_ValueListEditor();
+		gH_ValueListEditor.AssignValues(m_userItems);
+		GH_WindowsFormUtil.CenterFormOnCursor((Form)gH_ValueListEditor, limitToScreen: true);
+		checked
+		{
+			if (gH_ValueListEditor.ShowDialog(owner) == DialogResult.OK && gH_ValueListEditor.Changed)
+			{
+				OnPingDocument()?.UndoUtil.RecordGenericObjectEvent("Value List Change", this);
+				m_userItems.Clear();
+				m_userItems.AddRange(gH_ValueListEditor.RetrieveValues());
+				int num = Math.Min(list.Count, m_userItems.Count) - 1;
+				for (int i = 0; i <= num; i++)
+				{
+					m_userItems[i].Selected = list[i];
+				}
+				ExpireSolution(recompute: true);
+			}
+		}
+	}
+
+	public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+	{
+		ToolStripMenuItem toolStripMenuItem = GH_DocumentObject.Menu_AppendItem(menu, "Edit…", Menu_EditorClicked);
+		toolStripMenuItem.Font = GH_FontServer.NewFont(toolStripMenuItem.Font, FontStyle.Bold);
+		menu.Items.Remove(toolStripMenuItem);
+		menu.Items.Insert(1, toolStripMenuItem);
+		GH_DocumentObject.Menu_AppendSeparator(menu);
+		GH_DocumentObject.Menu_AppendItem(menu, "Check List", Menu_CheckListClicked, enabled: true, ListMode == GH_ValueListMode.CheckList);
+		GH_DocumentObject.Menu_AppendItem(menu, "Dropdown List", Menu_DropdownClicked, enabled: true, ListMode == GH_ValueListMode.DropDown);
+		GH_DocumentObject.Menu_AppendItem(menu, "Value Sequence", Menu_SequenceClicked, enabled: true, ListMode == GH_ValueListMode.Sequence);
+		GH_DocumentObject.Menu_AppendItem(menu, "Value Cycle", Menu_CycleClicked, enabled: true, ListMode == GH_ValueListMode.Cycle);
+	}
+
+	private void Menu_EditorClicked(object sender, EventArgs e)
+	{
+		ShowListEditor(Instances.DocumentEditor);
+	}
+
+	private void Menu_CheckListClicked(object sender, EventArgs e)
+	{
+		if (ListMode != 0)
+		{
+			RecordUndoEvent("Check List");
+			ListMode = GH_ValueListMode.CheckList;
+			ExpireSolution(recompute: true);
+		}
+	}
+
+	private void Menu_DropdownClicked(object sender, EventArgs e)
+	{
+		if (ListMode != GH_ValueListMode.DropDown)
+		{
+			RecordUndoEvent("Dropdown List");
+			ListMode = GH_ValueListMode.DropDown;
+			ExpireSolution(recompute: true);
+		}
+	}
+
+	private void Menu_SequenceClicked(object sender, EventArgs e)
+	{
+		if (ListMode != GH_ValueListMode.Sequence)
+		{
+			RecordUndoEvent("Value Sequence");
+			ListMode = GH_ValueListMode.Sequence;
+			ExpireSolution(recompute: true);
+		}
+	}
+
+	private void Menu_CycleClicked(object sender, EventArgs e)
+	{
+		if (ListMode != GH_ValueListMode.Cycle)
+		{
+			RecordUndoEvent("Value Cycle");
+			ListMode = GH_ValueListMode.Cycle;
+			ExpireSolution(recompute: true);
+		}
+	}
+
+	protected override IGH_Goo InstantiateT()
+	{
+		return new GH_ObjectWrapper();
+	}
+
+	protected override void CollectVolatileData_Custom()
+	{
+		m_data.Clear();
+		foreach (GH_ValueListItem selectedItem in SelectedItems)
+		{
+			m_data.Append(selectedItem.Value, new GH_Path(0));
+		}
+	}
+
+	public void DrawViewportMeshes(IGH_PreviewArgs args)
+	{
+		Preview_DrawMeshes(args);
+	}
+
+	void IGH_PreviewObject.DrawViewportMeshes(IGH_PreviewArgs args)
+	{
+		//ILSpy generated this explicit interface implementation from .override directive in DrawViewportMeshes
+		this.DrawViewportMeshes(args);
+	}
+
+	public void DrawViewportWires(IGH_PreviewArgs args)
+	{
+		Preview_DrawWires(args);
+	}
+
+	void IGH_PreviewObject.DrawViewportWires(IGH_PreviewArgs args)
+	{
+		//ILSpy generated this explicit interface implementation from .override directive in DrawViewportWires
+		this.DrawViewportWires(args);
+	}
+
+	public void BakeGeometry(RhinoDoc doc, List<Guid> obj_ids)
+	{
+		BakeGeometry(doc, null, obj_ids);
+	}
+
+	void IGH_BakeAwareObject.BakeGeometry(RhinoDoc doc, List<Guid> obj_ids)
+	{
+		//ILSpy generated this explicit interface implementation from .override directive in BakeGeometry
+		this.BakeGeometry(doc, obj_ids);
+	}
+
+	public void BakeGeometry(RhinoDoc doc, ObjectAttributes att, List<Guid> obj_ids)
+	{
+		if (att == null)
+		{
+			att = doc.CreateDefaultAttributes();
+		}
+		foreach (object datum in m_data)
+		{
+			object objectValue = RuntimeHelpers.GetObjectValue(datum);
+			if (objectValue != null && objectValue is IGH_BakeAwareData && ((IGH_BakeAwareData)objectValue).BakeGeometry(doc, att, out var obj_guid))
+			{
+				obj_ids.Add(obj_guid);
+			}
+		}
+	}
+
+	void IGH_BakeAwareObject.BakeGeometry(RhinoDoc doc, ObjectAttributes att, List<Guid> obj_ids)
+	{
+		//ILSpy generated this explicit interface implementation from .override directive in BakeGeometry
+		this.BakeGeometry(doc, att, obj_ids);
+	}
+
+	public void LoadState(string state)
+	{
+		foreach (GH_ValueListItem userItem in m_userItems)
+		{
+			userItem.Selected = false;
+		}
+		checked
+		{
+			if (int.TryParse(state, out var result))
+			{
+				if (result >= 0 && result < m_userItems.Count)
+				{
+					m_userItems[result].Selected = true;
+				}
+			}
+			else
+			{
+				int num = Math.Min(state.Length, m_userItems.Count) - 1;
+				for (int i = 0; i <= num; i++)
+				{
+					m_userItems[i].Selected = state[i].Equals('Y');
+				}
+			}
+			ExpireSolution(recompute: false);
+		}
+	}
+
+	void IGH_StateAwareObject.LoadState(string state)
+	{
+		//ILSpy generated this explicit interface implementation from .override directive in LoadState
+		this.LoadState(state);
+	}
+
+	public string SaveState()
+	{
+		StringBuilder stringBuilder = new StringBuilder(m_userItems.Count);
+		foreach (GH_ValueListItem userItem in m_userItems)
+		{
+			if (userItem.Selected)
+			{
+				stringBuilder.Append('Y');
+			}
+			else
+			{
+				stringBuilder.Append('N');
+			}
+		}
+		return stringBuilder.ToString();
+	}
+
+	string IGH_StateAwareObject.SaveState()
+	{
+		//ILSpy generated this explicit interface implementation from .override directive in SaveState
+		return this.SaveState();
+	}
+
+	public override bool Write(GH_IWriter writer)
+	{
+		writer.SetInt32("ListMode", (int)ListMode);
+		writer.SetInt32("ListCount", m_userItems.Count);
+		checked
+		{
+			int num = m_userItems.Count - 1;
+			for (int i = 0; i <= num; i++)
+			{
+				GH_IWriter gH_IWriter = writer.CreateChunk("ListItem", i);
+				gH_IWriter.SetString("Name", m_userItems[i].Name);
+				gH_IWriter.SetString("Expression", m_userItems[i].Expression);
+				gH_IWriter.SetBoolean("Selected", m_userItems[i].Selected);
+			}
+			return base.Write(writer);
+		}
+	}
+
+	public override bool Read(GH_IReader reader)
+	{
+		int value = 1;
+		reader.TryGetInt32("UIMode", ref value);
+		reader.TryGetInt32("ListMode", ref value);
+		ListMode = (GH_ValueListMode)value;
+		int @int = reader.GetInt32("ListCount");
+		int value2 = 0;
+		reader.TryGetInt32("CacheCount", ref value2);
+		m_userItems.Clear();
+		checked
+		{
+			int num = @int - 1;
+			for (int i = 0; i <= num; i++)
+			{
+				GH_IReader gH_IReader = reader.FindChunk("ListItem", i);
+				if (gH_IReader == null)
+				{
+					reader.AddMessage("Missing chunk for List Value: " + i, GH_Message_Type.error);
+					continue;
+				}
+				string @string = gH_IReader.GetString("Name");
+				string string2 = gH_IReader.GetString("Expression");
+				bool value3 = false;
+				gH_IReader.TryGetBoolean("Selected", ref value3);
+				GH_ValueListItem gH_ValueListItem = new GH_ValueListItem(@string, string2);
+				gH_ValueListItem.Selected = value3;
+				m_userItems.Add(gH_ValueListItem);
+			}
+			if (reader.ItemExists("ListIndex"))
+			{
+				int int2 = reader.GetInt32("ListIndex");
+				if (int2 >= 0 && int2 < m_userItems.Count)
+				{
+					m_userItems[int2].Selected = true;
+				}
+			}
+			return base.Read(reader);
+		}
+	}
+}
