@@ -156,6 +156,7 @@ namespace Woodpecker.Animation.GHComponents
                 {
                     foreach (var crv in _displayGeo.GetGeoms().Branch(i).SelectMany(x => DisplayUtil.DisplaySilhouette(x)))
                     {
+                        if(crv == null) continue;
                         var curveDisplay = new CurveDisplay(crv, _dashType);
                         foreach (var seg in curveDisplay.GetCurvesByDashType())
                             args.Display.DrawCurve(seg, TempCol, _displayGeo.GetWidth(_widthChangeByView));

@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    ".NETFramework,Version=v4.8": {
+    "net48": {
       "Grasshopper/8.0.23304.9001": {
         "type": "package",
         "dependencies": {
@@ -22,18 +22,6 @@
         },
         "build": {
           "build/net48/Grasshopper.targets": {}
-        }
-      },
-      "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETFramework.ReferenceAssemblies.net48": "1.0.3"
-        }
-      },
-      "Microsoft.NETFramework.ReferenceAssemblies.net48/1.0.3": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NETFramework.ReferenceAssemblies.net48.targets": {}
         }
       },
       "Newtonsoft.Json/13.0.4": {
@@ -186,7 +174,7 @@
         }
       }
     },
-    "net7.0-windows7.0": {
+    "net7.0-windows": {
       "Grasshopper/8.0.23304.9001": {
         "type": "package",
         "dependencies": {
@@ -263,17 +251,6 @@
         "lib/net48/GH_IO.xml",
         "lib/net48/Grasshopper.dll",
         "lib/net48/Grasshopper.xml"
-      ]
-    },
-    "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
-      "sha512": "vUc9Npcs14QsyOD01tnv/m8sQUnGTGOw1BCmKcv77LBJY7OxhJ+zJF7UD/sCL3lYNFuqmQEVlkfS4Quif6FyYg==",
-      "type": "package",
-      "path": "microsoft.netframework.referenceassemblies/1.0.3",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
-        "microsoft.netframework.referenceassemblies.nuspec"
       ]
     },
     "Microsoft.NETFramework.ReferenceAssemblies.net48/1.0.3": {
@@ -777,9 +754,8 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETFramework,Version=v4.8": [
+    "net48": [
       "Grasshopper >= 8.0.23304.9001",
-      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.3",
       "Newtonsoft.Json >= 13.0.4"
     ],
     "net7.0": [
@@ -788,26 +764,32 @@
       "Newtonsoft.Json >= 13.0.4",
       "System.Drawing.Common >= 7.0.0"
     ],
-    "net7.0-windows7.0": [
+    "net7.0-windows": [
       "Grasshopper >= 8.0.23304.9001",
       "Newtonsoft.Json >= 13.0.4"
     ]
   },
   "packageFolders": {
-    "/Users/tsungweicheng/.nuget/packages/": {}
+    "C:\\Users\\tcheng\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/IBOIS.Animation.csproj",
+      "projectUniqueName": "C:\\Users\\tcheng\\Desktop\\TestAnimation\\Code\\Woodpecker\\IBOIS.Animation.csproj",
       "projectName": "IBOIS.Animation",
-      "projectPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/IBOIS.Animation.csproj",
-      "packagesPath": "/Users/tsungweicheng/.nuget/packages/",
-      "outputPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/",
+      "projectPath": "C:\\Users\\tcheng\\Desktop\\TestAnimation\\Code\\Woodpecker\\IBOIS.Animation.csproj",
+      "packagesPath": "C:\\Users\\tcheng\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\tcheng\\Desktop\\TestAnimation\\Code\\Woodpecker\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/Users/tsungweicheng/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\tcheng\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net48",
@@ -815,19 +797,23 @@
         "net7.0-windows"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
+        "net48": {
+          "framework": "net48",
+          "targetAlias": "net48",
+          "projectReferences": {}
+        },
         "net7.0": {
+          "framework": "net7.0",
           "targetAlias": "net7.0",
           "projectReferences": {}
         },
-        "net7.0-windows7.0": {
+        "net7.0-windows": {
+          "framework": "net7.0-windows7.0",
           "targetAlias": "net7.0-windows",
-          "projectReferences": {}
-        },
-        "net48": {
-          "targetAlias": "net48",
           "projectReferences": {}
         }
       },
@@ -844,10 +830,27 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
+      "net48": {
+        "framework": "net48",
+        "targetAlias": "net48",
+        "dependencies": {
+          "Grasshopper": {
+            "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "target": "Package",
+            "version": "[8.0.23304.9001, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[13.0.4, )"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300\\RuntimeIdentifierGraph.json"
+      },
       "net7.0": {
+        "framework": "net7.0",
         "targetAlias": "net7.0",
         "dependencies": {
           "Grasshopper": {
@@ -884,6 +887,14 @@
         "warn": true,
         "downloadDependencies": [
           {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[7.0.20, 7.0.20]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[7.0.20, 7.0.20]"
+          },
+          {
             "name": "Microsoft.WindowsDesktop.App.Ref",
             "version": "[7.0.20, 7.0.20]"
           }
@@ -893,9 +904,10 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300\\RuntimeIdentifierGraph.json"
       },
-      "net7.0-windows7.0": {
+      "net7.0-windows": {
+        "framework": "net7.0-windows7.0",
         "targetAlias": "net7.0-windows",
         "dependencies": {
           "Grasshopper": {
@@ -921,6 +933,14 @@
         "warn": true,
         "downloadDependencies": [
           {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[7.0.20, 7.0.20]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[7.0.20, 7.0.20]"
+          },
+          {
             "name": "Microsoft.WindowsDesktop.App.Ref",
             "version": "[7.0.20, 7.0.20]"
           }
@@ -933,28 +953,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/RuntimeIdentifierGraph.json"
-      },
-      "net48": {
-        "targetAlias": "net48",
-        "dependencies": {
-          "Grasshopper": {
-            "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-            "target": "Package",
-            "version": "[8.0.23304.9001, )"
-          },
-          "Microsoft.NETFramework.ReferenceAssemblies": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "[1.0.3, )",
-            "autoReferenced": true
-          },
-          "Newtonsoft.Json": {
-            "target": "Package",
-            "version": "[13.0.4, )"
-          }
-        },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300\\RuntimeIdentifierGraph.json"
       }
     }
   }

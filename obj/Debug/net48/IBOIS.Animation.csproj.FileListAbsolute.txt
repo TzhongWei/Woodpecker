@@ -10,3 +10,16 @@
 /Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net48/IBOIS.Animation.gha
 /Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/Debug/net48/IBOIS.Animation.pdb
 /Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/bin/Debug/net48/AnimationCompile.py
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\bin\Debug\net48\AnimationCompile.py
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\bin\Debug\net48\IBOIS.Animation.gha
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\bin\Debug\net48\IBOIS.Animation.pdb
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\bin\Debug\net48\Newtonsoft.Json.dll
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.csproj.AssemblyReference.cache
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.AssemblyInfoInputs.cache
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.AssemblyInfo.cs
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.csproj.CoreCompileInputs.cache
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.sourcelink.json
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.An.60E98628.Up2Date
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.gha
+C:\Users\tcheng\Desktop\TestAnimation\Code\Woodpecker\obj\Debug\net48\IBOIS.Animation.pdb

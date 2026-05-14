@@ -63,7 +63,10 @@ namespace Woodpecker.Animation.Geometry.Display
         {
             var ActV = Rhino.RhinoDoc.ActiveDoc.Views.ActiveView;
             var AccDic = ActV.ActiveViewport.CameraDirection;
-            return Silhouette.Compute(G, SilhouetteType.Boundary, AccDic, 0.01, RhinoDoc.ActiveDoc.ModelAngleToleranceRadians).Select(x => x.Curve).ToList();
+            var result = Silhouette.Compute(G, SilhouetteType.Boundary, AccDic, 0.01, RhinoDoc.ActiveDoc.ModelAngleToleranceRadians).Select(x => x.Curve).ToList();
+            if(result == null)
+                throw new Exception("Silhouette failed");
+            return result;
         }
     }
 }
