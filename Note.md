@@ -460,3 +460,8 @@ SelectExistFileExtensions
 
 Window ->
 GH_DisplayGeometryWire.cs : Silhouette function and null value testing. 
+
+create a Param_Directory which is used for the 
+GH_CreateNewCodeFile
+GH_CreateNewGeometryCodeFile
+Adding add default code in the both
