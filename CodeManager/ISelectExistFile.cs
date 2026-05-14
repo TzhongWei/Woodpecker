@@ -1,6 +1,10 @@
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Grasshopper;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
+using Grasshopper.Kernel.Types;
 using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.CodeManager

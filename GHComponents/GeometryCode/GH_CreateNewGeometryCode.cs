@@ -20,9 +20,10 @@ namespace Woodpecker.Animation.GHComponents
         public override Guid ComponentGuid => new Guid("9f0686ab-7f9b-4ddd-b288-96c064ba5df6");
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_Directory(), "Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
             pManager.AddTextParameter("FileName", "Name", "The name of the geometry file", GH_ParamAccess.item);
             pManager.AddTextParameter("GeometryCode", "GC", "Encoded geometry code to save", GH_ParamAccess.tree);
+            pManager[2].Optional = true;
         }
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
@@ -48,17 +49,16 @@ namespace Woodpecker.Animation.GHComponents
             DA.GetData("Directory", ref dir);
             DA.GetData("FileName", ref name);
 
-            if (!DA.GetDataTree<GH_String>("GeometryCode", out var geometryCodeTree) || geometryCodeTree == null)
-            {
-                DA.SetData("Saved", false);
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "No colour code data provided.");
-                return;
-            }
-
             _filePath = Path.Combine(dir, name);
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(_filePath, @"\.json$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
                 _filePath += ".json";
+
+            if (DA.GetDataTree<GH_String>("GeometryCode", out var geometryCodeTree) || geometryCodeTree == null)
+            {
+                var gcCode = GeometryCodeUtil.GetDefaultGeometryCode();
+                codeDic = gcCode.GeomValues;
+            }
 
             for (int i = 0; i < geometryCodeTree.Branches.Count; i++)
             {

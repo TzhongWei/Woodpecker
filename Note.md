@@ -457,3 +457,6 @@ GH_LoadGeometryCode
 GH_LoadColourCode
 ISelectExistFile
 SelectExistFileExtensions
+
+Window ->
+GH_DisplayGeometryWire.cs : Silhouette function and null value testing. 

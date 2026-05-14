@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Permissions;
 using GH_IO.Serialization;
 using Grasshopper.Kernel;
 using Rhino.Geometry;

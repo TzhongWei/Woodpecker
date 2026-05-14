@@ -11,7 +11,7 @@ namespace Woodpecker.Animation.GHComponents
 {
     public class GH_CreateNewColourCodeFile : GH_Component
     {
-        public override GH_Exposure Exposure =>  GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
         public GH_CreateNewColourCodeFile() : base("Create a New ColourCode File", "NewCCodeBook", "Create a new colour code file at the target directory.", "Woodpecker", "ColourCode")
         {
 
@@ -21,9 +21,10 @@ namespace Woodpecker.Animation.GHComponents
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_Directory(), "Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
             pManager.AddTextParameter("FileName", "Name", "The name of the colourcode file", GH_ParamAccess.item);
             pManager.AddTextParameter("ColourCode", "CC", "Encoded colour code to save", GH_ParamAccess.tree);
+            pManager[2].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -50,40 +51,42 @@ namespace Woodpecker.Animation.GHComponents
             DA.GetData("Directory", ref dir);
             DA.GetData("FileName", ref name);
 
-            if (!DA.GetDataTree<GH_String>("ColourCode", out var colourCodeTree) || colourCodeTree == null)
-            {
-                DA.SetData("Saved", false);
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "No colour code data provided.");
-                return;
-            }
 
             _filePath = Path.Combine(dir, name);
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(_filePath, @"\.json$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
                 _filePath += ".json";
 
-            for (int i = 0; i < colourCodeTree.Branches.Count; i++)
+            if (DA.GetDataTree<GH_String>("ColourCode", out var colourCodeTree) || colourCodeTree == null)
             {
-                var branch = colourCodeTree.Branches[i];
-                if (branch.Count == 0) continue;
-                var key = branch[0].Value;
-
-                //Check the format of the values, they should be in CSS color format (e.g., "rgb(255, 0, 0)" or "rgba(255, 0, 0, 0.5)")
-                foreach (var Code in branch.Skip(1))
-                {
-                    var value = Code.Value.Trim().ToLowerInvariant();
-                    if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^rgba?\s*\(\s*(\d{1,3}\s*,\s*){2}\d{1,3}(,\s*(0|1|0?\.\d+))?\s*\)$"))
-                    {
-                        DA.SetData("Saved", false);
-                        this.AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Invalid color format for '{value}' in colour code '{key}'. Expected format: 'rgb(r, g, b)' or 'rgba(r, g, b, a)'.");
-                        return;
-                    }
-                }
-
-                var values = branch.Skip(1).Select(x => x.Value).ToList();
-                codeDic[key] = values;
+                var defaultCode = ColourCodeUtil.GetDefaultColourCode();
+                this.codeDic = ColourCodeUtil.ColourDictionaryToString(defaultCode.Values);
             }
-            
+            else
+            {
+                for (int i = 0; i < colourCodeTree.Branches.Count; i++)
+                {
+                    var branch = colourCodeTree.Branches[i];
+                    if (branch.Count == 0) continue;
+                    var key = branch[0].Value;
+
+                    //Check the format of the values, they should be in CSS color format (e.g., "rgb(255, 0, 0)" or "rgba(255, 0, 0, 0.5)")
+                    foreach (var Code in branch.Skip(1))
+                    {
+                        var value = Code.Value.Trim().ToLowerInvariant();
+                        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^rgba?\s*\(\s*(\d{1,3}\s*,\s*){2}\d{1,3}(,\s*(0|1|0?\.\d+))?\s*\)$"))
+                        {
+                            DA.SetData("Saved", false);
+                            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Invalid color format for '{value}' in colour code '{key}'. Expected format: 'rgb(r, g, b)' or 'rgba(r, g, b, a)'.");
+                            return;
+                        }
+                    }
+
+                    var values = branch.Skip(1).Select(x => x.Value).ToList();
+                    codeDic[key] = values;
+                }
+            }
+
             DA.SetData("Saved", _saveresult);
             DA.SetData("NewPath", _filePath);
         }

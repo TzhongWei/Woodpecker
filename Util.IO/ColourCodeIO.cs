@@ -18,6 +18,7 @@ namespace Woodpecker.Animation.Util.IO
             code["Tertiary"] = new List<Color> { Color.Blue, Color.Green, Color.Black };
             ProjectAppManager.CCParameters = new ColourCodeParameters(code);
         }
+        
         public static bool SetDefaultColourCode_Setfile()
         {
             var path = ProjectAppManager.ColourCodePath;

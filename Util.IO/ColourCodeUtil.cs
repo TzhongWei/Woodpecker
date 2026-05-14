@@ -17,7 +17,17 @@ namespace Woodpecker.Animation.Util.IO
     public static class ColourCodeUtil
     {
         #region ColourCode Tool
-
+        public static ColourCodeParameters GetDefaultColourCode()
+        {
+            var code = new Dictionary<string, List<Color>>();
+            code["Primary"] = new List<Color> { Color.Black };
+            code["Primary_Wire"] = new List<Color> { Color.White };
+            code["Secondary"] = new List<Color> { Color.Red };
+            code["Secondary_Wire"] = new List<Color> { Color.Yellow };
+            code["Tertiary"] = new List<Color> { Color.Blue, Color.Green, Color.Black };
+            var cccode = new ColourCodeParameters(code);
+            return cccode;
+        }
         /// <summary>
         /// convert a dictionary of colour codes in color format to a dictionary of CSS format objects. The input dictionary maps Color to lists of CSS color strings (in rgb or rgba format), and the output dictionary maps the same colour to lists of CSS string.
         /// </summary>

@@ -11,6 +11,9 @@
         "name": "Microsoft.WindowsDesktop.App",
         "version": "7.0.0"
       }
-    ]
+    ],
+    "configProperties": {
+      "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": true
+    }
   }
 }
