@@ -16,7 +16,7 @@ namespace Woodpecker.Animation.Geometry.Processing
             this.From = From;
             this.To = To;
         }
-        public override Transform GetTransform(double NormalT)
+        public override Transform GetTransform(GeometryContent content, double NormalT)
         {
             var PtCur = GeometryUtil.Lerp(From.Origin, To.Origin, NormalT);
             var XCur = GeometryUtil.Lerp(From.XAxis, To.XAxis, NormalT);

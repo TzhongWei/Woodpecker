@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rhino.Geometry;
 
 namespace Woodpecker.Animation.Geometry.Processing
@@ -20,17 +21,17 @@ namespace Woodpecker.Animation.Geometry.Processing
 
             t = Math.Max(0, Math.Min(1, t)); // Clamp t
             bool result = true;
-            result &= _geometryAnimation.PreEvaluate(t);
+            result &= _geometryAnimation.PreEvaluate(GeometryContent, t);
             if (result)
-                result &= _geometryAnimation.Evaluate(t);
+                result &= _geometryAnimation.Evaluate(GeometryContent, t);
             else
                 return false;
 
             if (result)
-                result &= _geometryAnimation.PostEvaluate(t);
+                result &= _geometryAnimation.PostEvaluate(GeometryContent, t);
 
             return result;
         }
-        public GeometryBase GeomObject => _geometryAnimation.GetGeometry();
+        public GeometryBase GeomObject => GeometryContent.GetCurrentGeometry().FirstOrDefault();
     }
 }

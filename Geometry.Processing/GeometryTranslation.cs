@@ -22,7 +22,7 @@ namespace Woodpecker.Animation.Geometry.Processing
         {
             this.Factor = Factor;
         }
-        public override Transform GetTransform(double NormalT)
+        public override Transform GetTransform(GeometryContent content, double NormalT)
         => TranslateVector == Vector3d.Zero ? Transform.Identity : Transform.Translation(TranslateVector * Factor * NormalT);
     }
 }

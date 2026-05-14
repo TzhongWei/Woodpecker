@@ -5,9 +5,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
-    public class GH_RotationAction : GH_GeometryActionAbstract
+    public class GH_FixedPivotRotationAction : GH_GeometryActionAbstract
     {
-        public GH_RotationAction():base("Rotation Action", "RA", "Create a timed rotation action for the geometry animation pipeline."){}
+        public GH_FixedPivotRotationAction():base("Fixed Pivot Rotation Action", "Rot Fixed", "Create a timed rotation action for the geometry animation pipeline."){}
         public override Guid ComponentGuid => new Guid("91a8c8a5-8e1e-4c74-b2c1-c746fa68ac76");
         protected override GeometryActionAbstract _geometryActionAbstract {get; set;}
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -34,7 +34,7 @@ namespace Woodpecker.Animation.GHComponents
             DA.GetData("Axis", ref axis);
             DA.GetData("Angle", ref angle);
             DA.GetData("Centre", ref pt);
-            this._geometryActionAbstract = new GeometryRotation(name, axis, angle, pt, timeline);
+            this._geometryActionAbstract = new GeometryFixedRotation(name, axis, angle, pt, timeline);
             DA.SetData("Action", this._geometryActionAbstract);
         }
     }

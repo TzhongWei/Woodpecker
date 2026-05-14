@@ -78,7 +78,7 @@ namespace Woodpecker.Animation.GHComponents
 
             _geometryAnimation = new GeometryAnimation(geom);
             _geometryAnimation.AddRangeAction(actionList);
-            var geom_result = _geometryAnimation.Evaluate(t);
+            var geom_result = _geometryAnimation.EvaluateGeometry_OLD(t);
 
             DA.SetData("Geometry", geom_result);
             DA.SetData("CMD", _geometryAnimation.Message);

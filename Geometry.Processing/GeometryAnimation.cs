@@ -65,7 +65,24 @@ namespace Woodpecker.Animation.Geometry.Processing
             }
         }
         public List<string> Message {get; private set;} = new List<string>();
-        public virtual bool PreEvaluate(double t)
+        public virtual bool PreEvaluate(GeometryContent content, double t)
+        {
+            if (content == null)
+                return false;
+
+            Message.Clear();
+            content.Initialised();
+
+            var result = true;
+            foreach(var action in _actions.OrderBy(x => x.Timeline.Min))
+            {
+                result &= action.PreEvaluate(content);
+            }
+            return result;
+        }
+
+        [Obsolete("Use PreEvaluate(GeometryContent content, double t) instead.")]
+        public virtual bool PreEvaluate_OLD(double t)
         {
             _current = _source.Duplicate();
             var result = true;
@@ -75,17 +92,50 @@ namespace Woodpecker.Animation.Geometry.Processing
             }
             return result;
         }
-        public virtual bool Evaluate(double t)
+        public virtual bool Evaluate(GeometryContent content, double t)
+        {
+            if (content == null)
+                return false;
+
+            var result = true;
+            foreach(var action in _actions.OrderBy(a => a.Timeline.Min))
+            {
+                result &= action.TryApply(content, t);
+                if (!string.IsNullOrWhiteSpace(action.Message))
+                    Message.Add(action.Message);
+            }
+            return result;
+        }
+
+        [Obsolete("Use Evaluate(GeometryContent content, double t) instead.")]
+        public virtual bool Evaluate_OLD(double t)
         {
             var result = true;
             foreach(var action in _actions.OrderBy(a => a.Timeline.Min))
             {
-                result &= action.TryApply(this._current, t, out this._current);   
-                Message.Add(action.Message);
+                result &= action.TryApply_OLD(this._current, t, out this._current);
+                if (!string.IsNullOrWhiteSpace(action.Message))
+                    Message.Add(action.Message);
             }
-            return true;
+            return result;
         }
-        public virtual bool PostEvaluate(double t)
+        public virtual bool PostEvaluate(GeometryContent content, double t)
+        {
+            if (content == null)
+                return false;
+
+            var result = true;
+            foreach(var action in _actions)
+            {
+                if(t > action.Timeline.Max)
+                    result &= action.PostEvaluate(content);
+
+            }
+            return result;
+        }
+
+        [Obsolete("Use PostEvaluate(GeometryContent content, double t) instead.")]
+        public virtual bool PostEvaluate_OLD(double t)
         {
             var result = true;
             foreach(var action in _actions)
@@ -97,20 +147,23 @@ namespace Woodpecker.Animation.Geometry.Processing
             return result;
         }
 
-        [Obsolete]
-        public GeometryBase Evaluate_Old(double t)
+        [Obsolete("Use PreEvaluate/Evaluate/PostEvaluate with GeometryContent instead.")]
+        public GeometryBase EvaluateGeometry_OLD(double t)
         {
             GeometryBase result = _source.Duplicate();
 
             foreach (var action in _actions.OrderBy(a => a.Timeline.Min))
             {
 
-                if (action.TryApply(result, t, out result))
+                if (action.TryApply_OLD(result, t, out result))
                 {
                     Message.Add(action.Message);
                 }
             }
             return result;
         }
+
+        [Obsolete("Use EvaluateGeometry_OLD(double t) for the old geometry-returning path, or the GeometryContent pipeline for new code.")]
+        public GeometryBase Evaluate_Old(double t) => EvaluateGeometry_OLD(t);
     }
 }

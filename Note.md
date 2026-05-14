@@ -465,3 +465,8 @@ create a Param_Directory which is used for the
 GH_CreateNewCodeFile
 GH_CreateNewGeometryCodeFile
 Adding add default code in the both
+
+GeometryContent:
+* Start applying GeometryContent to GeometryAction evaluation
+* Keep old evaluation functions as [Obsolete] *_OLD during transition
+* Pending: GeometryAction has transformation inheritance problems
