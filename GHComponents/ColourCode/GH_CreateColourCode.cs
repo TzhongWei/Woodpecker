@@ -10,6 +10,9 @@ using System.CodeDom;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates or updates a named colour-code entry. A code name and colour values are encoded into the colour-code data structure for saving or downstream use. Inputs include CodeName and ColourList. Outputs include ColourCode.
+    /// </summary>
     public class GH_CreateColourCode : GH_Component
     {
         public override GH_Exposure Exposure =>  GH_Exposure.tertiary;

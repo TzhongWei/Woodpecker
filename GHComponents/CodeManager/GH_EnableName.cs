@@ -5,6 +5,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Enable or disable a component type by provide its' name or nickname. Inputs include Enable and ComponentName. Outputs include Result.
+    /// </summary>
     public class GH_EnableName : GH_CodeManagerAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.primary;

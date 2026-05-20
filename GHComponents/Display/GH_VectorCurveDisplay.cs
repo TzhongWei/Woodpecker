@@ -10,6 +10,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Display vector on a curve with a curved arrow. Inputs include Curve, Curve_t, VectorDisplaySetting, and Pointer_t.
+    /// </summary>
     public class GH_VectorCurveDisplay: GH_Component
     {
         public GH_VectorCurveDisplay():base("Vector Curve Display", "VCD", "Display vector on a curve with a curved arrow", "Woodpecker", "Display")

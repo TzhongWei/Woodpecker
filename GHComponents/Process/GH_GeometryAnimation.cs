@@ -6,6 +6,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Evaluates source geometry through ordered timed geometry actions. Geometry and action inputs are combined with a normalized pointer value, then the component outputs evaluated geometry and status messages. Inputs include Geometry, Pointer_t, and Actions. Outputs include Geometry and Message.
+    /// </summary>
     public class GH_GeometryAnimation : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -46,6 +49,9 @@ namespace Woodpecker.Animation.GHComponents
         }
     }
     [Obsolete]
+    /// <summary>
+    /// Legacy geometry animation evaluator. Inputs include Geometry, Pointer_t, and Actions. Outputs include Geometry and Message.
+    /// </summary>
     public class GH_GeometryAnimation_Old : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

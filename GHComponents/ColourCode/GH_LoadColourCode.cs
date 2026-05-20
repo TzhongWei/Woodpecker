@@ -15,6 +15,9 @@ using Eto.Forms;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Loads the shared colour-code database from a selected file or input path. The loaded colour codes are refreshed for dependent components and output as encoded colour data. Inputs include ColourCodePath. Outputs include ColourCode.
+    /// </summary>
     public class GH_LoadColourCode : GH_ColourCodeAbstract, ISingletonDocumentComponent, ISelectExistFile
     {
         public string SingletonTag => "LColourCode";
@@ -65,7 +68,7 @@ namespace Woodpecker.Animation.GHComponents
         protected override System.Drawing.Bitmap Icon => null;
         public override void CreateAttributes()
         {
-            m_attributes = new ButtonUIAttributesEditable(this, "Load", Select_SingleExistingFileClicked, ShowEditor, "Load colour code");
+            m_attributes = new ButtonUIAttributesEditable(this, "Reflesh", After_Select_RefreshComponent, ShowEditor, "Load colour code");
         }
         public void After_Select_RefreshComponent()
         {
@@ -75,7 +78,7 @@ namespace Woodpecker.Animation.GHComponents
         }
         public void Select_SingleExistingFileClicked()
         {
-            SelectExistFileExtensions.Select_SingleExistingFileClicked(this, "Select a colour code file");
+            SelectExistFileExtensions.Select_SingleExistingFileClicked(this, "Select a colour code file", ColourCodeIO.ReadColourFromPath);
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
@@ -99,6 +102,9 @@ namespace Woodpecker.Animation.GHComponents
         }
     }
     [Obsolete]
+    /// <summary>
+    /// Get existing Colour Code from the file data. Inputs include ColourCodePath. Outputs include ColourCode.
+    /// </summary>
     public class GH_ColourCode_Old : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

@@ -16,9 +16,12 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Splits a list or data tree into dynamically generated outputs. The input data provides branches or items, and the optional path selects a branch before outputs are created for downstream components. Inputs include DataList and Path. Outputs include Item 0.
+    /// </summary>
     public class GH_MatchList : GH_Component, IGH_VariableParameterComponent
     {
-        public GH_MatchList():base("Match List output", "Match List", "", "Woodpecker", "Util"){}
+        public GH_MatchList():base("Match List output", "Match List", "Create one output for each branch or item in an input list.", "Woodpecker", "Util"){}
         public override Guid ComponentGuid => new Guid("3446f404-891c-4bb2-885a-3407fc5198e1");
 
         public bool CanInsertParameter(GH_ParameterSide side, int index)
@@ -83,7 +86,7 @@ namespace Woodpecker.Animation.GHComponents
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("DataList", "List", "input list of data", GH_ParamAccess.tree);
-            pManager.AddPathParameter("Path", "P", "", GH_ParamAccess.item);
+            pManager.AddPathParameter("Path", "P", "Optional data-tree path used to select a branch.", GH_ParamAccess.item);
             pManager[1].Optional = true;
         }
 

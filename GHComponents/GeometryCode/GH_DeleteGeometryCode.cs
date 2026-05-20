@@ -7,6 +7,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Delete selected geometry code entries from the active geometry code book. Inputs include CodeName. Outputs include Delete.
+    /// </summary>
     public class GH_DeleteGeometryCode : GH_GeometryCodeAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.tertiary;

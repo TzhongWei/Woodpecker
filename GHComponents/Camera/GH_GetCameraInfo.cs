@@ -6,6 +6,9 @@ using Woodpecker.Animation.Control.Camera;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Get the camera information of a rhino named view. Outputs include Is Parallel Projection, Camera Plane, Camera Direction, and Camera Up, and related results.
+    /// </summary>
     public class GH_GetCameraInfo : GH_Component
     {
         public GH_GetCameraInfo() : base("Get Camera Info", "GetCamInfo", "Get the camera information of a rhino named view", "Woodpecker", "Camera")

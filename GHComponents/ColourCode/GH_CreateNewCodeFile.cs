@@ -9,6 +9,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates a new colour-code file at a selected directory. Directory, file name, and optional colour-code data are combined into a saved JSON codebook path. Inputs include FileName and ColourCode. Outputs include Saved and NewPath.
+    /// </summary>
     public class GH_CreateNewColourCodeFile : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;

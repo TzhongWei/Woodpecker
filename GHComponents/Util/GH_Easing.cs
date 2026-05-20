@@ -5,6 +5,9 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Applies an easing function to a normalized time value (0–1), allowing smooth animation transitions. Inputs include t. Outputs include t.
+    /// </summary>
     public class GH_Easing: GH_Component
     {
         public GH_Easing():base("Easing", "E", "Applies an easing function to a normalized time value (0–1), allowing smooth animation transitions.", "Woodpecker", "Util")

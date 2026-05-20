@@ -7,6 +7,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Extend a curve from its start or end by distance and direction values. Inputs include Curve, Distance, and Direction. Outputs include NewCurve.
+    /// </summary>
     public class GH_AddEndPath : GH_PathEditAbstract
     {
         public GH_AddEndPath():base("Add End Path", "AddP", "Extend a curve from its start or end by distance and direction values.")

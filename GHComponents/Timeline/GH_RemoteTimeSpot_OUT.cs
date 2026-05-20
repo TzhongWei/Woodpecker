@@ -7,6 +7,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 namespace Woodpecker.Animation.GHComponents
 {
     [Obsolete]
+    /// <summary>
+    /// Get a time spot without grasshopper wires from a label with a tag. Inputs include Tag. Outputs include Value.
+    /// </summary>
     public class GH_RemoteTimeSpot_OUT : GH_RemoteTimeSpotAbstract
     {
         public GH_RemoteTimeSpot_OUT() : base("Remote Time spot output", "Out_TSpot", "Get a time spot without grasshopper wires from a label with a tag") { }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Grasshopper.GUI.MRU;
 using Rhino.Geometry;
 using Woodpecker.Animation.Geometry.Display;
 using Woodpecker.Animation.Util.IO;
@@ -191,9 +192,12 @@ namespace Woodpecker.Animation.Control.Timeline
         /// <param name="Tout">The out time zone.</param>
         /// <param name="T">The input time. The global time T = [a, b]</param>
         /// <returns>The current percentage of the timeline. t = [0,1] </returns>
-        public static double ActivativeTimeline(Interval Tin, Interval Tout, double T)
+        public static double ActivativeTimeline(Interval TLin, Interval TLout, double G_T, int round = 4)
         {
             double CurrentP = 0;
+            var Tin = RoundInterval(TLin, round);
+            var Tout = RoundInterval(TLout, round);
+            var T = Math.Round(G_T, round);
             if (Tin != new Interval(0, 0) || !Tout.IsValid) //Invalid OutTimeZone
             {
                 if (T <= Tin.Min) CurrentP = 0;
@@ -216,9 +220,11 @@ namespace Woodpecker.Animation.Control.Timeline
         /// <param name="Tin"></param>
         /// <param name="T"></param>
         /// <returns></returns>
-        public static double ActivativeTimeline(Interval Tin, double T)
+        public static double ActivativeTimeline(Interval TLin, double G_T, int round = 4)
         {
             double CurrentP = 0;
+            var Tin = RoundInterval(TLin, round);
+            var T = Math.Round(G_T, round);
             if (Tin != new Interval(0, 0))
             {
                 if (T <= Tin.Min) CurrentP = 0;
@@ -226,6 +232,12 @@ namespace Woodpecker.Animation.Control.Timeline
                 else if (T >= Tin.Max) CurrentP = 1;
             }
             return CurrentP;
+        }
+        public static double RemapTtoSliderControl(double t, Interval ParameterRange, int digits)
+        {
+            t = Math.Max(0, Math.Min(t, 1));
+            var newvalue = ParameterRange.Min + ParameterRange.Length * t;
+            return Math.Round(newvalue, digits);
         }
         /// <summary>
         /// If ActivatedInZone is true, calculate the current percentage of the timeline based on the input time and the in and out time zones. 
@@ -238,9 +250,12 @@ namespace Woodpecker.Animation.Control.Timeline
         /// <param name="Tout"> The out time zone</param>
         /// <param name="T"> The input time. The global time T = [a, b]</param>
         /// <returns> The current percentage of the timeline, t = [0,1]</returns>
-        public static double ActivativeTimeline(bool ActivedInZone, Interval Tin, Interval Tout, double T)
+        public static double ActivativeTimeline(bool ActivedInZone, Interval TLin, Interval TLout, double G_T, int round = 3)
         {
             double CurrentP = 0;
+            var Tin = RoundInterval(TLin, round);
+            var Tout = RoundInterval(TLout, round);
+            var T = Math.Round(G_T, round);
             if (ActivedInZone &&
         !Tin.IncludesParameter(T) &&
         (!Tout.IncludesParameter(T) || Tout == new Interval(0, 0))
@@ -270,8 +285,10 @@ namespace Woodpecker.Animation.Control.Timeline
             }
             return CurrentP;
         }
-        public static double ActivativeTimeline(bool ActivedInZone, Interval Tin, double T)
+        public static double ActivativeTimeline(bool ActivedInZone, Interval TLin, double G_T, int round = 3)
         {
+            var Tin = RoundInterval(TLin, round);
+            var T = Math.Round(G_T, round);
             if (ActivedInZone && !Tin.IncludesParameter(T))
             {
                 return -1;
@@ -384,7 +401,8 @@ namespace Woodpecker.Animation.Control.Timeline
         }
         public static string TimelineDescription(Interval Timeline, int round = 4)
         => $"{Math.Round(Timeline.Min, round)} - {Math.Round(Timeline.Max, round)}";
-
+        public static Interval RoundInterval(Interval interval, int round = 4)
+        => new Interval(Math.Round(interval.Min, round), Math.Round(interval.Max, round));
         public static Interval RedefindTimeline(Interval timeline, bool startorEnd, double period, double speed = 1)
         {
             speed = speed != 0 ? speed : 1;

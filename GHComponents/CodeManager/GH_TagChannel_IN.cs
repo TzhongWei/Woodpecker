@@ -11,6 +11,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Stores general data under named input nicknames inside a tag channel. A tag acts as the channel label, and each variable input nickname becomes a data key that can be read by matching Tag Channel Output components. Inputs include Tag and General Data A.
+    /// </summary>
     public class GH_TagChannel_IN : GH_TagChannel_Abstract, IGH_VariableParameterComponent
     {
         public GH_TagChannel_IN():base("Tag Channel Input", "In_Tag", "Connect data without Grasshopper wires, and label the data with a tag"){}

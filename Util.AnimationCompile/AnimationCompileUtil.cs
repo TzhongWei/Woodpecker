@@ -26,26 +26,27 @@ namespace Woodpecker.Animation.Util.AnimationCompile
         }
         internal static bool MirrorFrames(AnimationSetting setting, bool horizontal = true)
         {
-            try{
-            var extension = setting.FrameExtension.TrimStart('.');
-            var files = Directory.GetFiles(
-                setting.InputFolder,
-                $"{setting.FramePrefix}*.{extension}")
-                .OrderBy(x => x)
-                .ToList();
-
-            foreach (var file in files)
+            try
             {
-                using (var bitmap = new System.Drawing.Bitmap(file))
-                {
-                    bitmap.RotateFlip(horizontal
-                        ? System.Drawing.RotateFlipType.RotateNoneFlipX
-                        : System.Drawing.RotateFlipType.RotateNoneFlipY);
+                var extension = setting.FrameExtension.TrimStart('.');
+                var files = Directory.GetFiles(
+                    setting.InputFolder,
+                    $"{setting.FramePrefix}*.{extension}")
+                    .OrderBy(x => x)
+                    .ToList();
 
-                    bitmap.Save(file);
+                foreach (var file in files)
+                {
+                    using (var bitmap = new System.Drawing.Bitmap(file))
+                    {
+                        bitmap.RotateFlip(horizontal
+                            ? System.Drawing.RotateFlipType.RotateNoneFlipX
+                            : System.Drawing.RotateFlipType.RotateNoneFlipY);
+
+                        bitmap.Save(file);
+                    }
                 }
-            }
-            return true;
+                return true;
             }
             catch
             {

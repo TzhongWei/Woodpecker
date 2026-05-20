@@ -5,6 +5,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Animating camera from camera A to camera B. Inputs include Pointer_t. Outputs include Status.
+    /// </summary>
     public class GH_CameraFromAtoB : GH_CameraMotionAbstract
     {
         public GH_CameraFromAtoB() : base("Camera from A to B", "CameraA2B", "Animating camera from camera A to camera B") { }

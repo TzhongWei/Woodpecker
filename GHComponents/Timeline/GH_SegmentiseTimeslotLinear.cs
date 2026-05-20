@@ -7,6 +7,9 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Segmentise timeslot linearly. Inputs include Pointer_t, Segments, and Overlap. Outputs include segmented_Pointer_t and Segment_Length.
+    /// </summary>
     public class GH_SegmentiseTimeslotLinear : GH_TimelineAbstract
     {
         public GH_SegmentiseTimeslotLinear() : base("Segmentise Timeslot in Linear", "STL", "Segmentise timeslot linearly") { }

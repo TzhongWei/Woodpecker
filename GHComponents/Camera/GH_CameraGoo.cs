@@ -5,6 +5,9 @@ using Woodpecker.Animation.Control.Camera;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
+    /// <summary>
+    /// Camera Goo component.
+    /// </summary>
     public class GH_CameraGoo : GH_Goo<Plane>
     {
         private Plane CameraPlane => this.Value;

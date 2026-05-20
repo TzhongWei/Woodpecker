@@ -6,6 +6,9 @@ using Woodpecker.Animation.CodeManager;
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
     [Obsolete]
+    /// <summary>
+    /// Remote Time Spot Abstract component.
+    /// </summary>
     public abstract class GH_RemoteTimeSpotAbstract : GH_TimelineAbstract, ISingletonDocumentComponent
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

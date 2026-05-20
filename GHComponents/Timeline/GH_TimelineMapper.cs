@@ -7,6 +7,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Interactively edit and output a timeline interval. Inputs include Timeline. Outputs include Timeline.
+    /// </summary>
     internal class GH_TimelineMapper : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

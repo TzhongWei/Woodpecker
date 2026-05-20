@@ -3,6 +3,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Geometry Action Abstract component.
+    /// </summary>
     public abstract class GH_GeometryActionAbstract : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;

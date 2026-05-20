@@ -8,6 +8,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Adjust current viewpoint to the given camera. Inputs include Run. Outputs include Status.
+    /// </summary>
     public class GH_ToCamera : GH_CameraMotionAbstract
     {
         public GH_ToCamera() : base("To Camera", "TCam", "Adjust current viewpoint to the given camera") { }

@@ -12,6 +12,9 @@ using Grasshopper.Kernel.Geometry.SpatialTrees;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Displays geometry in the viewport using colour and transparency settings. Geometry, colour, and display options are read as Grasshopper data and drawn as preview geometry. Inputs include Geometry, Color, and Pointer_t.
+    /// </summary>
     public class GH_DisplayGeometry : GH_Component
     {
         public GH_DisplayGeometry() : base("Display Geometry", "DispGeo", "Display geometry in the viewport with custom color and width. t provides a fade effect by time.", "Woodpecker", "Display")

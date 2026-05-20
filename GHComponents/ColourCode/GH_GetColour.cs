@@ -12,6 +12,9 @@ using System.Drawing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Get colour from a colour code. Inputs include ColourCode. Outputs include CodeName and ColourList.
+    /// </summary>
     public class GH_GetColour: GH_Component
     {
         public override GH_Exposure Exposure =>  GH_Exposure.tertiary;

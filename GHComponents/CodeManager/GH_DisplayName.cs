@@ -5,6 +5,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Display or hidden previous geometry by a component type by provide its' name or nickname. Inputs include Display and ComponentName. Outputs include Result.
+    /// </summary>
     public class GH_DisplayName : GH_CodeManagerAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;

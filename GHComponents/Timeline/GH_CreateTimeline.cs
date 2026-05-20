@@ -10,6 +10,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create timeline intervals from start times and durations. Inputs include Start Time and Period. Outputs include Timeline.
+    /// </summary>
     public class GH_CreateTimeline : GH_TimelineAbstract
     {
         public GH_CreateTimeline() : 

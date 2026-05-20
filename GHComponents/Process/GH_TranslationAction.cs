@@ -6,6 +6,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates a timed translation action. The action uses a timeline, direction vector, and distance factor, then outputs an action object for the geometry animation pipeline. Inputs include Name, Timeline, MoveDirection, and Factor. Outputs include Action.
+    /// </summary>
     public class GH_TranslationAction : GH_GeometryActionAbstract
     {
         public GH_TranslationAction():base("Translation Action", "TA", "Create a timed translation action for the geometry animation pipeline."){}

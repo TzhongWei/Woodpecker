@@ -11,6 +11,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Displays multiple vectors with shared or per-branch display settings. Input points and vectors become viewport arrows for checking direction and magnitude. Inputs include ArrowTarget, ArrowDirection, VectorDisplaySetting, and Pointer_t.
+    /// </summary>
     public class GH_VectorsDisplay : GH_Component
     {
         public GH_VectorsDisplay():base("Vectors Display", "VsD", "Display a tree of vectors as viewport arrows with optional styling and fade timing.", "Woodpecker", "Display"){}

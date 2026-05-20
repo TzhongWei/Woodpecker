@@ -9,6 +9,9 @@ using Woodpecker.Animation.Geometry.Display;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// The vector display setting. Inputs include Length, ArrowheadSize, ArrowsRelativeSize, Width, and Color. Outputs include VectorDisplaySetting.
+    /// </summary>
     public class GH_VectorDisplaySetting : GH_Component
     {
         public GH_VectorDisplaySetting():base("Vector Display Setting", "VDS", "The vector display setting", "Woodpecker", "Display"){}

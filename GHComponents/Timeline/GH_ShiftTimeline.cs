@@ -9,6 +9,9 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Shift and extend timeline intervals by applying per-segment delays, prolongation, and global speed scaling. Delay offsets the start of each segment, Prolong extends its duration, and Speed scales the overall timing progression. Inputs include Timeline, Delay, Prolong, and Speed. Outputs include Timeline.
+    /// </summary>
     public class GH_ShiftTimeline : GH_TimelineAbstract
     {
         public GH_ShiftTimeline():base(

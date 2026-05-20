@@ -7,6 +7,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Connect consecutive path curves using a list of link patterns. Inputs include Curves and Patterns. Outputs include FinishPaths.
+    /// </summary>
     public class GH_LinkPath : GH_PathEditAbstract
     {
         public GH_LinkPath() : base("Link Paths", "LP", "Connect consecutive path curves using a list of link patterns.")

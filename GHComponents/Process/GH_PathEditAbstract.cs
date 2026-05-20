@@ -5,6 +5,9 @@ using Grasshopper.Kernel;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
+    /// <summary>
+    /// Path Edit Abstract component.
+    /// </summary>
     public abstract class GH_PathEditAbstract : GH_Component
     {
         public GH_PathEditAbstract(string Name, string NickName, string Description) : base(Name, NickName, Description, "Woodpecker", "Process")

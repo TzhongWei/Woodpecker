@@ -7,6 +7,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Offset a curve with a distance until reaching the limitation or cannot offset. Inputs include Curve, Distance, Seam_t, Plane, and Direction, and related settings. Outputs include Curve.
+    /// </summary>
     public class GH_IterativeOffset : GH_Component
     {
         public GH_IterativeOffset(): base("Iterative Offset", "IOffset", "Offset a curve with a distance until reaching the limitation or cannot offset", "Woodpecker", "Process")

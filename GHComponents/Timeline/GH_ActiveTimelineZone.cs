@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Active timeline zone component. Inputs include ActivateInZone, InTimeline, OutTimeline, and Global_T. Outputs include Pointer_t.
+    /// </summary>
     public class GH_ActiveTimelineZone : GH_TimelineAbstract
     {
         public GH_ActiveTimelineZone() : base("Active Timeline in Zone", "ATLZ", "Active timeline zone component") { }
@@ -19,7 +22,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             base.AppendAdditionalMenuItems(menu);
             Menu_AppendSeparator(menu);
-            Menu_AppendItem(menu, "Display Timeline", ReverseTime, true, _reverseValue);
+            Menu_AppendItem(menu, "Reverse Timeline", ReverseTime, true, _reverseValue);
         }
         protected virtual void ReverseTime(object sender, EventArgs e)
         {

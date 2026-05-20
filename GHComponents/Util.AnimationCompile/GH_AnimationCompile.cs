@@ -1,6 +1,7 @@
 using System;
 using System.Net.Mail;
 using System.Windows.Forms;
+using GH_IO.Serialization;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using Woodpecker.Animation.CodeManager;
@@ -9,6 +10,9 @@ using Woodpecker.Animation.Util.AnimationCompile;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Opens and stores animation compile settings, then runs the frame-to-movie compile process. It uses folder, naming, frame, and overwrite settings to produce a movie output. Inputs include Animation Setting. Outputs include Result.
+    /// </summary>
     public class GH_AnimationCompile : GH_Component, IEditableWindow
     {
         public GH_AnimationCompile():base("Animation Compile", "Com", "Compile rendered animation frames into a .mov file.", "Woodpecker", "Util"){}
@@ -96,6 +100,17 @@ namespace Woodpecker.Animation.GHComponents
                 return;
             }
             DA.SetData("Result", result.ToString());
+        }
+        public override bool Write(GH_IWriter writer)
+        {
+            if(_inputJson != "")
+                writer.SetString("Setting", _inputJson);
+            return base.Write(writer);
+        }
+        public override bool Read(GH_IReader reader)
+        {
+            reader.TryGetString("Setting", ref _inputJson);
+            return base.Read(reader);
         }
     }
 }

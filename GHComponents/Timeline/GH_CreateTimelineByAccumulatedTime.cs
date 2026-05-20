@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create a timeline by accumulated time. Inputs include Start, AccumulatedTime, Shift, and Speed. Outputs include Timelines.
+    /// </summary>
     public class GH_CreateTimelineByAccumulatedTime : GH_TimelineAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.primary;

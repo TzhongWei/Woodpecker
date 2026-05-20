@@ -6,6 +6,9 @@ using Woodpecker.Animation.Geometry.Display;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Extract silhouette outline curves from geometry for display or drafting. Inputs include Geometry. Outputs include Outline.
+    /// </summary>
     public class GH_Silhouette: GH_Component
     {
         public override Guid ComponentGuid => new Guid("6d90bdf5-af93-4371-87a9-0d11d89ae8a6");

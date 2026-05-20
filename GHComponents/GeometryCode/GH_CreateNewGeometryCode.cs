@@ -10,6 +10,9 @@ using System.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates a new geometry-code file at a selected directory. Directory, file name, and optional geometry-code data are combined into a saved JSON codebook path. Inputs include FileName and GeometryCode. Outputs include Saved and NewPath.
+    /// </summary>
     public class GH_CreateNewGeometryCodeFile : GH_Component
     {
         public GH_CreateNewGeometryCodeFile() : base("Create a New GeometryCode File", "NewGCodeBook", "Create a new geometry code file at the target directory.", "Woodpecker", "GeometryCode")

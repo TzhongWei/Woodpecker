@@ -5,6 +5,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates a geometry rotation action whose pivot follows previous geometry transformations. The action uses a timeline, axis, angle, and centre point, then outputs a timed action object for the animation pipeline. Inputs include Name, Timeline, Axis, Angle, and Centre. Outputs include Action.
+    /// </summary>
     public class GH_MovingPivotRotationAction : GH_GeometryActionAbstract
     {
         public GH_MovingPivotRotationAction():base("Moving Pivot Rotation Action", "Rot Move", "Create a timed rotation action for the geometry animation pipeline."){}

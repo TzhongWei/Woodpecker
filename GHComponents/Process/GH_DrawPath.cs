@@ -11,6 +11,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Generate progressive path segments along one or multiple curves based on a normalized parameter t. Supports directional growth control, per-segment speed, and tool plane generation along the path. Inputs include Paths, Pointer_t, Tool_Normal, Distance, and ChangeEnd, and related settings. Outputs include FinishedPaths and ToolPlane.
+    /// </summary>
     public class GH_DrawPath : GH_Component
     {
             public GH_DrawPath():base(

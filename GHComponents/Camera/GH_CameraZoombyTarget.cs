@@ -6,6 +6,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create or evaluate a camera zoom motion from a key camera and zoom factor. Inputs include Pointer_t, Factor, and Target. Outputs include Status.
+    /// </summary>
     public class GH_CameraZoombyTarget : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("e05d6158-e7e3-4904-98c4-830d1d77764e");
@@ -15,7 +18,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddParameter(new GH_CameraParam(), "Camera Parameter", "Cam", "The camera to use for the zoom motion.", GH_ParamAccess.item);
             pManager.AddNumberParameter("Pointer_t", "t", "The time parameter to evaluate the camera motion, where 0 is the start and 1 is the end of the motion. If t < 0, the motion is not activated.", GH_ParamAccess.item, -1.0);
             pManager.AddNumberParameter("Factor", "F", "Zoom in or out factor", GH_ParamAccess.item, 1);
-            pManager.AddPointParameter("Target", "T", "", GH_ParamAccess.item);
+            pManager.AddPointParameter("Target", "T", "Target point used as the zoom focus.", GH_ParamAccess.item);
         }
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {

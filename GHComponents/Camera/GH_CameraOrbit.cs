@@ -6,6 +6,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create or evaluate an orbit camera motion around a centre and axis. Inputs include Pointer_t, Angle, Axis, and Centre. Outputs include Status.
+    /// </summary>
     public class GH_CameraOrbit : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("4649731d-e967-41b7-9caf-3dac592b2d03");

@@ -11,6 +11,9 @@ using System.Linq;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Display the colour code in a panel. Inputs include ColourCode.
+    /// </summary>
     public class GH_ColourCodePanel : GH_Component
     {
         public override GH_Exposure Exposure =>  GH_Exposure.primary;

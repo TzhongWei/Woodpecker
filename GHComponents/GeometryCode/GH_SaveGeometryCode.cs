@@ -12,6 +12,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Save geometry code to file. Inputs include GeometryCode. Outputs include Saved.
+    /// </summary>
     public class GH_SaveGeometryCode : GH_GeometryCodeAbstract
     {
         public GH_SaveGeometryCode() : base("Save GeometryCodes", "SG", "Save geometry code to file") { }
@@ -124,6 +127,9 @@ namespace Woodpecker.Animation.GHComponents
     }
 
     [Obsolete]
+    /// <summary>
+    /// Save named Rhino geometries to a JSON file. Existing entries with the same name will be overwritten. Inputs include GeometryCode. Outputs include Saved.
+    /// </summary>
     public class GH_SaveGeometry_Old : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

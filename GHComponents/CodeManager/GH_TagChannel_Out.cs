@@ -10,6 +10,9 @@ using Woodpecker.Animation.CodeManager;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Reads general data from a tag channel with the same tag. Output nicknames are matched to stored data keys from Tag Channel Input, so each output receives the branch associated with that name. Inputs include Tag. Outputs include General Data A.
+    /// </summary>
     public class GH_TagChannel_Out : GH_TagChannel_Abstract, IGH_VariableParameterComponent
     {
         public GH_TagChannel_Out() : base("Tag Channel Output", "Out_Tag", "output values based on the input tag") { }

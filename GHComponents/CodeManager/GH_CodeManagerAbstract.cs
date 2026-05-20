@@ -4,6 +4,9 @@ using Woodpecker.Animation.CodeManager;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
+    /// <summary>
+    /// Code Manager Abstract component.
+    /// </summary>
     public abstract class GH_CodeManagerAbstract : GH_Component
     {
         protected CodeManagerUtil _codeManagerUtil = null;

@@ -7,6 +7,9 @@ using Woodpecker.Animation.Control.Camera;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
+    /// <summary>
+    /// A Grasshopper parameter that stores a rhino named-view camera.
+    /// </summary>
     public class GH_CameraParam : GH_PersistentParam<GH_CameraGoo>, IGH_PreviewObject
     {
         public GH_CameraParam() : base("Camera", "Camera", "A Grasshopper parameter that stores a rhino named-view camera", "Woodpecker", "Camera")

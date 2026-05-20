@@ -7,6 +7,9 @@ using Rhino;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create a camera parameter from a rhino named view or a phantom camera info. Inputs include Camera Name. Outputs include Camera Parameter.
+    /// </summary>
     public class GH_CreateCamera : GH_Component
     {
         public GH_CreateCamera() : base("Create Camera", "Create Camera", "Create a camera parameter from a rhino named view or a phantom camera info", "Woodpecker", "Camera")

@@ -16,6 +16,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Displays geometry as wire or outline preview. Geometry, colour, width, dash pattern, and silhouette options control how viewport wires are drawn. Inputs include Geometry, Dash Pattern, Color, Width, and Pointer_t.
+    /// </summary>
     public class GH_DisplayGeometryWire : GH_Component
     {
         public GH_DisplayGeometryWire() : base(
@@ -54,7 +57,7 @@ namespace Woodpecker.Animation.GHComponents
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "G", "Geometry to display.", GH_ParamAccess.tree);
-            pManager.AddGenericParameter("Dash Pattern", "Pattern", "", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Dash Pattern", "Pattern", "Dash pattern setting used for wire display.", GH_ParamAccess.item);
             pManager.AddColourParameter("Color", "Col", "Color of the geometry.", GH_ParamAccess.item);
             pManager.AddIntegerParameter("Width", "W", "Line width for wireframe, edges, and silhouette display.", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("Pointer_t", "t", "Time parameter for fade effect (0 to 1).", GH_ParamAccess.tree, 1.0);

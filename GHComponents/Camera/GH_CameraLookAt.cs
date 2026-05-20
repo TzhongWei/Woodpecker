@@ -6,6 +6,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create or evaluate a camera motion that looks toward a target point. Inputs include Pointer_t, Target, Camera Up, and Camera Length. Outputs include Status.
+    /// </summary>
     public class GH_CameraLookAt : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("6d8cc478-9b38-43df-9e8a-a80d1b3bcc7f");

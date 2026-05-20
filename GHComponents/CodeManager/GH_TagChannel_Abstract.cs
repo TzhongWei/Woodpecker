@@ -5,6 +5,9 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Tag Channel Abstract component.
+    /// </summary>
     public abstract class GH_TagChannel_Abstract : GH_Component, ISingletonDocumentComponent
     {
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
@@ -16,7 +19,7 @@ namespace Woodpecker.Animation.GHComponents
         /// <returns></returns>
         public abstract bool IsPrimaryInstance();
         public string SingletonTag { get; protected set; }
-        public TagChannel<IGH_Goo> tagChannel;
+        public virtual TagChannel<IGH_Goo> tagChannel {get; set;}
         public GH_TagChannel_Abstract(string Name, string NickName, string Description) : base(Name, NickName, Description, "Woodpecker", "CodeManager") { }
         public abstract RemoteType ChannelType { get; }
         protected static string ChannelKey(IGH_Param param, int fallbackIndex)
@@ -41,6 +44,5 @@ namespace Woodpecker.Animation.GHComponents
                 }
             }
         }
-
     }
 }

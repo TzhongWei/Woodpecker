@@ -11,6 +11,9 @@ using Woodpecker.Animation.Geometry;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Draws curves with a dash pattern setting. Curve input and dash pattern input combine into custom dashed viewport curve display. Inputs include Curve and Dash Pattern. Outputs include Dashed Curves.
+    /// </summary>
     public class GH_DashCurve : GH_Component
     {
          public GH_DashCurve() : base("Dash Curve", "DashCrv", "Apply dash pattern to a curve.", "Woodpecker", "Util")
@@ -21,7 +24,7 @@ namespace Woodpecker.Animation.GHComponents
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddCurveParameter("Curve", "C", "Curve to display with the selected dash pattern.", GH_ParamAccess.item);
-            pManager.AddGenericParameter("Dash Pattern", "D", "", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Dash Pattern", "D", "Dash pattern setting used to draw the curve.", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -42,6 +45,9 @@ namespace Woodpecker.Animation.GHComponents
         }
     }
     [Obsolete]
+    /// <summary>
+    /// Apply dash pattern to a curve. Inputs include Curve and Dash Pattern. Outputs include Dashed Curves.
+    /// </summary>
     public class GH_DashCurve_OLD : GH_Component
     {
         public override GH_Exposure Exposure =>  GH_Exposure.hidden;

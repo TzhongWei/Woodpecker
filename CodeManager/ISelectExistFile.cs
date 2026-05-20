@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -16,7 +17,8 @@ namespace Woodpecker.Animation.CodeManager
     }
     public static class SelectExistFileExtensions
     {
-        public static void Select_SingleExistingFileClicked<T>(T owner, string Text) where T : GH_Component, ISelectExistFile
+        public delegate bool ReadCode(string path);
+        public static void Select_SingleExistingFileClicked<T>(T owner, string Text, ReadCode readCode) where T : GH_Component, ISelectExistFile
         {
             using (var dialog = new Eto.Forms.OpenFileDialog())
             {
@@ -32,7 +34,7 @@ namespace Woodpecker.Animation.CodeManager
                 if (string.IsNullOrWhiteSpace(path)) return;
 
                 owner.RecordUndoEvent("Select a colourcode file");
-                if (!ColourCodeIO.ReadColourFromPath(path))
+                if (!readCode(path))
                 {
                     owner.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Failed to read colour code file: {path}");
                 }

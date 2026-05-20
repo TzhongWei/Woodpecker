@@ -13,6 +13,9 @@ using Rhino.Input.Custom;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Select a colour from the list. Inputs include Refresh. Outputs include Colour.
+    /// </summary>
     public class GH_SelectedColour : GH_ColourCodeAbstract
     {
         public override GH_Exposure Exposure =>  GH_Exposure.primary;
@@ -151,6 +154,9 @@ namespace Woodpecker.Animation.GHComponents
         }
     }
     [Obsolete]
+    /// <summary>
+    /// Legacy component for selecting colours from a colour code file. Inputs include Refresh. Outputs include Colour.
+    /// </summary>
     public class GH_SelectedColour_old : GH_Component
     {
         public override GH_Exposure Exposure =>  GH_Exposure.hidden;

@@ -8,6 +8,9 @@ using Woodpecker.Animation.Geometry;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Filter out invisible geometries based on their indices. Inputs include Geometries and Invisible Indices. Outputs include Visible Geometries.
+    /// </summary>
     public class GH_VisiableGeometry : GH_Component
     {
         public GH_VisiableGeometry() : base("Visible Geometry by indices", "VisGeo", "Filter out invisible geometries based on their indices.", "Woodpecker", "Util")

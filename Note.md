@@ -469,4 +469,144 @@ Adding add default code in the both
 GeometryContent:
 * Start applying GeometryContent to GeometryAction evaluation
 * Keep old evaluation functions as [Obsolete] *_OLD during transition
-* Pending: GeometryAction has transformation inheritance problems
+* Pending: GeometryAction has transformation inheritance problems : Solve
+
+# --- GH Component Summary ---
+Short functional index only. Detailed input/output logic is kept in class summaries.
+
+Camera:
+* GH_CameraDolly: Creates a dolly camera motion based on a key camera and a distance to move the camera forward or backward.
+* GH_CameraFromAtoB: Animating camera from camera A to camera B.
+* GH_CameraGoo: Camera Goo component.
+* GH_CameraLookAt: Create or evaluate a camera motion that looks toward a target point.
+* GH_CameraMotionAbstract: Camera Motion Abstract component.
+* GH_CameraOrbit: Create or evaluate an orbit camera motion around a centre and axis.
+* GH_CameraPan: Create or evaluate a camera pan motion using a world-space translation vector.
+* GH_CameraParam: A Grasshopper parameter that stores a rhino named-view camera.
+* GH_CameraRotate: Rotate a camera.
+* GH_CameraZoom: Create or evaluate a camera zoom motion from a key camera and zoom factor.
+* GH_CameraZoombyTarget: Create or evaluate a camera zoom motion from a key camera and zoom factor.
+* GH_CreateCamera: Create a camera parameter from a rhino named view or a phantom camera info.
+* GH_GetCameraInfo: Get the camera information of a rhino named view.
+* GH_ToCamera: Adjust current viewpoint to the given camera.
+
+CodeManager:
+* GH_CodeManagerAbstract: Code Manager Abstract component.
+* GH_DisplayGroup: Display or hidden previous geometry by components by provide the group name.
+* GH_DisplayName: Display or hidden previous geometry by a component type by provide its' name or nickname.
+* GH_EnableGroup: Enable or disable components by provide the group name.
+* GH_EnableName: Enable or disable a component type by provide its' name or nickname.
+* GH_TagChannel_Abstract: Tag Channel Abstract component.
+* GH_TagChannel_IN: Stores general data under named input nicknames inside a tag channel.
+* GH_TagChannel_Out: Reads general data from a tag channel with the same tag.
+
+ColourCode:
+* GH_ColourCodeAbstract: Colour Code Abstract component.
+* GH_ColourCodePanel: Display the colour code in a panel.
+* GH_ColourCode_Old: Get existing Colour Code from the file data.
+* GH_CreateColourCode: Creates or updates a named colour-code entry.
+* GH_CreateNewColourCodeFile: Creates a new colour-code file at a selected directory.
+* GH_GetColour: Get colour from a colour code.
+* GH_LoadColourCode: Loads the shared colour-code database from a selected file or input path.
+* GH_SaveColourCode: Save the colour code to file.
+* GH_SaveColourCode_old: Save the colour code to file.
+* GH_SelectedColour: Select a colour from the list.
+* GH_SelectedColour_old: Legacy component for selecting colours from a colour code file.
+
+Display:
+* GH_DisplayGeometry: Displays geometry in the viewport using colour and transparency settings.
+* GH_DisplayGeometryCols: Display geometry with custom colors in the viewport.
+* GH_DisplayGeometryWire: Displays geometry as wire or outline preview.
+* GH_GlobalDashSetting: Provides an editable global dash-pattern value list.
+* GH_VectorCurveDisplay: Display vector on a curve with a curved arrow.
+* GH_VectorDisplay: Displays vectors at points with configurable colour, scale, and arrow style.
+* GH_VectorDisplaySetting: The vector display setting.
+* GH_VectorsDisplay: Displays multiple vectors with shared or per-branch display settings.
+
+GeometryCode:
+* GH_CreateGeometry: Creates or updates a named geometry-code entry.
+* GH_CreateNewGeometryCodeFile: Creates a new geometry-code file at a selected directory.
+* GH_DeleteGeometryCode: Delete selected geometry code entries from the active geometry code book.
+* GH_GeometryCodeAbstract: Geometry Code Abstract component.
+* GH_LoadGeometry: Loads the shared geometry-code database from a selected file or input path.
+* GH_LoadGeometry_Old: Load the geometry from the database.
+* GH_SaveGeometryCode: Save geometry code to file.
+* GH_SaveGeometry_Old: Save named Rhino geometries to a JSON file.
+* GH_SelectGeometry: Select a list of geometry from the list.
+
+Process:
+* GH_AddEndPath: Extend a curve from its start or end by distance and direction values.
+* GH_DrawPath: Generate progressive path segments along one or multiple curves based on a normalized parameter t.
+* GH_FixedPivotRotationAction: Creates a geometry rotation action around a fixed world pivot.
+* GH_GeometryActionAbstract: Geometry Action Abstract component.
+* GH_GeometryAnimation: Evaluates source geometry through ordered timed geometry actions.
+* GH_GeometryAnimation_Old: Legacy geometry animation evaluator.
+* GH_IterativeOffset: Offset a curve with a distance until reaching the limitation or cannot offset.
+* GH_LinkPath: Connect consecutive path curves using a list of link patterns.
+* GH_MovingPivotRotationAction: Creates a geometry rotation action whose pivot follows previous geometry transformations.
+* GH_PathEditAbstract: Path Edit Abstract component.
+* GH_PlaneToPlaneAction: Creates a timed orientation action between two planes.
+* GH_TranslationAction: Creates a timed translation action.
+
+Timeline:
+* GH_ActiveTimeline: Active timeline component.
+* GH_ActiveTimelineZone: Active timeline zone component.
+* GH_CreateTimeline: Create timeline intervals from start times and durations.
+* GH_CreateTimelineByAccumulatedTime: Create a timeline by accumulated time.
+* GH_IntervalRange: Generate a range of intervals between two given intervals.
+* GH_IntervalRange_old: Generate a range of intervals between two given intervals.
+* GH_RedefineTimeline: Redefine the time length of a time line from start or end.
+* GH_RemoteTimeSpotAbstract: Remote Time Spot Abstract component.
+* GH_RemoteTimeSpot_OUT: Get a time spot without grasshopper wires from a label with a tag.
+* GH_SegmentiseTimeslotLinear: Segmentise timeslot linearly.
+* GH_SegmentiseTimeslotNonlinear: Segmentise timeslot nonlinearly.
+* GH_ShiftTimeline: Shift and extend timeline intervals by applying per-segment delays, prolongation, and global speed scaling.
+* GH_TimelineAbstract: Timeline Abstract component.
+* GH_TimelineMapper: Interactively edit and output a timeline interval.
+
+Util:
+* GH_DashCurve: Draws curves with a dash pattern setting.
+* GH_DashCurve_OLD: Apply dash pattern to a curve.
+* GH_DelGeometry: Delete geometry from the database.
+* GH_Easing: Applies an easing function to a normalized time value (0–1), allowing smooth animation transitions.
+* GH_MatchList: Splits a list or data tree into dynamically generated outputs.
+* GH_Silhouette: Extract silhouette outline curves from geometry for display or drafting.
+* GH_VisiableGeometry: Filter out invisible geometries based on their indices.
+
+Util.AnimationCompile:
+* GH_AnimationCompile: Opens and stores animation compile settings, then runs the frame-to-movie compile process.
+* GH_AnimationSetting: Creates a serialized animation compile setting from input/output folders, output name, frame filename pattern, frame duration, and overwrite behavior.
+* GH_MirrorFrames: Mirrors rendered animation frame images in a folder.
+
+
+# --- 1805 ---
+Display pending:
+* Create new DisplayGeometry architecture based on RhinoCommon pipeline stage.
+* DisplayGeometryBase : DisplayConduit for shared display settings, geometry data, bounds, and draw helpers.
+* DisplayGeometryPreDraw and DisplayGeometryPostDraw for different render sequence.
+* DisplayAnnotationBase for post-draw annotation display.
+* DisplayVectorAnnotation and DisplayTextAnnotation as annotation display implementations.
+
+Camera pending:
+* Create a Camera State Pipeline for chained camera motion.
+* Use Rhino named views as source or final baked cameras.
+* Use phantom camera names as intermediate camera states.
+* Store phantom cameras in a shared registry with unique names.
+* Allow camera motion components to read either Rhino named view names or phantom camera names.
+* Output a phantom camera name after a camera motion finishes, so the next camera motion can continue from it.
+* Avoid creating duplicated Rhino named views for every intermediate camera action.
+* Debug CameraParameter wire display, especially phantom camera display and parallel camera frustum sizing.
+* Use Rhino _Camera _Show only as a reference/debug command for active viewport cameras, not as the phantom camera display system.
+
+# --- 2005 ---
+Create a render pipeline in Util.AnimationCompile
+RenderUtil
+RenderSetting
+RenderSettingWindow
+
+GH_ViewCaptureToFile
+GH_RenderSetting
+
+GH_RenderController : debugging
+A new architecture:
+A new tagChannel with double for the render component and global_T setting. 

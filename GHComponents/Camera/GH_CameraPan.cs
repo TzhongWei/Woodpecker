@@ -6,6 +6,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create or evaluate a camera pan motion using a world-space translation vector. Inputs include Pointer_t and Pan Vector. Outputs include Status.
+    /// </summary>
     public class GH_CameraPan : GH_CameraMotionAbstract
     {
         public GH_CameraPan() : base("Camera Pan", "Pan", "Create or evaluate a camera pan motion using a world-space translation vector.") { }

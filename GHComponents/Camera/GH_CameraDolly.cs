@@ -7,6 +7,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates a dolly camera motion based on a key camera and a distance to move the camera forward or backward. Inputs include Pointer_t and Distance. Outputs include Status.
+    /// </summary>
     public class GH_CameraDolly : GH_CameraMotionAbstract
     {
         public GH_CameraDolly() : base("Camera Dolly", "Dolly", "Creates a dolly camera motion based on a key camera and a distance to move the camera forward or backward.") { }

@@ -5,6 +5,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Create or evaluate a camera zoom motion from a key camera and zoom factor. Inputs include Pointer_t and Factor. Outputs include Status.
+    /// </summary>
     public class GH_CameraZoom : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("99a2e6a1-f978-4c3d-b927-700e64e6c21f");

@@ -11,6 +11,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Save the colour code to file. Inputs include ColourCode. Outputs include Saved.
+    /// </summary>
     public class GH_SaveColourCode : GH_ColourCodeAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -120,6 +123,9 @@ namespace Woodpecker.Animation.GHComponents
     }
 
     [Obsolete]
+    /// <summary>
+    /// Save the colour code to file. Inputs include ColourCode. Outputs include Saved.
+    /// </summary>
     public class GH_SaveColourCode_old : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

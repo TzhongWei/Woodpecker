@@ -6,6 +6,9 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Segmentise timeslot nonlinearly. Inputs include pointer_t, Segments, and Overlap. Outputs include segmented_Pointer_t and Segment_Length.
+    /// </summary>
     public class GH_SegmentiseTimeslotNonlinear : GH_TimelineAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;

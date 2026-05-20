@@ -9,6 +9,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Select a list of geometry from the list. Inputs include Refresh. Outputs include Geometry.
+    /// </summary>
     public class GH_SelectGeometry : GH_GeometryCodeAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.primary;

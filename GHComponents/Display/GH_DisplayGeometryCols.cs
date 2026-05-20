@@ -11,6 +11,9 @@ using System.Linq;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Display geometry with custom colors in the viewport. Based on the pointer_t, the colors will be interpolated. Inputs include Linear, Geometry, Colors, Width, and Pointer_t.
+    /// </summary>
     public class GH_DisplayGeometryCols : GH_Component
     {
         public GH_DisplayGeometryCols() : base("Display Geometry Cols", "DispGeoCols", "Display geometry with custom colors in the viewport. Based on the pointer_t, the colors will be interpolated.", "Woodpecker", "Display")

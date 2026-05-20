@@ -6,6 +6,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Rotate a camera. Inputs include Pointer_t, Angle, and Axis. Outputs include Status.
+    /// </summary>
     public class GH_CameraRotate : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("3439ce50-7d12-4992-9c4f-14c820c8a934");

@@ -15,6 +15,9 @@ using Woodpecker.Animation.Util.IO;
 namespace Woodpecker.Animation.GHComponents
 {
     [Obsolete]
+    /// <summary>
+    /// Displays vectors at points with configurable colour, scale, and arrow style. Point and vector inputs define the preview arrows shown in the viewport. Inputs include ArrowTarget, ArrowDirection, VectorDisplaySetting, and Pointer_t.
+    /// </summary>
     public class GH_VectorDisplay : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

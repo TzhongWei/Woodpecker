@@ -9,6 +9,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Redefine the time length of a time line from start or end. Inputs include Timeline, Period, and Speed. Outputs include Timeline.
+    /// </summary>
     public class GH_RedefineTimeline : GH_TimelineAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;

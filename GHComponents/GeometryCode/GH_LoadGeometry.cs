@@ -14,6 +14,9 @@ using System.Windows.Forms;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Loads the shared geometry-code database from a selected file or input path. The loaded geometry codes are refreshed for dependent components and output as encoded geometry data. Inputs include GeometryCodePath. Outputs include GeometryName, Geometry, and GeometryCodeTree.
+    /// </summary>
     public class GH_LoadGeometry : GH_GeometryCodeAbstract, ISingletonDocumentComponent, ISelectExistFile
     {
         public string SingletonTag => "LGeometryCode";
@@ -72,7 +75,8 @@ namespace Woodpecker.Animation.GHComponents
         }
         public void Select_SingleExistingFileClicked()
         {
-            SelectExistFileExtensions.Select_SingleExistingFileClicked(this, "Select a geometry code file");
+            SelectExistFileExtensions.Select_SingleExistingFileClicked(this, "Select a geometry code file", GeometryCodeIO.ReadGeometryFromPath);
+            After_Select_RefreshComponent();
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
@@ -109,6 +113,9 @@ namespace Woodpecker.Animation.GHComponents
     }
 
     [Obsolete]
+    /// <summary>
+    /// Load the geometry from the database. Inputs include GeometryCodePath. Outputs include GeometryName, Geometry, and GeometryCodeTree.
+    /// </summary>
     public class GH_LoadGeometry_Old : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

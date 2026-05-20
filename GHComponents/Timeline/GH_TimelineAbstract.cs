@@ -7,6 +7,9 @@ using GH_IO.Serialization;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Timeline Abstract component.
+    /// </summary>
     public abstract class GH_TimelineAbstract : GH_Component
     {
         public GH_TimelineAbstract(string componentName, string nickname, string description): 

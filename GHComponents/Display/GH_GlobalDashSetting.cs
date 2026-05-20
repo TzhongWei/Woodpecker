@@ -11,6 +11,9 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Provides an editable global dash-pattern value list. A tag identifies the shared dash setting, and display components can read the selected dash pattern by that tag. Inputs include Tag Name and Change By Viewport. Outputs include Dash Pattern.
+    /// </summary>
     public class GH_GlobalDashSetting : GH_Component, ISingletonDocumentComponent, IEditableWindow
     {
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -27,13 +30,13 @@ namespace Woodpecker.Animation.GHComponents
 
             return sameTag.Count == 1;
         }
-        public GH_GlobalDashSetting() : base("Dash Pattern ValueList", "DP VList", "", "Woodpecker", "Display") { }
+        public GH_GlobalDashSetting() : base("Dash Pattern ValueList", "DP VList", "Provide the shared editable dash-pattern value list used by display components.", "Woodpecker", "Display") { }
         public override Guid ComponentGuid => new Guid("e4474246-ca96-44d0-8544-5f58e277ef3a");
         private readonly List<DashTypeListItem> _valueListItems = new List<DashTypeListItem>();
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Tag Name", "Tag", "", GH_ParamAccess.item, DefaultTag);
-            pManager.AddBooleanParameter("Change By Viewport", "CBV", "", GH_ParamAccess.item, false);
+            pManager.AddTextParameter("Tag Name", "Tag", "Tag used to identify the shared dash-pattern setting.", GH_ParamAccess.item, DefaultTag);
+            pManager.AddBooleanParameter("Change By Viewport", "CBV", "Whether dash scaling should react to the active viewport.", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)

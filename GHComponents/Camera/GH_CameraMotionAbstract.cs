@@ -8,6 +8,9 @@ using Woodpecker.Animation.CodeManager;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
+    /// <summary>
+    /// Camera Motion Abstract component.
+    /// </summary>
     public abstract class GH_CameraMotionAbstract : GH_Component, IHasMultipleActiveInstanceDocumentComponent
     {
         public string MultiTag => "CameraSetting";

@@ -26,6 +26,8 @@ namespace Woodpecker.Animation.Control.Camera
         public ViewInfo Info => this._viewInfo;
         private ViewportInfo _viewportInfo;
         public ViewportInfo viewportInfo => this._viewportInfo;
+        private static int _perspectiveCameraIndex = 0;
+        private static int _parallelCameraIndex = 0;
         public readonly int ViewIndex;
         public Vector3d CameraDirection => this._viewportInfo.CameraDirection;
         public Vector3d CameraUp => this._viewportInfo.CameraUp;
@@ -130,6 +132,109 @@ namespace Woodpecker.Animation.Control.Camera
             {
                 return new CameraParameter(Name, viewportInfo);
             }
+        }
+        public static CameraParameter CreateCameraPerspective(Point3d CameraLocation, Point3d Target, Vector3d CameraUp, double CameraLength)
+        {
+            var viewportInfo = CreateViewportInfo(CameraLocation, Target, CameraUp);
+            var distance = CameraLocation.DistanceTo(Target);
+            var lensLength = CameraLength > 0 ? CameraLength : 50.0;
+
+            viewportInfo.ChangeToPerspectiveProjection(distance, true, lensLength);
+            viewportInfo.Camera35mmLensLength = lensLength;
+            viewportInfo.SetCameraLocation(CameraLocation);
+            viewportInfo.TargetPoint = Target;
+            viewportInfo.SetCameraDirection(GetCameraDirection(CameraLocation, Target));
+            viewportInfo.SetCameraUp(GetValidCameraUp(CameraUp, viewportInfo.CameraDirection));
+
+            return CreateCameraParameter(GetNextCameraName("PerspectiveView", ref _perspectiveCameraIndex), viewportInfo, true);
+        }
+        public static CameraParameter CreateCameraParallel(Point3d CameraLocation, Point3d Target, Vector3d CameraUp, double WindowSizes)
+        {
+            var viewportInfo = CreateViewportInfo(CameraLocation, Target, CameraUp);
+            viewportInfo.ChangeToParallelProjection(true);
+            viewportInfo.SetCameraLocation(CameraLocation);
+            viewportInfo.TargetPoint = Target;
+            viewportInfo.SetCameraDirection(GetCameraDirection(CameraLocation, Target));
+            viewportInfo.SetCameraUp(GetValidCameraUp(CameraUp, viewportInfo.CameraDirection));
+
+            var windowSize = WindowSizes > 0 ? WindowSizes : CameraLocation.DistanceTo(Target);
+            if (windowSize <= 0)
+                windowSize = 10.0;
+
+            SetParallelWindowSize(viewportInfo, windowSize);
+
+            return CreateCameraParameter(GetNextCameraName("ParallelView", ref _parallelCameraIndex), viewportInfo, true);
+        }
+        private static ViewportInfo CreateViewportInfo(Point3d cameraLocation, Point3d target, Vector3d cameraUp)
+        {
+            if (!cameraLocation.IsValid)
+                throw new Exception("CameraLocation is invalid.");
+            if (!target.IsValid)
+                throw new Exception("Target is invalid.");
+
+            var direction = GetCameraDirection(cameraLocation, target);
+            var up = GetValidCameraUp(cameraUp, direction);
+
+            var doc = RhinoDoc.ActiveDoc;
+            if (doc == null || doc.Views.ActiveView == null)
+                throw new Exception("RhinoDoc.ActiveDoc and the active Rhino view cannot be null.");
+
+            var viewportInfo = new ViewportInfo(doc.Views.ActiveView.ActiveViewport);
+            viewportInfo.SetCameraLocation(cameraLocation);
+            viewportInfo.TargetPoint = target;
+            viewportInfo.SetCameraDirection(direction);
+            viewportInfo.SetCameraUp(up);
+            return viewportInfo;
+        }
+        private static Vector3d GetCameraDirection(Point3d cameraLocation, Point3d target)
+        {
+            var direction = target - cameraLocation;
+            if (!direction.IsValid || direction.IsZero)
+                throw new Exception("CameraLocation and Target cannot be the same point.");
+
+            direction.Unitize();
+            return direction;
+        }
+        private static Vector3d GetValidCameraUp(Vector3d cameraUp, Vector3d cameraDirection)
+        {
+            var up = cameraUp;
+            if (!up.IsValid || up.IsZero)
+                up = Vector3d.ZAxis;
+
+            up.Unitize();
+            var direction = cameraDirection;
+            direction.Unitize();
+
+            up -= direction * (up * direction);
+            if (!up.IsValid || up.IsZero)
+            {
+                up = Math.Abs(direction * Vector3d.ZAxis) < 0.99 ? Vector3d.ZAxis : Vector3d.XAxis;
+                up -= direction * (up * direction);
+            }
+
+            up.Unitize();
+            return up;
+        }
+        private static void SetParallelWindowSize(ViewportInfo viewportInfo, double windowSize)
+        {
+            double left, right, bottom, top, near, far;
+            viewportInfo.GetFrustum(out left, out right, out bottom, out top, out near, out far);
+
+            var half = windowSize * 0.5;
+            viewportInfo.SetFrustum(-half, half, -half, half, near, far);
+        }
+        private static string GetNextCameraName(string prefix, ref int index)
+        {
+            var doc = RhinoDoc.ActiveDoc;
+            string name;
+            do
+            {
+                index++;
+                name = $"{prefix}_{index}";
+            }
+            while (doc != null && doc.NamedViews.FindByName(name) >= 0);
+
+            return name;
         }
         public CameraParameter Duplicate(string newName, bool CreateInRhino = false)
         {

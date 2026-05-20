@@ -9,6 +9,9 @@ using Grasshopper.Kernel.Data;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates or updates a named geometry-code entry. A code name and geometry input are encoded into the geometry-code data structure for saving or downstream use. Inputs include CodeName and GeometryList. Outputs include GeometryCode.
+    /// </summary>
     public class GH_CreateGeometry : GH_Component
     {
         public override GH_Exposure Exposure =>  GH_Exposure.tertiary;

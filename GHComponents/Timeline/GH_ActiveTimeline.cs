@@ -8,6 +8,9 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Active timeline component. Inputs include InTimeline, OutTimeline, and Global_T. Outputs include Pointer_t.
+    /// </summary>
     public class GH_ActiveTimeline : GH_TimelineAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
@@ -25,7 +28,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             base.AppendAdditionalMenuItems(menu);
             Menu_AppendSeparator(menu);
-            Menu_AppendItem(menu, "ReverseTimeline", ReverseTime, true, _reverseValue);
+            Menu_AppendItem(menu, "Reverse Timeline", ReverseTime, true, _reverseValue);
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)

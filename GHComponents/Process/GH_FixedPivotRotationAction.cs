@@ -5,6 +5,9 @@ using Woodpecker.Animation.Geometry.Processing;
 
 namespace Woodpecker.Animation.GHComponents
 {
+    /// <summary>
+    /// Creates a geometry rotation action around a fixed world pivot. The action uses a timeline, axis, angle, and centre point, then outputs a timed action object for the animation pipeline. Inputs include Name, Timeline, Axis, Angle, and Centre. Outputs include Action.
+    /// </summary>
     public class GH_FixedPivotRotationAction : GH_GeometryActionAbstract
     {
         public GH_FixedPivotRotationAction():base("Fixed Pivot Rotation Action", "Rot Fixed", "Create a timed rotation action for the geometry animation pipeline."){}

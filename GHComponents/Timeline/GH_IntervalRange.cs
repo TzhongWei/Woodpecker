@@ -7,6 +7,9 @@ using Rhino.Geometry;
 
 namespace Woodpecker.Animation.GHComponents
 {
+/// <summary>
+/// Generate a range of intervals between two given intervals. Inputs include Timelines. Outputs include Max, Mid, and Min.
+/// </summary>
 public class GH_IntervalRange : GH_TimelineAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
@@ -47,6 +50,9 @@ public class GH_IntervalRange : GH_TimelineAbstract
         => "Min: " + _min + "\nMax: " + _max;
     }
     [Obsolete]
+    /// <summary>
+    /// Generate a range of intervals between two given intervals. Inputs include Timelines. Outputs include Max, Mid, and Min.
+    /// </summary>
     public class GH_IntervalRange_old : GH_TimelineAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

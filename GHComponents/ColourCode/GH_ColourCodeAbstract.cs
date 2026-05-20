@@ -6,6 +6,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
+    /// <summary>
+    /// Colour Code Abstract component.
+    /// </summary>
     public abstract class GH_ColourCodeAbstract: GH_Component, IUpdateDependent
     {
         public string UpdateTag => "ColourCodeDependent";

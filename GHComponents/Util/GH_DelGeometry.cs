@@ -9,6 +9,9 @@ using Woodpecker.Animation.Util.IO;
 namespace Woodpecker.Animation.GHComponents
 {
     [Obsolete]
+    /// <summary>
+    /// Delete geometry from the database. Inputs include SaveTrigger, GeometryPath, and GeometryName. Outputs include Deleted.
+    /// </summary>
     public class GH_DelGeometry : GH_Component
     {
         public override GH_Exposure Exposure => GH_Exposure.hidden;

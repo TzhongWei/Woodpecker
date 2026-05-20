@@ -5,6 +5,9 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
+    /// <summary>
+    /// Geometry Code Abstract component.
+    /// </summary>
     public abstract class GH_GeometryCodeAbstract : GH_Component, IUpdateDependent
     {
         public string UpdateTag => "GeometryCode";
