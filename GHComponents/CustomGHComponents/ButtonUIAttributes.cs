@@ -92,7 +92,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
                 }
 
                 // Draw button box
-                System.Drawing.Drawing2D.GraphicsPath button = RoundedRect(ButtonBounds, 2);
+                System.Drawing.Drawing2D.GraphicsPath button = AttributeUtil.RoundedRect(ButtonBounds, 2);
 
                 Brush normal_colour = ButtonColours.ButtonColor;
                 Brush hover_colour = ButtonColours.HoverButtonColour;
@@ -112,7 +112,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
                 };
                 graphics.DrawPath(pen, button);
 
-                System.Drawing.Drawing2D.GraphicsPath overlay = RoundedRect(ButtonBounds, 2, true);
+                System.Drawing.Drawing2D.GraphicsPath overlay = AttributeUtil.RoundedRect(ButtonBounds, 2, true);
                 graphics.FillPath(new SolidBrush(Color.FromArgb(mouseDown ? 0 : mouseOver ? 40 : 60, 255, 255, 255)), overlay);
 
                 // draw button text
@@ -243,48 +243,6 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
                     sp = GH_FontServer.StringWidth(spacerTxts[i], font) + 8;
             }
             return sp;
-        }
-        public static GraphicsPath RoundedRect(RectangleF bounds, int radius, bool overlay = false)
-        {
-            RectangleF b = new RectangleF(bounds.X, bounds.Y, bounds.Width, bounds.Height);
-            int diameter = radius * 2;
-            Size size = new Size(diameter, diameter);
-            RectangleF arc = new RectangleF(b.Location, size);
-            GraphicsPath path = new GraphicsPath();
-            
-            if (overlay)
-                b.Height = diameter;
-
-            if (radius == 0)
-            {
-                path.AddRectangle(b);
-                return path;
-            }
-
-            // top left arc  
-            path.AddArc(arc, 180, 90);
-
-            // top right arc  
-            arc.X = b.Right - diameter;
-            path.AddArc(arc, 270, 90);
-
-            if (!overlay)
-            {
-                // bottom right arc  
-                arc.Y = b.Bottom - diameter;
-                path.AddArc(arc, 0, 90);
-
-                // bottom left arc 
-                arc.X = b.Left;
-                path.AddArc(arc, 90, 90);
-            }
-            else
-            {
-                path.AddLine(new PointF(b.X + b.Width, b.Y + b.Height), new PointF(b.X, b.Y + b.Height));
-            }
-
-            path.CloseFigure();
-            return path;
         }
     }
 

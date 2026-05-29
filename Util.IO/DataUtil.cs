@@ -5,27 +5,120 @@ using System;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using System.Linq;
+using Rhino.Geometry;
+using Rhino;
 
 namespace Woodpecker.Animation.Util.IO
 {
     internal static class DataUtil
     {
+        internal static bool GetSequentialGeometryFromLayer(string LayerNamePrefix, Interval Range, out List<int> Indice, out List<GeometryBase> Geometries, out DataTree<GeometryBase> GeometryTree)
+        {
+            Indice = new List<int>();
+            Geometries = new List<GeometryBase>();
+            GeometryTree = new DataTree<GeometryBase>();
+
+            var doc = RhinoDoc.ActiveDoc;
+            if (doc == null)
+            {
+                // "Rhino document cannot be found."
+                return false;
+            }
+
+            var LayerFullName = new List<string>();
+
+            var hasRange = Range.IsValid && Math.Abs(Range.Length) > Rhino.RhinoMath.ZeroTolerance;
+
+            if (hasRange)
+            {
+                var layerMin = (int)Math.Round(Math.Min(Range.Min, Range.Max));
+                var layerMax = (int)Math.Round(Math.Max(Range.Min, Range.Max));
+                for (int i = layerMin; i <= layerMax; i++)
+                {
+                    var name = LayerNamePrefix + i.ToString();
+                    var layerIndex = doc.Layers.FindByFullPath(name, -1);
+
+                    if (layerIndex >= 0)
+                        LayerFullName.Add(name);
+                }
+            }
+            else
+            {
+                for (int index = 0; index < 200; index++)
+                {
+                    var name = LayerNamePrefix + index;
+                    var layerIndex = doc.Layers.FindByFullPath(name, -1);
+
+                    if (layerIndex >= 0)
+                        LayerFullName.Add(name);
+                    else
+                        break;
+                }
+            }
+            if (LayerFullName.Count == 0)
+                return false;
+
+            var settings = new Rhino.DocObjects.ObjectEnumeratorSettings
+            {
+                HiddenObjects = true,
+                LockedObjects = true,
+                NormalObjects = true,
+                DeletedObjects = false,
+                IncludeLights = false,
+                IncludeGrips = false
+            };
+
+            var targetLayerIndices = new List<int>();
+            foreach(var name in LayerFullName)
+            {
+                var layerIndex = doc.Layers.FindByFullPath(name, -1);
+                if(layerIndex >= 0)
+                    targetLayerIndices.Add(layerIndex);
+            }
+
+            var targetLayerSet = new HashSet<int>(targetLayerIndices);
+            var objectsByLayer = doc.Objects
+                .GetObjectList(settings)
+                .Where(o => targetLayerSet.Contains(o.Attributes.LayerIndex))
+                .GroupBy(o => o.Attributes.LayerIndex)
+                .ToDictionary(g => g.Key, g => g.Select(o => o.Geometry).ToList());
+
+            var geoms = new List<GeometryBase>();
+            var indices = new List<int>();
+            var geomsTree = new DataTree<GeometryBase>();
+            var currentIndex = 0;
+            foreach (var layerIndex in targetLayerIndices)
+            {
+                if (objectsByLayer.TryGetValue(layerIndex, out var layerGeometries) && layerGeometries.Count > 0)
+                {
+                    geoms.AddRange(layerGeometries);
+                    indices.AddRange(Enumerable.Repeat(currentIndex, layerGeometries.Count));
+                    geomsTree.AddRange(layerGeometries, new GH_Path(currentIndex));
+                    currentIndex++;
+                }
+            }
+
+            Indice = indices;
+            Geometries = geoms;
+            GeometryTree = geomsTree;
+            return true;
+        }
         internal static bool GH_Structure2GHDataTreeIGH_Goo(GH_Structure<IGH_Goo> structure, ref DataTree<IGH_Goo> datatree)
         {
             datatree = new DataTree<IGH_Goo>();
-            for(int i = 0; i < structure.Branches.Count; i++)
+            for (int i = 0; i < structure.Branches.Count; i++)
             {
                 datatree.AddRange(structure.Branches[i], new GH_Path(i));
             }
             return datatree.AllData().Any(x => x != null);
         }
-        
+
         internal static bool GH_Structure2GH_DataTree<T1, T2>(GH_Structure<T1> structure, ref DataTree<T2> datatree) where T1 : IGH_Goo
         {
             datatree = new DataTree<T2>();
-            for(int i = 0; i < structure.Branches.Count; i++)
+            for (int i = 0; i < structure.Branches.Count; i++)
             {
-                datatree.AddRange(structure.Branches[i].ConvertAll(g => g.ScriptVariable() is T2 value ? value : default), 
+                datatree.AddRange(structure.Branches[i].ConvertAll(g => g.ScriptVariable() is T2 value ? value : default),
                 new GH_Path(i));
             }
             return datatree.AllData().Count == 0 && datatree.AllData().Any(x => x != null);
@@ -59,11 +152,11 @@ namespace Woodpecker.Animation.Util.IO
         }
         internal static void AlignList<T1, T2>(ref List<T1> list1, ref List<T2> list2)
         {
-            if(list1.Count > list2.Count)
+            if (list1.Count > list2.Count)
             {
                 list2 = AlignList(list1, list2);
             }
-            else if(list1.Count < list2.Count)
+            else if (list1.Count < list2.Count)
             {
                 list1 = AlignList(list2, list1);
             }
@@ -73,7 +166,7 @@ namespace Woodpecker.Animation.Util.IO
             if (Target == null) throw new Exception("Target is null");
             if (Goal == null || Goal.Count == 0) throw new Exception("Goal is null");
             var NewList = new List<T1>();
-            for(int i = 0; i < Target.Count; i++)
+            for (int i = 0; i < Target.Count; i++)
             {
                 var Ei = Goal.Count > i ? i : Goal.Count - 1;
                 NewList.Add(Goal[Ei]);

@@ -610,3 +610,13 @@ GH_RenderSetting
 GH_RenderController : debugging
 A new architecture:
 A new tagChannel with double for the render component and global_T setting. 
+
+GH_CreateLayer : Create layers by full path, middle layers, and names. 
+
+# --- 2805 ---
+Start to make the animation slider, GH_AnimationTimer.cs
+Animation slider window needs to be develops
+AnimationTimerAttribute input link bugs. 
+
+
+# ---2905 ---
