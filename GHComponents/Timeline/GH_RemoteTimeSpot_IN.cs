@@ -8,7 +8,7 @@ using Woodpecker.Animation.GHComponents.CustomGHComponents;
 namespace Woodpecker.Animation.GHComponents
 {
     [Obsolete]
-    public class GHRemoteTimeSpotIN : GH_RemoteTimeSpotAbstract
+    public class GH_RemoteTimeSpot_IN : GH_RemoteTimeSpotAbstract
     {
         public override Guid ComponentGuid => new Guid("167ed580-0a6a-4e54-83f6-97bba43a9701");
 
@@ -26,7 +26,7 @@ namespace Woodpecker.Animation.GHComponents
             return sameTag.Count == 1;
 
         }
-        public GHRemoteTimeSpotIN() : base("Remote Time spot input", "In_TSpot", "Connect a time spot without Grasshopper wires and label the time spot with a tag")
+        public GH_RemoteTimeSpot_IN() : base("Remote Time spot input", "In_TSpot", "Connect a time spot without Grasshopper wires and label the time spot with a tag")
         {
 
         }

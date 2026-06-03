@@ -8,16 +8,11 @@ using Grasshopper.GUI;
 using Grasshopper.GUI.Base;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Expressions;
-using Grasshopper.Kernel.Special;
 using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using Woodpecker.Animation.CodeManager;
 using Woodpecker.Animation.GHComponents.CustomGHComponents;
 using Woodpecker.Animation.Util.AnimationCompile;
-using Eto.Forms;
-using Rhino.Render.CustomRenderMeshes;
-using Grasshopper;
-using System.Text;
 
 namespace Woodpecker.Animation.GHComponents
 {
@@ -35,6 +30,9 @@ namespace Woodpecker.Animation.GHComponents
         private string m_expression;
         private bool _playState;
         private bool _tickScheduled;
+        private bool _frameInProgress;
+        private bool _remoteUpdateScheduled;
+        private bool _waitingForSolutionEnd;
         public GH_SliderBase Slider
         {
             get
@@ -112,32 +110,9 @@ namespace Woodpecker.Animation.GHComponents
         {
             var toolStripMenuItem = (ToolStripMenuItem)sender;
             IntervalMs = (int)toolStripMenuItem.Tag;
-            SafeSchedule();
-        }
-        private void SafeSchedule()
-        {
-            int intervalMS = IntervalMs;
-            if(intervalMS <= 0)
-            {
-                return;
-            }
-            var doc = OnPingDocument();
-            if(doc == null || !doc.Enabled)
-            {
-                return;
-            }
-            var utcNow = DateTime.UtcNow;
-            if(DateTime.Compare(m_schedule, utcNow) > 0)
-            {
-                int num = Convert.ToInt32((m_schedule - utcNow).TotalMilliseconds);
-                if(num < intervalMS)
-                {
-                    num = Math.Max(num, 1);
-                    doc.ScheduleSolution(num, ScheduleCallBack);
-                }
-            }
-            doc.ScheduleSolution(intervalMS, ScheduleCallBack);
-            m_schedule = utcNow + TimeSpan.FromMilliseconds(intervalMS);
+            ScheduleSetting = AnimationTimerScheduleUtil.FromMilliseconds(IntervalMs);
+            if (PlayState)
+                ScheduleNextTick();
         }
         public bool PlayState
         {
@@ -153,7 +128,12 @@ namespace Woodpecker.Animation.GHComponents
                 if (_playState)
                     ScheduleNextTick();
                 else
+                {
                     m_schedule = DateTime.MinValue;
+                    _tickScheduled = false;
+                    _frameInProgress = false;
+                    DetachFrameSolutionEnd();
+                }
             }
         }
 
@@ -296,10 +276,10 @@ namespace Woodpecker.Animation.GHComponents
 
         private void ScheduleNextTick()
         {
-            if (_tickScheduled || !PlayState) return;
+            if (_tickScheduled || _frameInProgress || !PlayState) return;
 
             var doc = OnPingDocument();
-            if (doc == null) return;
+            if (doc == null || !doc.Enabled) return;
 
             var interval = Math.Max(1, IntervalMs);
             var utcNow = DateTime.UtcNow;
@@ -325,6 +305,9 @@ namespace Woodpecker.Animation.GHComponents
                 return;
             }
 
+            if (_frameInProgress)
+                return;
+
             if (DateTime.Compare(DateTime.UtcNow, m_schedule - TimeSpan.FromMilliseconds(5.0)) < 0)
             {
                 ScheduleNextTick();
@@ -332,8 +315,36 @@ namespace Woodpecker.Animation.GHComponents
             }
 
             m_schedule = DateTime.MinValue;
+            _frameInProgress = true;
+            AttachFrameSolutionEnd(doc);
             AdvanceOneStep();
             ExpireSolution(false);
+        }
+
+        private void AttachFrameSolutionEnd(GH_Document doc)
+        {
+            if (doc == null || _waitingForSolutionEnd) return;
+
+            doc.SolutionEnd += OnFrameSolutionEnd;
+            _waitingForSolutionEnd = true;
+        }
+
+        private void DetachFrameSolutionEnd()
+        {
+            var doc = OnPingDocument();
+            if (doc == null || !_waitingForSolutionEnd) return;
+
+            doc.SolutionEnd -= OnFrameSolutionEnd;
+            _waitingForSolutionEnd = false;
+        }
+
+        private void OnFrameSolutionEnd(object sender, GH_SolutionEventArgs e)
+        {
+            if (sender is GH_Document doc)
+                doc.SolutionEnd -= OnFrameSolutionEnd;
+
+            _waitingForSolutionEnd = false;
+            _frameInProgress = false;
 
             if (PlayState)
                 ScheduleNextTick();
@@ -392,12 +403,12 @@ namespace Woodpecker.Animation.GHComponents
         private string _tagFromWindows = "";
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Tag", "Tag", "", GH_ParamAccess.item, "");
+            pManager.AddTextParameter("Tag", "Tag", "Time slot tag used to publish and identify the animation timer value.", GH_ParamAccess.item, "");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("Global T", "T", "", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Global T", "T", "Current animation timer value.", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -450,14 +461,17 @@ namespace Woodpecker.Animation.GHComponents
         private bool UpdateRemoteOutput()
         {
             var doc = OnPingDocument();
-            if (doc == null) return false;
+            if (doc == null || _remoteUpdateScheduled) return false;
 
+            _remoteUpdateScheduled = true;
             doc.ScheduleSolution(1, d =>
             {
-                foreach (var outComp in doc.Objects.OfType<GH_TagChannel_Abstract>()
+                _remoteUpdateScheduled = false;
+
+                foreach (var outComp in d.Objects.OfType<GH_TagChannel_Abstract>()
                     .Where(x => x.ChannelType == RemoteType.Output && x.SingletonTag == SingletonTag))
                 {
-                    outComp.ExpireSolution(true);
+                    outComp.ExpireSolution(false);
                 }
             });
             return true;

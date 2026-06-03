@@ -2,10 +2,11 @@
 using System.Drawing;
 using Grasshopper;
 using Grasshopper.Kernel;
+using Util.IO;
 
 namespace Woodpecker.Animation
 {
-  public class IBOIS_AnimationInfo : GH_AssemblyInfo
+  public class IBOIS_AnimationInfo : GH_AssemblyInfo, VersionControl
   {
     public override string Name => "IBOIS.Animation Info";
 
@@ -25,5 +26,6 @@ namespace Woodpecker.Animation
 
     //Return a string representing the version.  This returns the same version as the assembly.
     public override string AssemblyVersion => GetType().Assembly.GetName().Version.ToString();
+    public override string Version => "v1.1.0"; 
   }
 }

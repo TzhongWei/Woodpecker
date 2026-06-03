@@ -7,7 +7,7 @@ namespace Woodpecker.Animation.GHComponents
 {
     public class GH_RemapTtoParameter : GH_TimelineAbstract
     {
-        public GH_RemapTtoParameter():base("Remap t to Parameter Range", "Remap_t", "")
+        public GH_RemapTtoParameter():base("Remap t to Parameter Range", "Remap_t", "Remap a normalised timeline value to a numeric parameter range.")
         {
             this.SubCategory = "Util";
         }
@@ -32,13 +32,13 @@ namespace Woodpecker.Animation.GHComponents
         private double _value;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("t", "t", "", GH_ParamAccess.item, 0);
-            pManager.AddIntervalParameter("Parameter Range", "P Range", "", GH_ParamAccess.item);
-            pManager.AddIntegerParameter("Digits", "D", "", GH_ParamAccess.item);
+            pManager.AddNumberParameter("t", "t", "Normalised timeline value between 0 and 1.", GH_ParamAccess.item, 0);
+            pManager.AddIntervalParameter("Parameter Range", "P Range", "Target numeric range for the remapped value.", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Digits", "D", "Number of decimal digits used by the slider-style remap.", GH_ParamAccess.item);
         }
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("Slider Value", "Value", "", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Slider Value", "Value", "Remapped value in the target parameter range.", GH_ParamAccess.item);
         }
 
         protected override string ShowTimeSetupDescription()

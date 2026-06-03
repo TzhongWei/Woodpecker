@@ -619,4 +619,7 @@ Animation slider window needs to be develops
 AnimationTimerAttribute input link bugs. 
 
 
-# ---2905 ---
+# --- 2905 ---
+
+# --- 0306 ---
+Debug animation slider

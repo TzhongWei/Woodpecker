@@ -9,7 +9,7 @@ namespace Woodpecker.Animation.GHComponents
 {
     public class GH_TimeSlotChannel_OUT : GH_TimeSlotChannel_Abstract
     {
-        public GH_TimeSlotChannel_OUT():base("Global T output", "TSlot_Out", "", "Util"){}
+        public GH_TimeSlotChannel_OUT():base("Global T output", "TSlot_Out", "Read a named global timeline value from a time slot channel.", "Util"){}
         protected GH_TimeSlotChannel_OUT(string Name, string NickName, string Description, string Subcategory) : base(Name, NickName, Description, Subcategory){}
         public override Guid ComponentGuid => new Guid("f83a6ffa-b24e-4ac0-a001-bb78709b47ef");
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -61,11 +61,11 @@ namespace Woodpecker.Animation.GHComponents
         }
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Tag", "Tag", "", GH_ParamAccess.item, "Global_T");
+            pManager.AddTextParameter("Tag", "Tag", "Time slot tag used to find the published value.", GH_ParamAccess.item, "Global_T");
         }
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("Global T", "T", "", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Global T", "T", "Timeline value read from the matching time slot channel.", GH_ParamAccess.item);
         }
         public override bool IsPrimaryInstance()
         {

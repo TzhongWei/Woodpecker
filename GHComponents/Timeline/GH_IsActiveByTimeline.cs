@@ -8,9 +8,9 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.GHComponents
 {
-    public class IsActiveByTimeline : GH_TimelineAbstract
+    public class GH_IsActiveByTimeline : GH_TimelineAbstract
     {
-        public IsActiveByTimeline():base("Is Active in Timeline", "IsActive", "Test timeslot T is in a timeline and ouput a boolean value"){}
+        public GH_IsActiveByTimeline():base("Is Active in Timeline", "IsActive", "Test timeslot T is in a timeline and ouput a boolean value"){}
         public override Guid ComponentGuid => new Guid("e313420d-b2b2-49ac-980d-029f91ac4f96");
         private bool _invert;
         private void _toggle(object sender, EventArgs e)

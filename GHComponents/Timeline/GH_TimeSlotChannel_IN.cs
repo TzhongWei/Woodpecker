@@ -8,13 +8,13 @@ namespace Woodpecker.Animation.GHComponents
 {
     public class GH_TimeSlotChannel_IN : GH_TimeSlotChannel_Abstract
     {
-        public GH_TimeSlotChannel_IN():base("Global T input", "TSlot_In", "", "Util"){}
+        public GH_TimeSlotChannel_IN():base("Global T input", "TSlot_In", "Publish a named global timeline value to a time slot channel.", "Util"){}
         public override RemoteType ChannelType => RemoteType.Input;
         public override Guid ComponentGuid => new Guid("9cabd915-8c49-4e0b-b2bf-88c0766c9534");
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Tag", "Tag", "", GH_ParamAccess.item, "Global_T");
-            pManager.AddNumberParameter("Global T", "T", "", GH_ParamAccess.item, 0);
+            pManager.AddTextParameter("Tag", "Tag", "Time slot tag used to identify the published value.", GH_ParamAccess.item, "Global_T");
+            pManager.AddNumberParameter("Global T", "T", "Timeline value to publish to the time slot channel.", GH_ParamAccess.item, 0);
         }
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {

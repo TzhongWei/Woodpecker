@@ -233,6 +233,61 @@ namespace Woodpecker.Animation.Control.Timeline
             }
             return CurrentP;
         }
+        
+        
+        public static double ActivativeCircularTimeline(Interval TLin, Interval TLout, double G_T, int round = 4)
+        {
+            if(TLin.IncludesParameter(G_T) || TLout.IncludesParameter(G_T))
+            return ActivativeTimeline(TLin, TLout, G_T, round);
+            else
+            {
+                var period = TLin.Length + TLout.Length + TLout.Min - TLin.Max;
+                if(G_T > TLin.Max && G_T < TLout.Min)
+                {
+                    return 1;
+                }
+                if(G_T < TLin.Min)
+                {
+                    G_T += period;
+                    return ActivativeCircularTimeline(TLin, TLout, G_T, round);
+                }
+                if(G_T > TLout.Max)
+                {
+                    G_T -= period;
+                    return ActivativeCircularTimeline(TLin, TLout, G_T, round);
+                }
+                return -1;
+            }
+        }
+        
+        public static double ActivativeCircularTimeline(Interval TLin, double G_T, int round = 4)
+        {
+            if(TLin.IncludesParameter(G_T))
+            {
+                return ActivativeTimeline(TLin, G_T, round);
+            }
+            else
+            {
+                if(G_T < TLin.Min)
+                {
+                    G_T += TLin.Length;
+                    return  ActivativeCircularTimeline(TLin, G_T, round);
+                }
+                if(G_T > TLin.Max)
+                {
+                    G_T -= TLin.Length;
+                    return  ActivativeCircularTimeline(TLin, G_T, round);
+                }
+                return -1;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="ParameterRange"></param>
+        /// <param name="digits"></param>
+        /// <returns></returns>
         public static double RemapTtoSliderControl(double t, Interval ParameterRange, int digits)
         {
             t = Math.Max(0, Math.Min(t, 1));
