@@ -8,7 +8,7 @@ namespace Woodpecker.Animation.GHComponents
     public class GH_SumAnd : GH_Component
     {
         public GH_SumAnd() : base("Sum And", "SumAnd", "Sums or concatenates boolean values with and gates", "Woodpecker", "Util") { }
-        public override Guid ComponentGuid => new Guid("e5c8b9e7-5a3c-4f0b-9c8e-2a1b6f3e4d5f");
+        public override Guid ComponentGuid => new Guid("526f598f-ea91-4db5-b76e-490640d834df");
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddBooleanParameter("Boolean Values", "B", "Boolean values to sum or concatenate", GH_ParamAccess.list);
