@@ -624,3 +624,9 @@ AnimationTimerAttribute input link bugs.
 # --- 0306 ---
 Debug animation slider
 Tag -> Process, and a GH_IsTagExist
+
+# --- 0406 ---
+GH_IsTagExist Debug with other TagChannel Component
+Add
+GH_SumOr
+GH_SumAnd

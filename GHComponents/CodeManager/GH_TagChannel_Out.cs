@@ -170,6 +170,7 @@ namespace Woodpecker.Animation.GHComponents
                 inValid.Add(-1);
                 DA.SetDataTree(0, inValid);
             }
+            this.UpdateProcessOutput(tag);
             var doc = this.OnPingDocument();
             var target_Component = doc.Objects.OfType<GH_TagChannel_Abstract>()
             .FirstOrDefault(x => x.ChannelType == RemoteType.Input && x.SingletonTag == this.SingletonTag);

@@ -27,7 +27,7 @@ namespace Woodpecker.Animation.GHComponents
                 DA.SetData("Global T", -1);
                 return;
             }
-            
+            this.UpdateProcessOutput(tag);
 
             DA.SetData("Global T", t_Value);
 

@@ -30,18 +30,41 @@ namespace Woodpecker.Animation.GHComponents
             DA.GetData("Tag", ref tag);
             this.SingletonTag = tag;
             var checkCount = checkTagCount();
-            DA.SetData("IsExist", checkCount > 0);
-            DA.SetData("ChannelType", checkCount == 1? "A tag is created but not used" : "The tag is created and used for input or output");
+            
+            if(!checkCount)
+            {
+                DA.SetData("IsExist", false);
+                DA.SetData("ChannelType", CheckTagCount() > 0 ? "The tag is used in Tag output Channel, which is invalid": "Error: Tag is not created");
+                return;
+            }
+            else
+            {
+                DA.SetData("ChannelType", CheckTagCount() == 1? "A tag is created but not used" : "The tag is created and used for input or output");
+                DA.SetData("IsExist", true);
+            }
         }
-        protected int checkTagCount()
+        protected int CheckTagCount()
         {
             var doc = this.OnPingDocument();
             if (doc == null) return -1;
             var sameTag = doc.Objects
             .OfType<GH_TagChannel_Abstract>()
-            .Where(x => x.SingletonTag == this.SingletonTag)
+            .Where(x => x.SingletonTag == this.SingletonTag && x.InstanceGuid != this.InstanceGuid)
             .ToList();
+
             return sameTag.Count;
+         }
+        protected bool checkTagCount()
+        {
+            var doc = this.OnPingDocument();
+            if (doc == null) return false;
+            var sameTag = doc.Objects
+            .OfType<GH_TagChannel_Abstract>()
+            .Where(x => x.SingletonTag == this.SingletonTag && x.ChannelType == RemoteType.Input && x.InstanceGuid != this.InstanceGuid)
+            .ToList();
+
+
+            return sameTag.Count == 1;
         }
     }
 }

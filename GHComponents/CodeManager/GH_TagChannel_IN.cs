@@ -123,7 +123,7 @@ namespace Woodpecker.Animation.GHComponents
             doc.ScheduleSolution(1, d =>
             {
                 foreach (var outComp in doc.Objects.OfType<GH_TagChannel_Abstract>().Where(
-                    x => x.ChannelType == RemoteType.Output && x.SingletonTag == this.SingletonTag)
+                    x => (x.ChannelType == RemoteType.Output || x.ChannelType == RemoteType.Process) && x.SingletonTag == this.SingletonTag)
                 )
                 {
                     outComp.ExpireSolution(false);
@@ -131,11 +131,12 @@ namespace Woodpecker.Animation.GHComponents
             });
             return true;
         }
+        
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string tag = "";
             DA.GetData("Tag", ref tag);
-            
+            var oldTag = this.SingletonTag;
             DA.DisableGapLogic();
             if(DA.Iteration > 0)
             {
@@ -158,6 +159,10 @@ namespace Woodpecker.Animation.GHComponents
                 }
             }
             UpdateRemoteOutput();
+            if(oldTag != tag)
+            {
+                UpdateProcessOutput(oldTag);
+            }
         }
     }
 }

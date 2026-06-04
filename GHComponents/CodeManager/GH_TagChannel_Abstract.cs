@@ -1,3 +1,4 @@
+using System.Linq;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Woodpecker.Animation.CodeManager;
@@ -43,6 +44,22 @@ namespace Woodpecker.Animation.GHComponents
                     this.AddRuntimeMessage(Grasshopper.Kernel.GH_RuntimeMessageLevel.Error, $"The tag {SingletonTag} is not defined, please try different tags");
                 }
             }
+        }
+        protected bool UpdateProcessOutput(string oldTag)
+        {
+            var doc = this.OnPingDocument();
+            if (doc == null) return false;
+
+            doc.ScheduleSolution(1, d =>
+            {
+                foreach (var processComp in doc.Objects.OfType<GH_TagChannel_Abstract>().Where(
+                    x => x.ChannelType == RemoteType.Process && x.SingletonTag == oldTag)
+                )
+                {
+                    processComp.ExpireSolution(false);
+                }
+            });
+            return true;
         }
     }
 }
