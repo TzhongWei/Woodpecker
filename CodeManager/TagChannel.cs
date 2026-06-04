@@ -9,7 +9,8 @@ namespace Woodpecker.Animation.CodeManager
     public enum RemoteType
     {
         Input,
-        Output
+        Output,
+        Process
     }
     public class TagChannel<T>: ITagChannel<Dictionary<string, DataTree<T>>>
     {
