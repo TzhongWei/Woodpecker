@@ -19,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public string SingletonTag { get; private set; }
         private const string DefaultTag = "GlobalDash";
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Dash_Pattern_ValueList;
         public bool IsPrimaryInstance()
         {
             var doc = this.OnPingDocument();

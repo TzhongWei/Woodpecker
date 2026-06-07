@@ -12,6 +12,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_PlaneToPlaneAction() : base("Plane to Plane Action", "P2PA", "Create a timed plane-to-plane orientation action for the geometry animation pipeline.") { }
         public override Guid ComponentGuid => new Guid("ebfa8089-0e5e-4b67-92f3-99d36c17aff0");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Orient_Action;
 
         protected override GeometryActionAbstract _geometryActionAbstract { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 

@@ -13,6 +13,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_CameraPan() : base("Camera Pan", "Pan", "Create or evaluate a camera pan motion using a world-space translation vector.") { }
         public override Guid ComponentGuid => new Guid("ae84f980-6ae6-4d98-8736-aa869b68f32a");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Cam_Pan;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera Parameter", "Cam", "The camera to use for the pan motion.", GH_ParamAccess.item);

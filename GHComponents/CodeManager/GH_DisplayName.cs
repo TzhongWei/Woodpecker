@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Woodpecker.Animation.CodeManager;
 using Woodpecker.Animation.GHComponents.CustomGHComponents;
@@ -42,5 +43,6 @@ namespace Woodpecker.Animation.GHComponents
 
             DA.SetData("Result", this._reportMessage);
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Display_By_Name;
     }
 }

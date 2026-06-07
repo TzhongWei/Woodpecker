@@ -19,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Sel_Geom;
         public override Guid ComponentGuid => new Guid("83f0620e-863b-4e77-8ffb-60c72d0086b7");
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

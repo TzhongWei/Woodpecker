@@ -12,6 +12,7 @@ namespace Woodpecker.Animation.GHComponents
     public class GH_CameraLookAt : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("6d8cc478-9b38-43df-9e8a-a80d1b3bcc7f");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Cam_LookAt;
         public GH_CameraLookAt() : base("Camera LookAt", "LookAt", "Create or evaluate a camera motion that looks toward a target point.") { }
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

@@ -2,6 +2,7 @@ using Woodpecker.Animation.CodeManager;
 using System;
 using Grasshopper.Kernel;
 using System.Linq;
+using System.Drawing;
 
 namespace Woodpecker.Animation.GHComponents
 {
@@ -66,5 +67,6 @@ namespace Woodpecker.Animation.GHComponents
 
             return sameTag.Count == 1;
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Is_Tag;
     }
 }

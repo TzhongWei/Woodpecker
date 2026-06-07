@@ -33,6 +33,7 @@ namespace Woodpecker.Animation.GHComponents
         private bool _frameInProgress;
         private bool _remoteUpdateScheduled;
         private bool _waitingForSolutionEnd;
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Global_Slider;
         public GH_SliderBase Slider
         {
             get

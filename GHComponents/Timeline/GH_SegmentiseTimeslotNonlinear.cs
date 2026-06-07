@@ -15,7 +15,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_SegmentiseTimeslotNonlinear() : base("Segmentise Timeslot in Nonlinear", "STNL", "Segmentise timeslot nonlinearly") { }
 
         public override System.Guid ComponentGuid => new System.Guid("b1c2d3e4-f5a6-7890-1234-56789abcdef0");
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Seg_Non_TL;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddNumberParameter("pointer_t", "t", "Pointer time to segmentise around, t = [0,1]", GH_ParamAccess.item);

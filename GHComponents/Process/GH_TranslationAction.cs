@@ -14,6 +14,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_TranslationAction():base("Translation Action", "TA", "Create a timed translation action for the geometry animation pipeline."){}
 
         public override Guid ComponentGuid => new Guid("f82a470a-fa99-4818-9c75-4e2a2828e04f");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Translation_Action;
 
         protected override GeometryActionAbstract _geometryActionAbstract { get; set; }
 

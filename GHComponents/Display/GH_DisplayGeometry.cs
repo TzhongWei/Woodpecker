@@ -32,6 +32,7 @@ namespace Woodpecker.Animation.GHComponents
         //     _flatShading = !_flatShading;
         // }
         public override Guid ComponentGuid => new Guid("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Display_Geom;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

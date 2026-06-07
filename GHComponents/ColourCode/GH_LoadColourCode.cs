@@ -65,7 +65,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddTextParameter("ColourCode", "CC", "Encoded colour code", GH_ParamAccess.tree);
         }
         public override Guid ComponentGuid => new Guid("d8c0a0b3-21ff-4bfa-bddd-fff6525bb3a9");
-        protected override System.Drawing.Bitmap Icon => null;
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Colour_Load;
         public override void CreateAttributes()
         {
             m_attributes = new ButtonUIAttributesEditable(this, "Reflesh", After_Select_RefreshComponent, ShowEditor, "Load colour code");

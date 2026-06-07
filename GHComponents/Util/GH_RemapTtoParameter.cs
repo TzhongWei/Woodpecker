@@ -12,6 +12,7 @@ namespace Woodpecker.Animation.GHComponents
             this.SubCategory = "Util";
         }
         public override Guid ComponentGuid => new Guid("80c805af-4f62-453e-91f2-573633f38953");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Remap_T;
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             double t = 0.0;

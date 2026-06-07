@@ -24,6 +24,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_VectorDisplay() : base("Vector Display", "VD", "Legacy viewport vector-arrow display component.", "Woodpecker", "Display") { }
 
         public override Guid ComponentGuid => new Guid("32bd1fc4-14ae-4bf3-b845-0944e5e63ae2");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Display_Vec;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

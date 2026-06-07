@@ -14,6 +14,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         private CameraParameter _cameraParameter;
         public CameraParameter CameraValue => _cameraParameter;
         
+        
         public GH_CameraGoo()
         {}
         public GH_CameraGoo(CameraParameter value)

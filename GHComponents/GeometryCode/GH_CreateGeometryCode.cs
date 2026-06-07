@@ -21,6 +21,7 @@ namespace Woodpecker.Animation.GHComponents
               "Woodpecker", "GeometryCode")
         {
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Create_Geom_Code;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

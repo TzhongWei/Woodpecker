@@ -52,6 +52,7 @@ namespace Woodpecker.Animation.GHComponents
                 UpdateProcessOutput(oldTag);
             }
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Global_Tag_IN;
         public override bool IsPrimaryInstance()
         {
             var doc = this.OnPingDocument();

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Linq;
 using Grasshopper;
 using Grasshopper.Kernel;
@@ -164,5 +165,6 @@ namespace Woodpecker.Animation.GHComponents
                 UpdateProcessOutput(oldTag);
             }
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Tag_Channel_IN;
     }
 }

@@ -38,6 +38,7 @@ namespace Woodpecker.Animation.GHComponents
         private RenderSetting _setting;
         private string _inputJson = "";
         private Interval _renderRange = new Interval();
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Animation_Render;
 
         public GH_RenderController() : base("Animation Render", "ARen", "Render animation frames from Global_T.", "Util")
         {

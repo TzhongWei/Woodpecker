@@ -26,6 +26,7 @@ namespace Woodpecker.Animation.GHComponents
             _overwrite = !_overwrite;
             ExpireSolution(true);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Save_Colour_Code;
         private Dictionary<string, List<string>> codeDic;
         protected override void AppendAdditionalComponentMenuItems(ToolStripDropDown menu)
         {

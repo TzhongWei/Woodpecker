@@ -18,6 +18,7 @@ namespace Woodpecker.Animation.GHComponents
             _invert = !_invert;
             this.ExpireSolution(true);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Is_Active_TL;
         protected override void AppendAdditionalComponentMenuItems(ToolStripDropDown menu)
         {
             base.AppendAdditionalComponentMenuItems(menu);

@@ -12,6 +12,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_CameraFromAtoB() : base("Camera from A to B", "CameraA2B", "Animating camera from camera A to camera B") { }
         public override Guid ComponentGuid => new Guid("a8f57800-907e-4775-976d-dc461f89efd3");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Cam_FA2B;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera Parameter A", "Cam A", "The camera to use for the camera start transition ", GH_ParamAccess.item);

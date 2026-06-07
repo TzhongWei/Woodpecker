@@ -31,6 +31,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddNumberParameter("Global_T", "T", "Global time", GH_ParamAccess.item);
             pManager[1].Optional = true;
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Active_Circular_TL;
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {

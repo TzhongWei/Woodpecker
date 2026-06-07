@@ -32,6 +32,7 @@ namespace Woodpecker.Animation.GHComponents
             DA.SetData("Global T", t_Value);
 
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Global_Tag_Out;
         protected bool GetValue(out double value)
         {
             var doc = this.OnPingDocument();

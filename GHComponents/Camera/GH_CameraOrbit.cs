@@ -12,6 +12,7 @@ namespace Woodpecker.Animation.GHComponents
     public class GH_CameraOrbit : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("4649731d-e967-41b7-9caf-3dac592b2d03");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Cam_Orbit;
         public GH_CameraOrbit() : base("Camera Orbit", "Orbit", "Create or evaluate an orbit camera motion around a centre and axis.") { }
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

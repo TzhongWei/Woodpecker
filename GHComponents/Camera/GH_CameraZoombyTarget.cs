@@ -20,6 +20,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddNumberParameter("Factor", "F", "Zoom in or out factor", GH_ParamAccess.item, 1);
             pManager.AddPointParameter("Target", "T", "Target point used as the zoom focus.", GH_ParamAccess.item);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Cam_Zoom_Target;
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera Parameter", "Cam", "The resulting camera after applying the zoom motion.", GH_ParamAccess.item);

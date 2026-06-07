@@ -14,6 +14,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_CameraDolly() : base("Camera Dolly", "Dolly", "Creates a dolly camera motion based on a key camera and a distance to move the camera forward or backward.") { }
         public override Guid ComponentGuid => new Guid("d1c9e5b8-8c3f-4a2b-9f1e-2b6a5c4d7e8f");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Cam_Dolly;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera Parameter", "Cam", "The camera to use for the dolly motion.", GH_ParamAccess.item);

@@ -13,6 +13,7 @@ namespace Woodpecker.Animation.GHComponents
         public override Guid ComponentGuid => new Guid("167ed580-0a6a-4e54-83f6-97bba43a9701");
 
         public override RemoteType _remoteType => RemoteType.Input;
+        
 
         public override bool IsPrimaryInstance()
         {

@@ -8,9 +8,9 @@ using WinForms = System.Windows.Forms;
 
 namespace Woodpecker.Animation.GHComponents.CustomGHComponents
 {
-    public class Param_Directory : Param_String
+    public class GH_Param_Directory : Param_String
     {
-        public Param_Directory():base()
+        public GH_Param_Directory():base()
         {
             this.Name = "Directory Selection";
             this.NickName = "DSel";
@@ -18,7 +18,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
             this.Description = "Select a directory";
             this.SubCategory = "Util";
         }
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Properties.Resources.GH_File_Directory;
 
         public override Guid ComponentGuid => new Guid("3c8b0dbb-e1e5-46e8-a6a1-ae0424711d54");
 

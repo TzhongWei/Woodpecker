@@ -101,6 +101,7 @@ namespace Woodpecker.Animation.GHComponents
             }
             DA.SetData("Result", result.ToString());
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Animation_Compile;
         public override bool Write(GH_IWriter writer)
         {
             if(_inputJson != "")

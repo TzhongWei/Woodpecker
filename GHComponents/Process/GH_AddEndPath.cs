@@ -18,7 +18,7 @@ namespace Woodpecker.Animation.GHComponents
         }
 
         public override Guid ComponentGuid => new Guid("65d7c35a-67eb-4f7f-a7d9-e4e76f9e2d08");
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Add_End_Path;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddCurveParameter("Curve", "CP", "Base curve to extend.", GH_ParamAccess.item);

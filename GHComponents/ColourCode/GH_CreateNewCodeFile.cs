@@ -5,6 +5,7 @@ using Grasshopper.Kernel;
 using System.Linq;
 using Grasshopper.Kernel.Types;
 using Woodpecker.Animation.GHComponents.CustomGHComponents;
+using System.Drawing;
 using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
@@ -22,9 +23,11 @@ namespace Woodpecker.Animation.GHComponents
 
         public override Guid ComponentGuid => new Guid("c6c682ed-1209-4520-a9fa-b8b365da4912");
 
+        protected override Bitmap Icon => Properties.Resources.GH_Create_New_Colour_Code;
+
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new Param_Directory(), "Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
+            pManager.AddParameter(new GH_Param_Directory(), "Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
             pManager.AddTextParameter("FileName", "Name", "The name of the colourcode file", GH_ParamAccess.item);
             pManager.AddTextParameter("ColourCode", "CC", "Encoded colour code to save", GH_ParamAccess.tree);
             pManager[2].Optional = true;

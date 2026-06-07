@@ -52,5 +52,10 @@
     <TargetPath>AnimationCompile.py</TargetPath>
   </None>
 </ItemGroup>
+	<ItemGroup>
+	  <None Include="icon/*.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 
 </Project>

@@ -22,6 +22,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddIntegerParameter("Segments", "S", "Number of segments to create", GH_ParamAccess.item);
             pManager.AddNumberParameter("Overlap", "O", "Overlap between segments, Overlap = [0,1)", GH_ParamAccess.item, 0.0);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Seg_TL;
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {

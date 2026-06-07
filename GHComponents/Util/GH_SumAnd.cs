@@ -24,5 +24,6 @@ namespace Woodpecker.Animation.GHComponents
 
             DA.SetData("Result", values.Aggregate((a, b) => a & b));
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Sum_And;
     }
 }

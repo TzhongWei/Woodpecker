@@ -15,6 +15,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_ToCamera() : base("To Camera", "TCam", "Adjust current viewpoint to the given camera") { }
         public override Guid ComponentGuid => new Guid("03ddb948-d84e-4072-8c17-8eeab11dbbd5");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_To_Cam;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera", "Cam", "A camera you want to adapt to current viewport", GH_ParamAccess.item);

@@ -16,6 +16,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_CreateTimelineByAccumulatedTime() : base("Create Timelines By Accumulated Time Periods", "CTAT", "Create a timeline by accumulated time") { }
 
         public override Guid ComponentGuid => new Guid("e1f2a3b4-c5d6-7890-1234-56789abcdef0");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Create_TL_By_Agg;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

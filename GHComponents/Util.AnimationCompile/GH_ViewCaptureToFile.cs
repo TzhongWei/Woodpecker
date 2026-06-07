@@ -19,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
         { }
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override Guid ComponentGuid => new Guid("df52d404-9f4d-4465-b163-c61bdc56a123");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_ViewCaptureToFile;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera", "Cam", "Optional camera parameter used for the capture. If empty, the active viewport is captured.", GH_ParamAccess.item);

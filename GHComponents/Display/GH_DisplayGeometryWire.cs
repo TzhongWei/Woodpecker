@@ -30,6 +30,7 @@ namespace Woodpecker.Animation.GHComponents
         {
 
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Display_Wire;
         public override bool Write(GH_IWriter writer)
         {
 

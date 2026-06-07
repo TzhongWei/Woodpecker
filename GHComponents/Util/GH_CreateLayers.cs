@@ -19,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
         }
 
         public override Guid ComponentGuid => new Guid("c70f67da-0c04-4f6c-95a2-8570bbf82d14");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Create_Layer;
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
         public bool CanInsertParameter(GH_ParameterSide side, int index)

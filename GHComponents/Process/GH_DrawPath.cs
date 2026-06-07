@@ -25,7 +25,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             
         }
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Draw_Path;
         public override Guid ComponentGuid => new Guid("eb44c30d-9b01-403c-9792-3907f17f7185");
         public bool _tryfollowTangent = true;
         protected void ToogleTryFollowTangent(object sender, EventArgs e)

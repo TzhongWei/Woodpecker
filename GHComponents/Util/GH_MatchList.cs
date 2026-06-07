@@ -23,7 +23,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_MatchList():base("Match List output", "Match List", "Create one output for each branch or item in an input list.", "Woodpecker", "Util"){}
         public override Guid ComponentGuid => new Guid("3446f404-891c-4bb2-885a-3407fc5198e1");
-
+protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Match_List;
         public bool CanInsertParameter(GH_ParameterSide side, int index)
         {
             return side == GH_ParameterSide.Output;

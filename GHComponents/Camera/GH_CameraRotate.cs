@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using Woodpecker.Animation.Control.Camera;
@@ -21,6 +22,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddVectorParameter("Axis", "X", "Rotation axis", GH_ParamAccess.item);
             pManager[3].Optional = true;
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Cam_Rotate;
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera Parameter", "Cam", "The resulting camera after applying the rotate motion.", GH_ParamAccess.item);

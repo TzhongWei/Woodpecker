@@ -30,7 +30,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             pManager.AddBooleanParameter("Deleted", "D", "Whether the Geometry was successfully deleted", GH_ParamAccess.item);
         }
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Del_Geom_Code;
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var path = "";

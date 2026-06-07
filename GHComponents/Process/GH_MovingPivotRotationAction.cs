@@ -13,6 +13,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_MovingPivotRotationAction():base("Moving Pivot Rotation Action", "Rot Move", "Create a timed rotation action for the geometry animation pipeline."){}
         public override Guid ComponentGuid => new Guid("b783f75d-0c2d-4fc0-87b3-a4bf6c312559");
         protected override GeometryActionAbstract _geometryActionAbstract {get; set;}
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Rotate_M_T_Action;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Name", "N", "The name of this action", GH_ParamAccess.item, "Rotation");

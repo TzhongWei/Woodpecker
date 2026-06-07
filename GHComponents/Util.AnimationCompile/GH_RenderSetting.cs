@@ -18,7 +18,7 @@ namespace Woodpecker.Animation.GHComponents
             : base("Render Setting", "RSetting", "Create a JSON render setting for viewport image capture.", "Woodpecker", "Util")
         {
         }
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Animation_Render_Setting;
         public override Guid ComponentGuid => new Guid("9d850d9d-fb1c-4e0e-a30e-7f69de8346ff");
         public override GH_Exposure Exposure => GH_Exposure.secondary;
 

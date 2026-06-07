@@ -19,11 +19,12 @@ namespace Woodpecker.Animation.GHComponents
         {
             
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Create_New_Geom_Code;
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override Guid ComponentGuid => new Guid("9f0686ab-7f9b-4ddd-b288-96c064ba5df6");
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new Param_Directory(), "Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
+            pManager.AddParameter(new GH_Param_Directory(), "Directory", "Dir", "The directory of the file that you want to create", GH_ParamAccess.item);
             pManager.AddTextParameter("FileName", "Name", "The name of the geometry file", GH_ParamAccess.item);
             pManager.AddTextParameter("GeometryCode", "GC", "Encoded geometry code to save", GH_ParamAccess.tree);
             pManager[2].Optional = true;

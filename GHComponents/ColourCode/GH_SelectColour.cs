@@ -21,6 +21,7 @@ namespace Woodpecker.Animation.GHComponents
         public override GH_Exposure Exposure =>  GH_Exposure.primary;
         public GH_SelectedColour():base("Select Colour", "SelectC", "Select a colour from the list"){}
         public override Guid ComponentGuid => new Guid("a68cd7c6-2c02-49bd-ba5b-2363aab47189");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Colour_Sel;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddBooleanParameter("Refresh", "R", "Refresh this component, compulsorily", GH_ParamAccess.item, false);

@@ -630,3 +630,6 @@ GH_IsTagExist Debug with other TagChannel Component
 Add
 GH_SumOr
 GH_SumAnd
+
+# --- 0506 ---
+Update and finish Icons

@@ -18,6 +18,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_RedefineTimeline():base("Redefine Timelines", "ReTimeline", "Redefine the time length of a time line from start or end"){}
 
         public override Guid ComponentGuid => new Guid("f8ba9505-f87d-4228-99be-b815960c9b0b");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Redefine_TL;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

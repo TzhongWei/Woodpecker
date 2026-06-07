@@ -6,7 +6,8 @@ Images/
 .vs/
 .idea/
 
-Properties/
+Properties/*
+!Properties/Resources.Designer.cs
 launchSettings.json
 launchSetting.json
 

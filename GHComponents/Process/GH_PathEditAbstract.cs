@@ -20,7 +20,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         {
             this.m_attributes = new ButtonUIAttributesState(this, new List<string> { "JointCurve", "SplitCurve", "OnlyAddedCurves" }, Switch, optionColours, "output curves options", _option);
         }
-
+        
         protected void Switch()
         {
             _option = (_option + 1) % 3;

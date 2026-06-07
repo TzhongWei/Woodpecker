@@ -19,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
         base("Create Timelines", "C_TL", "Create timeline intervals from start times and durations.")
         {
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Create_TL;
         public override GH_Exposure Exposure => GH_Exposure.primary;  //create
         public override Guid ComponentGuid => new Guid("114f38fd-0ef7-4903-95fe-37dbeb62d5a2");
 

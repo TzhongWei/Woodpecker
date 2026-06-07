@@ -16,7 +16,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_ActiveTimelineZone() : base("Active Timeline in Zone", "ATLZ", "Active timeline zone component") { }
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public override Guid ComponentGuid => new Guid("d1c8e5b0-9a3c-4f1e-9b2a-8f7c6e5d4a3b");
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Active_TL_In_Zone;
         private bool _reverseValue = false;
         public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
         {

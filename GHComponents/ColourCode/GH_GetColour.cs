@@ -20,6 +20,7 @@ namespace Woodpecker.Animation.GHComponents
         public override GH_Exposure Exposure =>  GH_Exposure.tertiary;
         public GH_GetColour():base("Get Colour", "GC", "Get colour from a colour code", "Woodpecker", "ColourCode"){}
         public override Guid ComponentGuid => new Guid("17fcc77c-e793-4d4f-aff5-bf034505939a");
+        protected override Bitmap Icon => Properties.Resources.GH_Get_Colour_Code;
 
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {

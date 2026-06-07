@@ -14,7 +14,7 @@ namespace Woodpecker.Animation.GHComponents
         public override Guid ComponentGuid => new Guid("6db48ee1-84c4-4718-ad65-d3a7b681e202");
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public GH_AnimationSetting():base("Animation Setting", "ASetting", "Create a JSON animation compile setting from frame and output options.", "Woodpecker", "Util"){}
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Animation_Compile_Setting;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Input Folder", "In_Folder", "Animation Frames locations", GH_ParamAccess.item);

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Woodpecker.Animation.Control.Camera;
 using Woodpecker.Animation.GHComponents.CustomGHComponents;
@@ -18,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddNumberParameter("Pointer_t", "t", "The time parameter to evaluate the camera motion, where 0 is the start and 1 is the end of the motion. If t < 0, the motion is not activated.", GH_ParamAccess.item, -1.0);
             pManager.AddNumberParameter("Factor", "F", "Zoom in or out factor", GH_ParamAccess.item, 1);
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Cam_Zoom;
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new GH_CameraParam(), "Camera Parameter", "Cam", "The resulting camera after applying the zoom motion.", GH_ParamAccess.item);

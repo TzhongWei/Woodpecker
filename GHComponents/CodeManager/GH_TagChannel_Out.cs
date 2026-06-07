@@ -6,6 +6,7 @@ using Grasshopper.Kernel.Parameters;
 using Grasshopper;
 using Grasshopper.Kernel.Types;
 using Woodpecker.Animation.CodeManager;
+using System.Drawing;
 
 
 namespace Woodpecker.Animation.GHComponents
@@ -203,5 +204,6 @@ namespace Woodpecker.Animation.GHComponents
                 }
             }
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Tag_Channel_Out;
     }
 }

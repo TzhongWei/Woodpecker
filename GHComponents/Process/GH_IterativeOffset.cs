@@ -16,6 +16,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Iterative_Offset;
         public override Guid ComponentGuid => new Guid("1d3acd68-9ee1-423b-848f-0cda01030a3d");
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

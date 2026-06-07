@@ -13,6 +13,7 @@ namespace Woodpecker.Animation.GHComponents
     public class GH_DeleteGeometryCode : GH_GeometryCodeAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Del_Geom_Code;
         public GH_DeleteGeometryCode() : base("Delete GeometryCodes", "DelGC", "Delete selected geometry code entries from the active geometry code book.") { }
         public override Guid ComponentGuid => new Guid("0a22e029-c33c-4ec2-8a9a-6c56ec4fbc9a");
         protected override void RegisterInputParams(GH_InputParamManager pManager)

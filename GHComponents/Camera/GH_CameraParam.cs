@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
@@ -15,6 +16,8 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         public GH_CameraParam() : base("Camera", "Camera", "A Grasshopper parameter that stores a rhino named-view camera", "Woodpecker", "Camera")
         {}
         public override GH_Exposure Exposure => GH_Exposure.secondary;
+        protected override Bitmap Icon => Properties.Resources.GH_Cam_Param;
+        
         public override Guid ComponentGuid => new Guid("7e7f4153-7008-4b0c-b450-4b99b158521c");
 
         

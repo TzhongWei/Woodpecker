@@ -17,6 +17,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             pManager.AddBooleanParameter("Result", "R", "The result of summing or concatenating the input booleans.", GH_ParamAccess.item);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Sum_Or;
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var values = new List<bool>();

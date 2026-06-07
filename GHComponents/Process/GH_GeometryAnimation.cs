@@ -17,6 +17,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_GeometryAnimation(): base("Geometry Transform Animation", "GA", "Evaluate source geometry through an ordered list of timed geometry actions.", "Woodpecker", "Process"){
 
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Tranform_Action;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "G", "Source geometry to animate.", GH_ParamAccess.item);

@@ -50,5 +50,6 @@ namespace Woodpecker.Animation.GHComponents
             DA.SetDataList("ColourCode", Code);
         }
         public override Guid ComponentGuid => new Guid("B2C3D4E5-6789-0ABC-DEF1-234567890ABC");
+        protected override Bitmap Icon => Properties.Resources.GH_Create_Colour_Code;
     }
 }

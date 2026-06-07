@@ -23,6 +23,7 @@ namespace Woodpecker.Animation.GHComponents
         public override GH_Exposure Exposure => GH_Exposure.primary;
         public GH_LoadGeometry() : base("Load Geometry", "LG", "Load the geometry from the database") { }
         public override Guid ComponentGuid => new Guid("2cf7dc60-e623-495a-9d35-4b708f2862b8");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Load_Geom_Code;
         public bool IsPrimaryInstance()
         {
             var doc = this.OnPingDocument();

@@ -68,5 +68,6 @@ namespace Woodpecker.Animation.GHComponents
             this.OnDisplayExpired(true);
         }
         public override Guid ComponentGuid => new Guid("A1B2C3D4-5678-90AB-CDEF-1234567890AB");
+        protected override Bitmap Icon => Properties.Resources.GH_Colour_Panel;
     }
 }

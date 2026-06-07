@@ -17,6 +17,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             pManager.AddGeometryParameter("Geometry", "G", "Geometry from which to compute viewport silhouette outlines.", GH_ParamAccess.item);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Silhouette;
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {

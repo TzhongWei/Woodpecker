@@ -14,6 +14,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             m_attributes = new ButtonUIAttributes(this, "Refresh", Refresh);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Sequential_Geom_From_Layer;
         private void Refresh()
         {
             this.ExpireSolution(true);

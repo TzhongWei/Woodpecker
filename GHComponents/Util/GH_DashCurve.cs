@@ -20,6 +20,7 @@ namespace Woodpecker.Animation.GHComponents
         {
         }
         public override Guid ComponentGuid => new Guid("2b48c7ac-b64c-4c12-84fb-8698789a1285");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Dash_Crv;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

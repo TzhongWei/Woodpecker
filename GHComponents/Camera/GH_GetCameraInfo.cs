@@ -14,6 +14,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_GetCameraInfo() : base("Get Camera Info", "GetCamInfo", "Get the camera information of a rhino named view", "Woodpecker", "Camera")
         { }
         public override GH_Exposure Exposure => GH_Exposure.secondary;
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Get_Cam_Info;
         public override Guid ComponentGuid => new Guid("d1c8b9e7-5a3c-4f0c-9a1e-2b8f8c8c8c8c");
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

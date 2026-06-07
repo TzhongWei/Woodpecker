@@ -19,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
             "S_TL",
             "Shift and extend timeline intervals by applying per-segment delays, prolongation, and global speed scaling. Delay offsets the start of each segment, Prolong extends its duration, and Speed scales the overall timing progression."){}
         public override GH_Exposure Exposure => GH_Exposure.secondary; // adjust
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Shift_TL;
 
         public override Guid ComponentGuid => new Guid("92baf4c7-5e4f-485a-a5e0-339acf17e4c2");
 

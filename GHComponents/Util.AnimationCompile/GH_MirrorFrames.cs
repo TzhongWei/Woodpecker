@@ -11,6 +11,7 @@ namespace Woodpecker.Animation.GHComponents
     /// </summary>
     public class GH_MirrorFrames : GH_Component
     {
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Mirror_Frames;
         public GH_MirrorFrames() : base("Mirror Animation frames", "Mirror Frames", "Mirror animation frame images horizontally or vertically.", "Woodpecker", "Util") { }
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override Guid ComponentGuid => new Guid("b32d18f5-63ee-4f3a-ae41-4180ce109e4a");

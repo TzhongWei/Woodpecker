@@ -15,7 +15,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public GH_ActiveTimeline() : base("Active Timeline", "ATL", "Active timeline component") { }
-
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Active_TL;
         public override Guid ComponentGuid => new Guid("0727c17e-61b5-422e-999d-f22739a0b2d1");
 
         private bool _reverseValue = false;

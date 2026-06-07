@@ -19,6 +19,7 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_SaveGeometryCode() : base("Save GeometryCodes", "SG", "Save geometry code to file") { }
         public override GH_Exposure Exposure => GH_Exposure.secondary;
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Save_Geom_Code;
 
         public override Guid ComponentGuid => new Guid("3824b295-355f-4b00-966d-ac8fbbbbf5f9");
 

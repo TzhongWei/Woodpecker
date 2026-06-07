@@ -21,6 +21,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddAngleParameter("Angle", "A", "Total rotation angle evaluated across the action timeline.", GH_ParamAccess.item, 0.5 * Math.PI);
             pManager.AddPointParameter("Centre", "C", "Rotation centre point.", GH_ParamAccess.item);
         }
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Rotate_Fix_T_Action;
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddGenericParameter("Action", "A", "Rotation action object for Geometry Transform Animation.", GH_ParamAccess.item);

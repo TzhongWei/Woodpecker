@@ -17,6 +17,7 @@ namespace Woodpecker.Animation.GHComponents
         public GH_VectorDisplaySetting():base("Vector Display Setting", "VDS", "The vector display setting", "Woodpecker", "Display"){}
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override Guid ComponentGuid => new Guid("540844db-42df-4ae8-8ed6-96c4eb21ea51");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Display_Vec_Setting;
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

@@ -7,14 +7,15 @@ using Rhino.Geometry;
 
 namespace Woodpecker.Animation.GHComponents
 {
-/// <summary>
-/// Generate a range of intervals between two given intervals. Inputs include Timelines. Outputs include Max, Mid, and Min.
-/// </summary>
-public class GH_IntervalRange : GH_TimelineAbstract
+    /// <summary>
+    /// Generate a range of intervals between two given intervals. Inputs include Timelines. Outputs include Max, Mid, and Min.
+    /// </summary>
+    public class GH_IntervalRange : GH_TimelineAbstract
     {
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public GH_IntervalRange() : base("Interval Range", "IR", "Generate a range of intervals between two given intervals") { }
 
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Interval_Range;
         public override Guid ComponentGuid => new Guid("3446981f-4b9d-47ea-9986-7a6a0b234b96");
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
@@ -42,7 +43,7 @@ public class GH_IntervalRange : GH_TimelineAbstract
             TimelineSetting.IntervalRange(timelines, ref min, ref max);
 
             DA.SetData("Min", min);
-            DA.SetData("Mid", (max + min)/ 2);
+            DA.SetData("Mid", (max + min) / 2);
             DA.SetData("Max", max);
         }
 

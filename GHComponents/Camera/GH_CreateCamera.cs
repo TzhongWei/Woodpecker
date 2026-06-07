@@ -16,6 +16,7 @@ namespace Woodpecker.Animation.GHComponents
         { }
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override Guid ComponentGuid => new Guid("d1c8b9e7-5a3c-4f0e-9b2c-8a1f0e5b6c7d");
+        protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Create_Cam;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Camera Name", "Name", "The name of the rhino named view to reference. If the name is not found, it will try to create a phantom camera with this name.", GH_ParamAccess.item);
