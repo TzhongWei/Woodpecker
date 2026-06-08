@@ -47,22 +47,40 @@ namespace Woodpecker.Animation.Control.Camera
 
             CameraTransform.Pan(ref newCam, panfactor);
 
-            if (this._applyCameraMotion)
-            {
-                if (newCam.IsParallel)
-                {
-                    avp.ZoomWindow(newCam.WindowRect);
-                }
-                else
-                {
-                    avp.Camera35mmLensLength = newCam.CameraLength;
-                }
-                avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
-                avp.Name = "Motion";
-                avp.CameraUp = newCam.CameraUp;
+            this.MotionCamera = newCam;
 
-            }
+            // if (this._applyCameraMotion)
+            // {
+            //     if (newCam.IsParallel)
+            //     {
+            //         avp.ZoomWindow(newCam.WindowRect);
+            //     }
+            //     else
+            //     {
+            //         avp.Camera35mmLensLength = newCam.CameraLength;
+            //     }
+            //     avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
+            //     avp.Name = "Motion";
+            //     avp.CameraUp = newCam.CameraUp;
+
+            // }
             return newCam;
+        }
+        public override void ApplyMotion(bool IsFinished)
+        {
+            
+            avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
+            avp.CameraUp = this.MotionCamera.CameraUp;
+            if (this.MotionCamera.IsParallel)
+            {
+                avp.ZoomWindow(this.MotionCamera.WindowRect);
+            }
+            else
+            {
+                avp.Camera35mmLensLength = this.MotionCamera.CameraLength;
+            }
+            avp.Name = IsFinished ? "Pan_Finished" : "Motion";
+            
         }
     }
 }

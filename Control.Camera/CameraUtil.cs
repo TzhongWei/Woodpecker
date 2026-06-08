@@ -337,5 +337,17 @@ namespace Woodpecker.Animation.Control.Camera
 
             return Rectangle.FromLTRB(left, top, right, bottom);
         }
+        public static double GetParallelCameraZoomFactor(CameraParameter cameraParam1, CameraParameter cameraParam2)
+        {
+            if(!cameraParam1.IsParallel || !cameraParam2.IsParallel)
+                throw new ArgumentException("Both camera parameters must be parallel.");
+            cameraParam1.viewportInfo.GetFrustum(out var leftA, out var rightA, out var bottomA, out var topA, out var _, out var _);
+            cameraParam2.viewportInfo.GetFrustum(out var leftB, out var rightB, out var bottomB, out var topB, out var _, out var _);
+            var heightA = Math.Abs(topA - bottomA);
+            var heightB = Math.Abs(topB - bottomB);
+            if (heightA <= 1e-9 || heightB <= 1e-9)
+                return 1.0;
+            return heightA / heightB;
+        }
     }
 }

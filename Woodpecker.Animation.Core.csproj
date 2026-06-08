@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net7.0-windows;net7.0;net48</TargetFrameworks>
+    <AssemblyName>Woodpecker.Animation.Core</AssemblyName>
+    <RootNamespace>Woodpecker.Animation</RootNamespace>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>NU1701;NETSDK1086</NoWarn>
+    <Version>1.0</Version>
+    <Title>Woodpecker.Animation.Core</Title>
+    <Company>EPFL.IBOIS</Company>
+    <Description>Core camera, timeline, geometry, display, rendering, and IO services for Woodpecker Animation.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.Contains('-windows')) or $(TargetFramework.StartsWith('net4'))">
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grasshopper" Version="8.0.23304.9001" ExcludeAssets="runtime" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!($(TargetFramework.Contains('-windows')) or $(TargetFramework.StartsWith('net4')))">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" ExcludeAssets="all" GeneratePathProperty="true" />
+    <Reference Include="$(PkgMicrosoft_NETFramework_ReferenceAssemblies_net48)\build\.NETFramework\v4.8\System.Windows.Forms.dll" Private="False" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="CodeManager/**/*.cs" />
+    <Compile Include="Control.Camera/**/*.cs" />
+    <Compile Include="Control.Timeline/**/*.cs" />
+    <Compile Include="Geometry.Display/**/*.cs" />
+    <Compile Include="Geometry.Processing/**/*.cs" />
+    <Compile Include="Util.AnimationCompile/**/*.cs"
+             Exclude="Util.AnimationCompile/AnimationTimerWindows.cs" />
+    <Compile Include="Util.IO/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Woodpecker.Animation.GHC" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Util.AnimationCompile/AnimationCompile.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>AnimationCompile.py</TargetPath>
+    </None>
+  </ItemGroup>
+</Project>

@@ -29,13 +29,13 @@ namespace Woodpecker.Animation.GHComponents
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             GH_CameraGoo cameraGoo = null;
-            double t = 0;
+            _t = 0;
             Vector3d pan = new Vector3d(0, 0, 0);
-            DA.GetData("Pointer_t", ref t);
+            DA.GetData("Pointer_t", ref _t);
             DA.GetData("Pan Vector", ref pan);
-            DA.GetData("Camare Parameter", ref cameraGoo);
+            DA.GetData("Camera Parameter", ref cameraGoo);
 
-            if (t < 0)
+            if (_t < 0)
             {
                 DA.SetData("Camera Parameter", cameraGoo);
                 this._isActive = false;
@@ -52,7 +52,7 @@ namespace Woodpecker.Animation.GHComponents
             this._cameraParam = cameraGoo.CameraValue;
             var panMotion = new CM_Pan(this._cameraParam, pan);
             var executedCamera = new CameraExecution(panMotion);
-            executedCamera.Execute(t, this._applyCameraMotion);
+            executedCamera.Execute(_t, this._applyCameraMotion);
             this._cameraParam = panMotion.MotionCamera;
             DA.SetData("Camera Parameter", new GH_CameraGoo(this._cameraParam));
             DA.SetData("Status", this._isActive.ToString());

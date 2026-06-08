@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net7.0-windows;net7.0;net48</TargetFrameworks>
+    <AssemblyName>Woodpecker.Animation.GHC</AssemblyName>
+    <RootNamespace>Woodpecker.Animation</RootNamespace>
+    <TargetExt>.gha</TargetExt>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoWarn>NU1701;NETSDK1086</NoWarn>
+    <Version>1.0</Version>
+    <Title>Woodpecker.Animation.GHC</Title>
+    <Company>EPFL.IBOIS</Company>
+    <Description>Grasshopper components and user interface for Woodpecker Animation.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.Contains('-windows')) or $(TargetFramework.StartsWith('net4'))">
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Woodpecker.Animation.Core.csproj" />
+    <PackageReference Include="Grasshopper" Version="8.0.23304.9001" ExcludeAssets="runtime" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!($(TargetFramework.Contains('-windows')) or $(TargetFramework.StartsWith('net4')))">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" ExcludeAssets="all" GeneratePathProperty="true" />
+    <Reference Include="$(PkgMicrosoft_NETFramework_ReferenceAssemblies_net48)\build\.NETFramework\v4.8\System.Windows.Forms.dll" Private="False" />
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="GHComponents/**/*.cs" />
+    <Compile Include="Util.AnimationCompile/AnimationTimerWindows.cs" />
+    <Compile Include="Properties/Resources.Designer.cs" />
+    <Compile Include="Woodpecker.Animation.GHCInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="icon/*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

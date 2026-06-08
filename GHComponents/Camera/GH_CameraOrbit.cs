@@ -33,14 +33,14 @@ namespace Woodpecker.Animation.GHComponents
         {
             double angle = 1.0;
             Vector3d axis = new Vector3d();
-            double t = 1.0;
+            _t = 1.0;
 
             GH_CameraGoo cameraGoo = null;
             DA.GetData("Camera Parameter", ref cameraGoo);
             DA.GetData("Angle", ref angle);
             DA.GetData("Axis", ref axis);
-            DA.GetData("Pointer_t", ref t);
-            if (t < 0)
+            DA.GetData("Pointer_t", ref _t);
+            if (_t < 0)
             {
                 DA.SetData("Camera Parameter", cameraGoo);
                 this._isActive = false;
@@ -63,7 +63,7 @@ namespace Woodpecker.Animation.GHComponents
 
             var orbitMotion = new CM_Orbit(this._cameraParam, angle, axis, centre);
             var executedCamera = new CameraExecution(orbitMotion);
-            executedCamera.Execute(t, this._applyCameraMotion);
+            executedCamera.Execute(_t, this._applyCameraMotion);
             this._cameraParam = orbitMotion.MotionCamera;
 
             DA.SetData("Camera Parameter", new GH_CameraGoo(this._cameraParam));

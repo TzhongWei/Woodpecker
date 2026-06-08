@@ -13,14 +13,14 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         private Plane CameraPlane => this.Value;
         private CameraParameter _cameraParameter;
         public CameraParameter CameraValue => _cameraParameter;
-        
-        
+
+
         public GH_CameraGoo()
-        {}
+        { }
         public GH_CameraGoo(CameraParameter value)
         {
             this.Value = new Plane(value.CameraLocation, value.viewportInfo.CameraX, value.viewportInfo.CameraY);
-            
+
             this._cameraParameter = value;
         }
         public override bool IsValid => _cameraParameter != null && Value.IsValid;
@@ -28,8 +28,13 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         public override string TypeDescription => "Camera viewport info parameters";
         public override IGH_Goo Duplicate()
         {
-            /// not deep copy
-            return new GH_CameraGoo(_cameraParameter);
+            if (_cameraParameter == null)
+                return new GH_CameraGoo();
+
+            return new GH_CameraGoo(
+                _cameraParameter.Duplicate(
+                    _cameraParameter.Name,
+                    false));
         }
         public override string ToString()
         {
@@ -37,19 +42,19 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         }
         public override bool CastFrom(object source)
         {
-            if(source is GH_CameraGoo cameraGoo)
+            if (source is GH_CameraGoo cameraGoo)
             {
                 this.Value = cameraGoo.CameraPlane;
                 this._cameraParameter = cameraGoo.CameraValue;
                 return true;
             }
-            if(source is CameraParameter camera)
+            if (source is CameraParameter camera)
             {
                 this.Value = new Plane(camera.CameraLocation, camera.CameraDirection);
                 this._cameraParameter = camera;
                 return true;
             }
-            if(source is GH_String GH_Name)
+            if (source is GH_String GH_Name)
             {
                 try
                 {
@@ -63,7 +68,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
                     return false;
                 }
             }
-            if(source is string Name)
+            if (source is string Name)
             {
                 try
                 {
@@ -81,13 +86,13 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         }
         public override bool CastTo<Q>(ref Q target)
         {
-            if(typeof(Q).IsAssignableFrom(typeof(CameraParameter)) && this._cameraParameter != null)
+            if (typeof(Q).IsAssignableFrom(typeof(CameraParameter)) && this._cameraParameter != null)
             {
                 object obj = this._cameraParameter;
                 target = (Q)obj;
                 return true;
             }
-            if(typeof(Q).IsAssignableFrom(typeof(string)))
+            if (typeof(Q).IsAssignableFrom(typeof(string)))
             {
                 object obj = this._cameraParameter?.Name ?? string.Empty;
                 target = (Q)obj;

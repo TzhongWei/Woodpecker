@@ -633,3 +633,10 @@ GH_SumAnd
 
 # --- 0506 ---
 Update and finish Icons
+
+# --- 0806 ---
+Split this project into two compile files
+Woodpecker.Animation.Core.csproj => Woodpecker.Animation.Core.dll
+Woodpecker.Animation.GHC.csproj  => Woodpecker.Animation.GHC.gha
+
+Update camera structure

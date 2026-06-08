@@ -8,11 +8,115 @@ using Woodpecker.Animation.Control.Timeline;
 
 namespace Woodpecker.Animation.Control.Camera
 {
-    public class CM_CamAToCamB : CameraMotionAbstract, IMultiCamsTransform
+    public class CM_CamAToCamB : CameraMotionAbstract
+    {
+        public CameraParameter keyCam2;
+        public CameraParameter keyCam1 => this.KeyCamera;
+        public CM_CamAToCamB(CameraParameter keyCamera1, CameraParameter keyCamera2) : base(keyCamera1, new Interval(0, 1))
+        {
+            keyCam2 = keyCamera2.Duplicate(keyCamera2.Name + "_B", false);
+            if (keyCam2.IsParallel != this.KeyCamera.IsParallel)
+            {
+                keyCam2.SetParallel(keyCamera1.IsParallel);
+            }
+        }
+        public CM_CamAToCamB(CameraParameter keyCamera1, CameraParameter keyCamera2, Interval timeline) : base(keyCamera1, timeline)
+        {
+            keyCam2 = keyCamera2.Duplicate(keyCamera2.Name + "_B", false);
+            if (keyCam2.IsParallel != this.KeyCamera.IsParallel)
+            {
+                keyCam2.SetParallel(keyCamera1.IsParallel);
+            }
+        }
+        private double GetLocalT(double t)
+        {
+            if (timeline.Length <= 1e-9)
+            {
+                return 0;
+            }
+            else
+            {
+                t = (t - timeline.Min) / timeline.Length;
+                return Math.Max(0, Math.Min(1, t));
+            }
+        }
+        public override CameraParameter Evaluate(double t)
+        {
+            var newCam = this.MotionCamera;
+            var localT = GetLocalT(t);
+
+            if (this.KeyCamera.IsParallel)
+            {
+                double finalZoomFactor = CameraUtil.GetParallelCameraZoomFactor(this.KeyCamera, this.keyCam2);
+                double currentZoomFactor = 1.0 + localT * (finalZoomFactor - 1.0);
+                CameraTransform.Zoom(ref newCam, currentZoomFactor);
+            }
+
+            var currentLocation = CameraUtil.Lerp(
+            keyCam1.CameraLocation,
+            keyCam2.CameraLocation,
+            localT);
+
+            var currentTarget = CameraUtil.Lerp(
+                keyCam1.CameraTarget,
+                keyCam2.CameraTarget,
+                localT);
+
+            var currentUp = CameraUtil.Lerp(
+                keyCam1.CameraUp,
+                keyCam2.CameraUp,
+                localT);
+
+            if (!currentUp.Unitize())
+                currentUp = keyCam1.CameraUp;
+
+            var currentDirection = currentTarget - currentLocation;
+
+            if (!currentDirection.Unitize())
+                currentDirection = keyCam1.CameraDirection;
+
+            newCam.viewportInfo.SetCameraLocation(currentLocation);
+            newCam.viewportInfo.SetCameraDirection(currentDirection);
+            newCam.viewportInfo.SetCameraUp(currentUp);
+            newCam.viewportInfo.TargetPoint = currentTarget;
+
+            if (!keyCam1.IsParallel)
+            {
+                newCam.viewportInfo.Camera35mmLensLength =
+                    CameraUtil.Lerp(
+                        keyCam1.CameraLength,
+                        keyCam2.CameraLength,
+                        localT);
+            }
+            this.MotionCamera = newCam;
+
+            return newCam; 
+        }
+        public override void ApplyMotion(bool IsFinished)
+        {
+            if(keyCam1.IsParallel)
+            {
+                avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
+                avp.CameraUp = this.MotionCamera.CameraUp;
+                avp.ZoomWindow(this.MotionCamera.WindowRect);
+            }
+            else
+            {
+                avp.Camera35mmLensLength = this.MotionCamera.CameraLength;
+                avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
+                avp.CameraUp = this.MotionCamera.CameraUp;
+            }
+            avp.Name = IsFinished ? "CamA2CamB_Finish" : "Motion";
+        }
+    }
+
+    
+    [Obsolete("This class is deprecated and will be removed in a future version. Please use CM_CamAToCamB instead.")]
+    public class CM_CamAToCamB_Old : CameraMotionAbstract, IMultiCamsTransform
     {
         public List<CameraMotionAbstract> CamerasTS { get; private set; }
         private CameraParameter keyCam2;
-        public CM_CamAToCamB(CameraParameter keyCamera1, CameraParameter keyCamera2) : base(keyCamera1, new Interval(0, 1))
+        public CM_CamAToCamB_Old(CameraParameter keyCamera1, CameraParameter keyCamera2) : base(keyCamera1, new Interval(0, 1))
         {
             keyCam2 = keyCamera2.Duplicate(keyCamera2.Name + "_B", false);
             if (keyCam2.IsParallel != this.KeyCamera.IsParallel)
@@ -22,7 +126,11 @@ namespace Woodpecker.Animation.Control.Camera
             this.CamerasTS = new List<CameraMotionAbstract>();
 
         }
-        public CM_CamAToCamB(CameraParameter keyCamera1, CameraParameter keyCamera2, List<CameraMotionAbstract> cameras) : base(keyCamera1, new Interval(0, 1))
+        public override void ApplyMotion(bool IsFinished)
+        {
+            
+        }
+        public CM_CamAToCamB_Old(CameraParameter keyCamera1, CameraParameter keyCamera2, List<CameraMotionAbstract> cameras) : base(keyCamera1, new Interval(0, 1))
         {
             keyCam2 = keyCamera2.Duplicate(keyCamera2.Name + "_B", false);
             this.CamerasTS = new List<CameraMotionAbstract>();

@@ -32,13 +32,13 @@ namespace Woodpecker.Animation.GHComponents
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             GH_CameraGoo cameraGoo = null;
-            double t = 0;
+            _t = 0;
             double angle = 0;
             Vector3d axis = new Vector3d();
             DA.GetData("Camera Parameter", ref cameraGoo);
-            DA.GetData("Pointer_t", ref t);
+            DA.GetData("Pointer_t", ref _t);
             DA.GetData("Angle", ref angle);
-            if (t < 0)
+            if (_t < 0)
             {
                 DA.SetData("Camera Parameter", cameraGoo);
                 this._isActive = false;
@@ -58,7 +58,7 @@ namespace Woodpecker.Animation.GHComponents
             this._cameraParam = cameraGoo.CameraValue;
             var rotateMotion = new CM_Rotate(_cameraParam, angle, axis);
             var executedCamera = new CameraExecution(rotateMotion);
-            executedCamera.Execute(t, this._applyCameraMotion);
+            executedCamera.Execute(_t, this._applyCameraMotion);
             this._cameraParam = rotateMotion.MotionCamera;
 
             DA.SetData("Camera Parameter", new GH_CameraGoo(this._cameraParam));

@@ -44,22 +44,39 @@ namespace Woodpecker.Animation.Control.Camera
 
             CameraTransform.Zoom(ref newCam, sFactor);
 
-            if(this._applyCameraMotion)
-            {
-                if(newCam.IsParallel)
+            this.MotionCamera = newCam;
+
+            // if(this._applyCameraMotion)
+            // {
+            //     if(newCam.IsParallel)
+            //     {
+            //         avp.ZoomWindow(newCam.WindowRect);
+            //     }
+            //     else
+            //     {
+            //         avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
+            //         avp.Camera35mmLensLength = newCam.CameraLength;
+            //     }
+            //     avp.Name = "Motion";
+            //     avp.CameraUp = newCam.CameraUp;
+            // }
+
+            return newCam;
+        }
+        public override void ApplyMotion(bool IsFinished)
+        {
+            avp.CameraUp = this.MotionCamera.CameraUp;
+            if(this.MotionCamera.IsParallel)
                 {
-                    avp.ZoomWindow(newCam.WindowRect);
+                    avp.ZoomWindow(this.MotionCamera.WindowRect);
                 }
                 else
                 {
-                    avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
-                    avp.Camera35mmLensLength = newCam.CameraLength;
+                    avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
+                    avp.Camera35mmLensLength = this.MotionCamera.CameraLength;
                 }
-                avp.Name = "Motion";
-                avp.CameraUp = newCam.CameraUp;
-            }
-
-            return newCam;
+                avp.Name = IsFinished ? "ZoomTarget_Finished" : "Motion";
+                
         }
     }
 }

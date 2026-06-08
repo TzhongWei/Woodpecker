@@ -9,7 +9,7 @@ namespace Woodpecker.Animation.Control.Camera
 {
     public static class CameraTransform
     {
-        private static CameraParameter CheckCameraParameter(CameraParameter cameraParameter, string FunctionName)
+        private static CameraParameter DuplicateCameraParameter(CameraParameter cameraParameter, string FunctionName)
         {
             if (cameraParameter == null)
                 throw new ArgumentNullException(nameof(cameraParameter), $"CameraParameter cannot be null in {FunctionName}");
@@ -38,7 +38,7 @@ namespace Woodpecker.Animation.Control.Camera
         /// <returns></returns>
         public static bool Dolly(ref CameraParameter camera, double distance)
         {
-            CameraParameter _camera = CheckCameraParameter(camera, "Dolly");
+            CameraParameter _camera = DuplicateCameraParameter(camera, "Dolly");
 
             // In parallel projection, forward camera movement has little visible effect.
             // Therefore Dolly is interpreted as changing the view window size.
@@ -51,7 +51,8 @@ namespace Woodpecker.Animation.Control.Camera
                     pixelsPerUnit = 1;
                 var pixelScale = (int)-Math.Round(distance * pixelsPerUnit);
                 viewRect.Inflate(pixelScale, pixelScale);
-                _camera.WindowRect = viewRect;
+                if(_camera.SourceType == CameraReference.RhinoReference)
+                    _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
             }
@@ -71,7 +72,7 @@ namespace Woodpecker.Animation.Control.Camera
         }
         public static bool Zoom(ref CameraParameter camera, double factor, Point3d target)
         {
-            var _camera = CheckCameraParameter(camera, "Zoom");
+            var _camera = DuplicateCameraParameter(camera, "Zoom");
             if (!target.IsValid)
             {
                 return Zoom(ref camera, factor);
@@ -84,7 +85,9 @@ namespace Woodpecker.Animation.Control.Camera
                 if (doc == null || doc.Views.ActiveView == null)
                     return false;
 
-                var viewRect = CameraUtil.ViewRect(_camera.viewportInfo);
+                var viewRect = camera.SourceType == CameraReference.RhinoReference ?
+                CameraUtil.ViewRect(_camera.viewportInfo) : camera.WindowRect;
+
                 var targetScreen = doc.Views.ActiveView.ActiveViewport.WorldToClient(target);
 
                 var left = targetScreen.X + (viewRect.Left - targetScreen.X) / factor;
@@ -132,12 +135,13 @@ namespace Woodpecker.Animation.Control.Camera
         /// <returns></returns>
         public static bool Zoom(ref CameraParameter camera, double factor)
         {
-            CameraParameter _camera = CheckCameraParameter(camera, "Zoom");
+            CameraParameter _camera = DuplicateCameraParameter(camera, "Zoom");
             factor = factor <= 0 ? 1 : factor;
             if (_camera.IsParallel) //Zoom in by factor
             {
 
-                var viewRect = CameraUtil.ViewRect(_camera.viewportInfo);
+                var viewRect = camera.SourceType == CameraReference.RhinoReference ?
+                CameraUtil.ViewRect(_camera.viewportInfo) : camera.WindowRect;
                 var newWidth = (int)(viewRect.Width / factor);
                 var newHeight = (int)(viewRect.Height / factor);
                 var dx = (int)Math.Round((viewRect.Width - newWidth) / 2.0);
@@ -157,7 +161,7 @@ namespace Woodpecker.Animation.Control.Camera
         }
         public static bool Rotate(ref CameraParameter camera, double radians, Vector3d axis)
         {
-            var _camera = CheckCameraParameter(camera, "Rotate");
+            var _camera = DuplicateCameraParameter(camera, "Rotate");
             var rot = Transform.Rotation(radians, axis, _camera.CameraLocation);
             if(_camera.IsParallel)
             {
@@ -172,7 +176,8 @@ namespace Woodpecker.Animation.Control.Camera
                 _camera.viewportInfo.SetCameraUp(newCamUp);
                 _camera.viewportInfo.SetCameraDirection(newCamDir);
                 _camera.viewportInfo.TargetPoint = newCamTar;
-                _camera.WindowRect = viewRect;
+                if(_camera.SourceType == CameraReference.RhinoReference)
+                    _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
             }
@@ -196,7 +201,7 @@ namespace Woodpecker.Animation.Control.Camera
         }
         public static bool Pan(ref CameraParameter camera, Vector3d panVector)
         {
-            var _camera = CheckCameraParameter(camera, "Pan");
+            var _camera = DuplicateCameraParameter(camera, "Pan");
             if(!panVector.IsValid || panVector.IsZero)
             {
                 return false;
@@ -210,7 +215,8 @@ namespace Woodpecker.Animation.Control.Camera
                 camTar += panVector;
                 _camera.viewportInfo.SetCameraLocation(camLoc);
                 _camera.viewportInfo.TargetPoint = camTar;
-                _camera.WindowRect = viewRect;
+                if(_camera.SourceType == CameraReference.RhinoReference)
+                    _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
             }
@@ -228,7 +234,7 @@ namespace Woodpecker.Animation.Control.Camera
         }
         public static bool Orbit(ref CameraParameter camera, double radians, Vector3d axis, Point3d center)
         {
-            var _camera = CheckCameraParameter(camera, "Orbit");
+            var _camera = DuplicateCameraParameter(camera, "Orbit");
             var rot = Transform.Rotation(radians, axis, center);
             if(_camera.IsParallel)
             {
@@ -245,7 +251,8 @@ namespace Woodpecker.Animation.Control.Camera
                 _camera.viewportInfo.SetCameraDirection(newCamDir);
                 _camera.viewportInfo.SetCameraUp(newCamUp);
                 _camera.viewportInfo.TargetPoint = newCamTar;
-                _camera.WindowRect = viewRect;
+                if(_camera.SourceType == CameraReference.RhinoReference)
+                    _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
             }
@@ -270,7 +277,7 @@ namespace Woodpecker.Animation.Control.Camera
         public static bool LookAt(ref CameraParameter camera, Point3d targetPoint, Vector3d upDirection, double lensLength)
         {
             
-            var _camera = CheckCameraParameter(camera, "LookAt");
+            var _camera = DuplicateCameraParameter(camera, "LookAt");
             if(!targetPoint.IsValid)
             {
                 return false;
@@ -302,7 +309,8 @@ namespace Woodpecker.Animation.Control.Camera
             if(_camera.IsParallel)
             {
                 var viewRect = CameraUtil.ViewRect(_camera.viewportInfo);
-                _camera.WindowRect = viewRect;
+                if(_camera.SourceType == CameraReference.RhinoReference)
+                    _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
             }

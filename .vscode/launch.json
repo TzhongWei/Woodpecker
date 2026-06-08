@@ -2,24 +2,34 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Rhino 8 - netcore",
+      "name": "Rhino 8 macOS - netcore",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build",
-      "program": "",
-      "osx": {
-        "program": "/Applications/Rhino 8.app/Contents/MacOS/Rhinoceros",
-        "args": [
-          "-runscript=_Grasshopper"
-        ]
+      "preLaunchTask": "build-ghc-all",
+      "program": "/Applications/Rhino 8.app/Contents/MacOS/Rhinoceros",
+      "args": [
+        "-runscript=_Grasshopper"
+      ],
+      "env": {
+        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/bin/Debug/net7.0"
       },
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    },
+    {
+      "name": "Rhino 8 Windows - netcore",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-ghc-all",
+      "program": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe",
       "windows": {
         "program": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe",
         "targetArchitecture": "x86_64",
         "args": "/netcore /runscript=\"_Grasshopper\""
       },
       "env": {
-        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/bin/Debug"
+        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/bin/Debug/net7.0-windows"
       },
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
@@ -29,19 +39,19 @@
       "name": "Rhino 8 Windows - netfx",
       "type": "clr",
       "request": "launch",
-      "preLaunchTask": "build",
+      "preLaunchTask": "build-ghc-all",
       "windows": {
         "program": "C:\\Program Files\\Rhino 8\\System\\Rhino.exe",
         "targetArchitecture": "x86_64",
         "args": "/netfx /runscript=\"_Grasshopper\""
       },
       "env": {
-        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/bin/Debug"
+        "RHINO_PACKAGE_DIRS": "${workspaceFolder}/bin/Debug/net48"
       },
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "console": "internalConsole"
-    },
+    }
   ],
   "compounds": []
 }

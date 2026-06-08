@@ -71,6 +71,20 @@
         "build": {
           "build/net48/RhinoCommon.targets": {}
         }
+      },
+      "Woodpecker.Animation.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.8",
+        "dependencies": {
+          "Grasshopper": "8.0.23304.9001",
+          "Newtonsoft.Json": "13.0.4"
+        },
+        "compile": {
+          "bin/placeholder/Woodpecker.Animation.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Woodpecker.Animation.Core.dll": {}
+        }
       }
     },
     "net7.0": {
@@ -184,6 +198,22 @@
             "rid": "win"
           }
         }
+      },
+      "Woodpecker.Animation.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Grasshopper": "8.0.23304.9001",
+          "Microsoft.NETFramework.ReferenceAssemblies.net48": "1.0.3",
+          "Newtonsoft.Json": "13.0.4",
+          "System.Drawing.Common": "7.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Woodpecker.Animation.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Woodpecker.Animation.Core.dll": {}
+        }
       }
     },
     "net7.0-windows7.0": {
@@ -244,6 +274,23 @@
         "build": {
           "build/net48/RhinoCommon.targets": {}
         }
+      },
+      "Woodpecker.Animation.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Grasshopper": "8.0.23304.9001",
+          "Newtonsoft.Json": "13.0.4"
+        },
+        "compile": {
+          "bin/placeholder/Woodpecker.Animation.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Woodpecker.Animation.Core.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ]
       }
     }
   },
@@ -774,23 +821,31 @@
         "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Woodpecker.Animation.Core/1.0.0": {
+      "type": "project",
+      "path": "Woodpecker.Animation.Core.csproj",
+      "msbuildProject": "Woodpecker.Animation.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETFramework,Version=v4.8": [
       "Grasshopper >= 8.0.23304.9001",
       "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.3",
-      "Newtonsoft.Json >= 13.0.4"
+      "Newtonsoft.Json >= 13.0.4",
+      "Woodpecker.Animation.Core >= 1.0.0"
     ],
     "net7.0": [
       "Grasshopper >= 8.0.23304.9001",
       "Microsoft.NETFramework.ReferenceAssemblies.net48 >= 1.0.3",
       "Newtonsoft.Json >= 13.0.4",
-      "System.Drawing.Common >= 7.0.0"
+      "System.Drawing.Common >= 7.0.0",
+      "Woodpecker.Animation.Core >= 1.0.0"
     ],
     "net7.0-windows7.0": [
       "Grasshopper >= 8.0.23304.9001",
-      "Newtonsoft.Json >= 13.0.4"
+      "Newtonsoft.Json >= 13.0.4",
+      "Woodpecker.Animation.Core >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -799,9 +854,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/IBOIS.Animation.csproj",
-      "projectName": "IBOIS.Animation",
-      "projectPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/IBOIS.Animation.csproj",
+      "projectUniqueName": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.GHC.csproj",
+      "projectName": "Woodpecker.Animation.GHC",
+      "projectPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.GHC.csproj",
       "packagesPath": "/Users/tsungweicheng/.nuget/packages/",
       "outputPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/obj/",
       "projectStyle": "PackageReference",
@@ -820,15 +875,27 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.Core.csproj": {
+              "projectPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.Core.csproj"
+            }
+          }
         },
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.Core.csproj": {
+              "projectPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.Core.csproj"
+            }
+          }
         },
         "net48": {
           "targetAlias": "net48",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.Core.csproj": {
+              "projectPath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.Core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

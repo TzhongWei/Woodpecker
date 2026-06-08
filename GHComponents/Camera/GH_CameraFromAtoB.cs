@@ -26,14 +26,14 @@ namespace Woodpecker.Animation.GHComponents
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            double t = 0.0;
-            DA.GetData("Pointer_t", ref t);
+            _t = 0.0;
+            DA.GetData("Pointer_t", ref _t);
             GH_CameraGoo cam1 = null, cam2 = null;
 
             DA.GetData("Camera Parameter A", ref cam1);
             DA.GetData("Camera Parameter B", ref cam2);
 
-            if (t < 0)
+            if (_t < 0)
             {
                 DA.SetData("Camera Parameter", cam1);
                 this._isActive = false;
@@ -48,10 +48,17 @@ namespace Woodpecker.Animation.GHComponents
                 return;
             }
 
+            if(_isActive && HasMultipleActiveInstance())
+            {
+                this.AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "More than one CameraMotion setting is active");
+                DA.SetData("Status", this._isActive.ToString());
+                return;
+            }
+
             this._cameraParam = cam1.CameraValue;
-            var A2B = new CM_CamAToCamB(this._cameraParam, cam2.CameraValue);
+            var A2B = new CM_CamAToCamB(cam1.CameraValue, cam2.CameraValue);
             var executeCamera = new CameraExecution(A2B);
-            executeCamera.Execute(t, this._applyCameraMotion);
+            executeCamera.Execute(_t, this._applyCameraMotion);
             this._cameraParam = A2B.MotionCamera;
             DA.SetData("Camera Parameter", this._cameraParam);
             DA.SetData("Status", this._isActive.ToString());

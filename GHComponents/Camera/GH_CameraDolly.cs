@@ -30,13 +30,13 @@ namespace Woodpecker.Animation.GHComponents
         {
 
             double dist = 0.0;
-            var t = 0.0;
+            _t = 0.0;
             GH_CameraGoo cameraGoo = null;
             DA.GetData("Camera Parameter", ref cameraGoo);
             DA.GetData("Distance", ref dist);
-            DA.GetData("Pointer_t", ref t);
+            DA.GetData("Pointer_t", ref _t);
 
-            if (t < 0)
+            if (_t < 0)
             {
                 DA.SetData("Camera Parameter", cameraGoo);
                 this._isActive = false;
@@ -54,7 +54,7 @@ namespace Woodpecker.Animation.GHComponents
             var dollyMotion = new CM_Dolly(this._cameraParam, dist);
 
             var executedCamera = new CameraExecution(dollyMotion);
-            executedCamera.Execute(t, this._applyCameraMotion);
+            executedCamera.Execute(_t, this._applyCameraMotion);
             this._cameraParam = dollyMotion.MotionCamera;
 
             DA.SetData("Camera Parameter", new GH_CameraGoo(this._cameraParam));

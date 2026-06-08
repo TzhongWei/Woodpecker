@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("This code is developed by IBOIS, which is used to make animations. \r\n    If there" +
     " are any questions, please contact tsungwei.cheng@epfl.ch"))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+5e9bb9cbbe8a6f90a25677f4375dd7b215c2f5ad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+0e657ecddecbbdd5c9d6cd02092c9c76d555add3")]
 [assembly: System.Reflection.AssemblyProductAttribute("IBOIS.Animation")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IBOIS.Animation")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

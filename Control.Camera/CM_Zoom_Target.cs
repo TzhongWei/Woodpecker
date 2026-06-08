@@ -15,13 +15,13 @@ namespace Woodpecker.Animation.Control.Camera
             }
         }
         public Point3d Target;
-        private CM_Zoom_Target(){}
-        public CM_Zoom_Target(CameraParameter keyCamera, double Factor, Point3d Target): base(keyCamera, new Interval(0,1))
+        private CM_Zoom_Target() { }
+        public CM_Zoom_Target(CameraParameter keyCamera, double Factor, Point3d Target) : base(keyCamera, new Interval(0, 1))
         {
             this.Factor = Factor;
             this.Target = Target;
         }
-        public CM_Zoom_Target(CameraParameter keyCamera, Interval timeline, double Factor, Point3d Target): base(keyCamera, timeline)
+        public CM_Zoom_Target(CameraParameter keyCamera, Interval timeline, double Factor, Point3d Target) : base(keyCamera, timeline)
         {
             this.Factor = Factor;
             this.Target = Target;
@@ -30,11 +30,11 @@ namespace Woodpecker.Animation.Control.Camera
         {
             var newCam = this.MotionCamera;
             double sFactor;
-            if(t <= timeline.Min)
+            if (t <= timeline.Min)
             {
                 sFactor = 1;
             }
-            else if(t >= timeline.Max)
+            else if (t >= timeline.Max)
             {
                 sFactor = Factor;
             }
@@ -47,22 +47,37 @@ namespace Woodpecker.Animation.Control.Camera
 
             CameraTransform.Zoom(ref newCam, sFactor, Target);
 
-            if(this._applyCameraMotion)
-            {
-                if(newCam.IsParallel)
-                {
-                    avp.ZoomWindow(newCam.WindowRect);
-                }
-                else
-                {
-                    avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
-                    avp.Camera35mmLensLength = newCam.CameraLength;
-                }
-                avp.Name = "Motion";
-                avp.CameraUp = newCam.CameraUp;
-            }
+            // if (this._applyCameraMotion)
+            // {
+            //     if (newCam.IsParallel)
+            //     {
+            //         avp.ZoomWindow(newCam.WindowRect);
+            //     }
+            //     else
+            //     {
+            //         avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
+            //         avp.Camera35mmLensLength = newCam.CameraLength;
+            //     }
+            //     avp.Name = "Motion";
+            //     avp.CameraUp = newCam.CameraUp;
+            // }
 
             return newCam;
+        }
+        public override void ApplyMotion(bool IsFinished)
+        {
+            avp.CameraUp = this.MotionCamera.CameraUp;
+            if (this.MotionCamera.IsParallel)
+            {
+                avp.ZoomWindow(this.MotionCamera.WindowRect);
+            }
+            else
+            {
+                avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
+                avp.Camera35mmLensLength = this.MotionCamera.CameraLength;
+            }
+            avp.Name = IsFinished ? "Zoom_Finished" : "Motion";
+            
         }
     }
 }

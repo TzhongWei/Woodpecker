@@ -14,6 +14,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
     public abstract class GH_CameraMotionAbstract : GH_Component, IHasMultipleActiveInstanceDocumentComponent
     {
         public string MultiTag => "CameraSetting";
+        protected double _t;
         public bool HasMultipleActiveInstance()
         {
             var doc = this.OnPingDocument();
@@ -63,10 +64,23 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         }
         protected override void AfterSolveInstance()
         {
-            if(_isActive && HasMultipleActiveInstance())
+            if(_t == 1 || _t < 0)
             {
-                this.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "More than one CameraMotion setting is active");
+                _isActive = false;
             }
+            else
+            {
+                _isActive = true;
+            }
+            // if(!this.Locked)
+            // {
+            //     _isActive = false;
+            // }
+
+            // if(_isActive && HasMultipleActiveInstance())
+            // {
+            //     this.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "More than one CameraMotion setting is active");
+            // }
         }
     }
 }

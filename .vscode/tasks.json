@@ -2,13 +2,70 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build",
+      "label": "build-ghc-all",
       "command": "dotnet",
-      "type": "shell",
+      "type": "process",
       "args": [
         "build",
         "-clp:NoSummary",
-        "${workspaceFolder}/IBOIS.Animation.csproj"
+        "${workspaceFolder}/Woodpecker.Animation.GHC.csproj"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build-ghc-net7",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "-clp:NoSummary",
+        "${workspaceFolder}/Woodpecker.Animation.GHC.csproj",
+        "--framework",
+        "net7.0"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      },
+      "group": "build"
+    },
+    {
+      "label": "build-ghc-net7-windows",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "-clp:NoSummary",
+        "${workspaceFolder}/Woodpecker.Animation.GHC.csproj",
+        "--framework",
+        "net7.0-windows"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "clear": true
+      },
+      "group": "build"
+    },
+    {
+      "label": "build-ghc-net48",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "-clp:NoSummary",
+        "${workspaceFolder}/Woodpecker.Animation.GHC.csproj",
+        "--framework",
+        "net48"
       ],
       "problemMatcher": "$msCompile",
       "presentation": {

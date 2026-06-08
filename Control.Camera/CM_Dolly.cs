@@ -40,23 +40,38 @@ namespace Woodpecker.Animation.Control.Camera
             // Linear interpolation of camera distance for dolly motion.
             var newDist = _distance * factor;
             CameraTransform.Dolly(ref newCam, newDist);
-
-            if (this._applyCameraMotion)
-            {
-                if (newCam.IsParallel)
-                {
-                    avp.ZoomWindow(newCam.WindowRect);
-                }
-                else
-                {
-                    avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
-                    avp.Camera35mmLensLength = newCam.CameraLength;
-                }
-                avp.Name = "Motion";
-                avp.CameraUp = newCam.CameraUp;
-            }
+            this.MotionCamera = newCam;
+            
+            // if (this._applyCameraMotion)
+            // {
+            //     if (newCam.IsParallel)
+            //     {
+            //         avp.ZoomWindow(newCam.WindowRect);
+            //     }
+            //     else
+            //     {
+            //         avp.SetCameraLocations(newCam.CameraTarget, newCam.CameraLocation);
+            //         avp.Camera35mmLensLength = newCam.CameraLength;
+            //     }
+            //     avp.Name = "Motion";
+            //     avp.CameraUp = newCam.CameraUp;
+            // }
 
             return newCam;
+        }
+        public override void ApplyMotion(bool IsFinished)
+        {
+            avp.CameraUp = this.MotionCamera.CameraUp;
+            if (this.MotionCamera.IsParallel)
+            {
+                avp.ZoomWindow(this.MotionCamera.WindowRect);
+            }
+            else
+            {
+                avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
+                avp.Camera35mmLensLength = this.MotionCamera.CameraLength;
+            }
+            avp.Name = IsFinished ? "Dolly_Finished" : "Motion";
         }
     }
 }

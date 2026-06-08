@@ -19,6 +19,11 @@ namespace Woodpecker.Animation.Control.Camera
                 {
 
                     _cameraMotion.Evaluate(t);
+                    if(applyCameraMotion)
+                    {
+                        _cameraMotion.ApplyMotion(_cameraMotion.IsEnd(t));
+                    }
+
                     result = _cameraMotion.PostEvaluate();
 
                 }
