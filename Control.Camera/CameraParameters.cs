@@ -9,6 +9,7 @@ using Woodpecker.Animation.Geometry.Display;
 using Rhino.Display;
 using Rhino;
 using System.Drawing;
+using System.Security.Permissions;
 
 namespace Woodpecker.Animation.Control.Camera
 {
@@ -17,7 +18,63 @@ namespace Woodpecker.Animation.Control.Camera
         RhinoReference,
         Phantom,
     }
-    
+    public sealed class ParallelWindowValues
+    {
+        public ParallelWindowValues(ViewportInfo cameraInfo)
+        {
+            if (cameraInfo == null)
+                throw new ArgumentNullException(nameof(cameraInfo));
+
+            cameraInfo.GetFrustum(
+                out var left,
+                out var right,
+                out var bottom,
+                out var top,
+                out var near,
+                out var far);
+
+            var width = Math.Abs(right - left);
+            var height = Math.Abs(top - bottom);
+
+            ParallelHeight = height > 1e-9 ? height : 1.0;
+            AspectRatio = width > 1e-9 ? width / ParallelHeight : 1.0;
+            OffsetX = (left + right) * 0.5;
+            OffsetY = (bottom + top) * 0.5;
+            Near = near;
+            Far = far;
+        }
+        public double ParallelHeight { get; set; }
+        public double AspectRatio { get; set; }
+        public double OffsetX { get; set; }
+        public double OffsetY { get; set; }
+        public double Near { get; set; }
+        public double Far { get; set; }
+        public void SetValue(
+            double? ParallelHeight = null,
+            double? AspectRatio = null,
+            double? OffsetX = null,
+            double? OffsetY = null,
+            double? Near = null,
+            double? Far = null)
+        {
+            if (ParallelHeight.HasValue && ParallelHeight.Value > 1e-9)
+                this.ParallelHeight = ParallelHeight.Value;
+            if (AspectRatio.HasValue && AspectRatio.Value > 1e-9)
+                this.AspectRatio = AspectRatio.Value;
+            if (OffsetX.HasValue &&
+                !double.IsNaN(OffsetX.Value) &&
+                !double.IsInfinity(OffsetX.Value))
+                this.OffsetX = OffsetX.Value;
+            if (OffsetY.HasValue &&
+                !double.IsNaN(OffsetY.Value) &&
+                !double.IsInfinity(OffsetY.Value))
+                this.OffsetY = OffsetY.Value;
+            if (Near.HasValue && Near.Value > 1e-9)
+                this.Near = Near.Value;
+            if (Far.HasValue && Far.Value > this.Near)
+                this.Far = Far.Value;
+        }
+    }
     public class CameraParameter
     {
         public readonly CameraReference SourceType;
@@ -35,14 +92,27 @@ namespace Woodpecker.Animation.Control.Camera
         public Point3d CameraLocation => this._viewportInfo.CameraLocation;
         public bool IsParallel => this._viewportInfo.IsParallelProjection;
         public double CameraLength => this._viewportInfo.Camera35mmLensLength;
+        public readonly ParallelWindowValues parallelParameters;
+        [Obsolete]
         public Rectangle WindowRect;
-        public Rectangle BaseWindowRect {get; private set;}
+        [Obsolete]
+        public Rectangle BaseWindowRect { get; private set; }
         public void SetParallel(bool ChangeToParallel)
         {
             if (IsParallel == ChangeToParallel)
                 return;
             if (ChangeToParallel)
+            {
                 this._viewportInfo.ChangeToParallelProjection(true);
+                var values = new ParallelWindowValues(this._viewportInfo);
+                this.parallelParameters.SetValue(
+                    values.ParallelHeight,
+                    values.AspectRatio,
+                    values.OffsetX,
+                    values.OffsetY,
+                    values.Near,
+                    values.Far);
+            }
             else
                 this._viewportInfo.ChangeToPerspectiveProjection(CameraTarget.DistanceTo(CameraLocation), true, CameraLength);
         }
@@ -68,6 +138,7 @@ namespace Woodpecker.Animation.Control.Camera
             this.Name = this._viewInfo.Name;
             _viewportInfo = new ViewportInfo(this._viewInfo.Viewport);
             SourceType = CameraReference.RhinoReference;
+            this.parallelParameters = new ParallelWindowValues(_viewportInfo);
             WindowRect = CameraUtil.ViewRect(_viewportInfo);
             BaseWindowRect = WindowRect;
         }
@@ -82,6 +153,8 @@ namespace Woodpecker.Animation.Control.Camera
             _viewportInfo = new ViewportInfo(viewportInfo);
             this.ViewIndex = -1;
             SourceType = CameraReference.Phantom;
+            this.parallelParameters = new ParallelWindowValues(_viewportInfo);
+
             WindowRect = CameraUtil.ViewRect(_viewportInfo);
             BaseWindowRect = WindowRect;
         }
@@ -106,7 +179,7 @@ namespace Woodpecker.Animation.Control.Camera
         }
         public static CameraParameter CreateCameraParameter(string Name, ViewportInfo viewportInfo, bool CreateInRhino = true)
         {
-            if(CreateInRhino)
+            if (CreateInRhino)
             {
                 var doc = Rhino.RhinoDoc.ActiveDoc;
                 if (doc == null)
@@ -119,12 +192,12 @@ namespace Woodpecker.Animation.Control.Camera
 
                 activeView.ActiveViewport.SetViewProjection(copy_viewportInfo, false);
                 doc.NamedViews.Add(Name, activeView.ActiveViewport.Id);
-                if(tempViewIndex >= 0)
+                if (tempViewIndex >= 0)
                 {
                     doc.NamedViews.Restore(tempViewIndex, activeView.ActiveViewport);
                     doc.NamedViews.Delete(tempViewIndex);
                 }
-                
+
 
                 return new CameraParameter(Name);
             }
@@ -161,7 +234,13 @@ namespace Woodpecker.Animation.Control.Camera
             if (windowSize <= 0)
                 windowSize = 10.0;
 
-            SetParallelWindowSize(viewportInfo, windowSize);
+            var doc = RhinoDoc.ActiveDoc;
+            var bounds = doc?.Views.ActiveView?.ActiveViewport.Bounds;
+            var aspectRatio = bounds.HasValue && bounds.Value.Height > 0
+                ? bounds.Value.Width / (double)bounds.Value.Height
+                : 1.0;
+
+            SetParallelWindowSize(viewportInfo, windowSize, aspectRatio);
 
             return CreateCameraParameter(GetNextCameraName("ParallelView", ref _parallelCameraIndex), viewportInfo, true);
         }
@@ -215,13 +294,23 @@ namespace Woodpecker.Animation.Control.Camera
             up.Unitize();
             return up;
         }
-        private static void SetParallelWindowSize(ViewportInfo viewportInfo, double windowSize)
+        private static void SetParallelWindowSize(
+            ViewportInfo viewportInfo,
+            double windowHeight,
+            double aspectRatio)
         {
             double left, right, bottom, top, near, far;
             viewportInfo.GetFrustum(out left, out right, out bottom, out top, out near, out far);
 
-            var half = windowSize * 0.5;
-            viewportInfo.SetFrustum(-half, half, -half, half, near, far);
+            var halfHeight = windowHeight * 0.5;
+            var halfWidth = halfHeight * Math.Max(aspectRatio, 1e-9);
+            viewportInfo.SetFrustum(
+                -halfWidth,
+                halfWidth,
+                -halfHeight,
+                halfHeight,
+                near,
+                far);
         }
         private static string GetNextCameraName(string prefix, ref int index)
         {
@@ -241,6 +330,14 @@ namespace Woodpecker.Animation.Control.Camera
             if (string.IsNullOrWhiteSpace(newName))
                 throw new Exception("newName cannot be null or empty.");
             var duplicate = CreateCameraParameter(newName, this._viewportInfo, CreateInRhino);
+            duplicate.parallelParameters.SetValue(
+                this.parallelParameters.ParallelHeight,
+                this.parallelParameters.AspectRatio,
+                this.parallelParameters.OffsetX,
+                this.parallelParameters.OffsetY,
+                this.parallelParameters.Near,
+                this.parallelParameters.Far
+            );
             duplicate.WindowRect = this.WindowRect;
             duplicate.BaseWindowRect = this.BaseWindowRect;
             return duplicate;
@@ -248,6 +345,14 @@ namespace Woodpecker.Animation.Control.Camera
         public CameraParameter ToPhantom(string name = null)
         {
             var phantom = new CameraParameter(name ?? this.Name, this._viewportInfo);
+            phantom.parallelParameters.SetValue(
+                this.parallelParameters.ParallelHeight,
+                this.parallelParameters.AspectRatio,
+                this.parallelParameters.OffsetX,
+                this.parallelParameters.OffsetY,
+                this.parallelParameters.Near,
+                this.parallelParameters.Far
+            );
             phantom.WindowRect = this.WindowRect;
             phantom.BaseWindowRect = this.BaseWindowRect;
             return phantom;

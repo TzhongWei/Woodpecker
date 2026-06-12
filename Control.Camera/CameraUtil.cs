@@ -117,19 +117,13 @@ namespace Woodpecker.Animation.Control.Camera
             if (targetCorners.Count != 4)
                 return DisplayCamera(camera.viewportInfo);
 
-            var viewport = camera.viewportInfo;
-            var baseTargetCorners = GetTargetRectCorners(viewport);
-            var nearCorners = viewport.GetNearPlaneCorners();
-            var farCorners = viewport.GetFarPlaneCorners();
-            if (baseTargetCorners.Count != 4 || nearCorners.Length != 4 || farCorners.Length != 4)
-                return DisplayCamera(camera.viewportInfo);
-
-            var camDir = viewport.CameraDirection;
+            var camDir = camera.CameraDirection;
             if (!camDir.Unitize())
                 return DisplayCamera(camera.viewportInfo);
 
-            var nearOffset = Vector3d.Multiply(nearCorners[0] - baseTargetCorners[0], camDir);
-            var farOffset = Vector3d.Multiply(farCorners[0] - baseTargetCorners[0], camDir);
+            var targetDistance = camera.CameraLocation.DistanceTo(camera.CameraTarget);
+            var nearOffset = camera.parallelParameters.Near - targetDistance;
+            var farOffset = camera.parallelParameters.Far - targetDistance;
 
             var fakeNearCorners = targetCorners.Select(x => x + camDir * nearOffset).ToArray();
             var fakeFarCorners = targetCorners.Select(x => x + camDir * farOffset).ToArray();
@@ -167,52 +161,27 @@ namespace Woodpecker.Animation.Control.Camera
         }
         private static List<Point3d> GetParallelTargetRectCorners(CameraParameter camera)
         {
-            var baseTargetCorners = GetTargetRectCorners(camera.viewportInfo);
-            if (baseTargetCorners.Count != 4)
-                return baseTargetCorners;
-
             var xAxis = camera.viewportInfo.CameraX;
             var yAxis = camera.viewportInfo.CameraY;
             if (!xAxis.Unitize() || !yAxis.Unitize())
-                return baseTargetCorners;
+                return GetTargetRectCorners(camera.viewportInfo);
 
-            var target = camera.CameraTarget;
-            var xValues = baseTargetCorners.Select(x => Vector3d.Multiply(x - target, xAxis)).ToList();
-            var yValues = baseTargetCorners.Select(x => Vector3d.Multiply(x - target, yAxis)).ToList();
-
-            var minX = xValues.Min();
-            var maxX = xValues.Max();
-            var minY = yValues.Min();
-            var maxY = yValues.Max();
-            var widthWorld = maxX - minX;
-            var heightWorld = maxY - minY;
-            if (Math.Abs(widthWorld) < 1e-9 || Math.Abs(heightWorld) < 1e-9)
-                return baseTargetCorners;
-
-            var rect = camera.WindowRect;
-            var baseRect = camera.BaseWindowRect;
-            if (baseRect.Width == 0 || baseRect.Height == 0)
-                return baseTargetCorners;
-
-            var uLeft = (rect.Left - baseRect.Left) / (double)baseRect.Width;
-            var uRight = (rect.Right - baseRect.Left) / (double)baseRect.Width;
-            var vTop = (rect.Top - baseRect.Top) / (double)baseRect.Height;
-            var vBottom = (rect.Bottom - baseRect.Top) / (double)baseRect.Height;
-
-            var xLeft = minX + widthWorld * uLeft;
-            var xRight = minX + widthWorld * uRight;
-            var yTop = maxY - heightWorld * vTop;
-            var yBottom = maxY - heightWorld * vBottom;
+            var values = camera.parallelParameters;
+            var halfHeight = values.ParallelHeight * 0.5;
+            var halfWidth = halfHeight * values.AspectRatio;
+            var center = camera.CameraTarget
+                + xAxis * values.OffsetX
+                + yAxis * values.OffsetY;
 
             Point3d ToWorld(double x, double y)
-            => target + xAxis * x + yAxis * y;
+                => center + xAxis * x + yAxis * y;
 
             return new List<Point3d>
             {
-                ToWorld(xLeft, yTop),
-                ToWorld(xRight, yTop),
-                ToWorld(xLeft, yBottom),
-                ToWorld(xRight, yBottom)
+                ToWorld(-halfWidth, halfHeight),
+                ToWorld(halfWidth, halfHeight),
+                ToWorld(-halfWidth, -halfHeight),
+                ToWorld(halfWidth, -halfHeight)
             };
         }
         public static List<Line> DisplayCameraDirection(Rhino.DocObjects.ViewportInfo viewport)
@@ -277,7 +246,7 @@ namespace Woodpecker.Animation.Control.Camera
             int h = Math.Max(1, RectMaxY - RectMinY);
             return new Rectangle(RectMinX, RectMinY, w, h);
         }
-    
+        [Obsolete]
         public static Rectangle InterpolateParallel(CameraParameter CurrentInfo,
             ViewportInfo viewport1,
             ViewportInfo viewport2,
@@ -341,10 +310,8 @@ namespace Woodpecker.Animation.Control.Camera
         {
             if(!cameraParam1.IsParallel || !cameraParam2.IsParallel)
                 throw new ArgumentException("Both camera parameters must be parallel.");
-            cameraParam1.viewportInfo.GetFrustum(out var leftA, out var rightA, out var bottomA, out var topA, out var _, out var _);
-            cameraParam2.viewportInfo.GetFrustum(out var leftB, out var rightB, out var bottomB, out var topB, out var _, out var _);
-            var heightA = Math.Abs(topA - bottomA);
-            var heightB = Math.Abs(topB - bottomB);
+            var heightA = cameraParam1.parallelParameters.ParallelHeight;
+            var heightB = cameraParam2.parallelParameters.ParallelHeight;
             if (heightA <= 1e-9 || heightB <= 1e-9)
                 return 1.0;
             return heightA / heightB;

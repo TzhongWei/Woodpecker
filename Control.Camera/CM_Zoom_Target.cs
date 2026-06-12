@@ -45,8 +45,8 @@ namespace Woodpecker.Animation.Control.Camera
                 sFactor = 1.0 + t * (Factor - 1.0);
             }
 
-            CameraTransform.Zoom(ref newCam, sFactor, Target);
-
+            CameraTransform.ScaleZoomToTarget(ref newCam, sFactor, Target);
+            this.MotionCamera = newCam;
             // if (this._applyCameraMotion)
             // {
             //     if (newCam.IsParallel)
@@ -67,17 +67,18 @@ namespace Woodpecker.Animation.Control.Camera
         public override void ApplyMotion(bool IsFinished)
         {
             avp.CameraUp = this.MotionCamera.CameraUp;
+            avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
             if (this.MotionCamera.IsParallel)
             {
-                avp.ZoomWindow(this.MotionCamera.WindowRect);
+                
+                ZoomParallelWindows(this);
             }
             else
             {
-                avp.SetCameraLocations(this.MotionCamera.CameraTarget, this.MotionCamera.CameraLocation);
                 avp.Camera35mmLensLength = this.MotionCamera.CameraLength;
             }
             avp.Name = IsFinished ? "Zoom_Finished" : "Motion";
-            
+
         }
     }
 }

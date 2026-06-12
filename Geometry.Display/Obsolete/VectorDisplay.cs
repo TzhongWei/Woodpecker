@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace Woodpecker.Animation.Geometry.Display
 {
+    [Obsolete]
     public class VectorDisplay
     {
         private Point3d _arrowheadLocation;
@@ -37,7 +38,7 @@ namespace Woodpecker.Animation.Geometry.Display
             var ptOnCrv = Crv.PointAt(t);
             var tangentOnCrv = Crv.TangentAt(t);
             var vectorDisplay = new VectorDisplay(ptOnCrv, tangentOnCrv, setting);
-            var settingCol = setting.CurrentColor;
+            var settingCol = setting.Colour;
             var col = component.Attributes.Selected ? DisplayDefaultColour.SelectedColour : Color.FromArgb((int)Math.Round(t * settingCol.A),
             settingCol.R, settingCol.G, settingCol.B);
             var draw = setting.DrawArrowCurve(Crv);
@@ -51,7 +52,7 @@ namespace Woodpecker.Animation.Geometry.Display
             var ptOnCrv = Crv.PointAt(t);
             var tangentOnCrv = Crv.TangentAt(t);
             var vectorDisplay = new VectorDisplay(ptOnCrv, tangentOnCrv, setting);
-            var settingCol = setting.CurrentColor;
+            var settingCol = setting.Colour;
             var col = component.Attributes.Selected ? DisplayDefaultColour.SelectedColour : Color.FromArgb((int)Math.Round(t * settingCol.A),
             settingCol.R, settingCol.G, settingCol.B);
             vectorDisplay._body.Add(setting.DrawArrowCurve(Crv));
@@ -83,7 +84,7 @@ namespace Woodpecker.Animation.Geometry.Display
         {
             var vectorDisplay = new VectorDisplay(startPoint, direction, setting);
             //ArrowHead = setting.DrawArrowhead();
-            var settingCol = setting.CurrentColor;
+            var settingCol = setting.Colour;
             var col = component.Attributes.Selected ? DisplayDefaultColour.SelectedColour : Color.FromArgb((int)Math.Round(t * settingCol.A),
             settingCol.R, settingCol.G, settingCol.B);
             vectorDisplay._body.Add(setting.DrawArrowLine());

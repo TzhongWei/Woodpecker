@@ -233,25 +233,111 @@ namespace Woodpecker.Animation.Control.Timeline
             }
             return CurrentP;
         }
-        
-        
+        public static List<bool> IsTimelineChannelFinished(List<Interval> TL, double Global_T, out List<int> state)
+        {
+            if (TL == null || TL.Count == 0)
+            {
+                state = new List<int>();
+                return new List<bool>();
+            }
+
+            state = TL
+                .Select(timeline => IsTimelineInFinished(timeline, Global_T))
+                .ToList();
+
+            return state
+                .Select(timelineState => timelineState == 1)
+                .ToList();
+        }
+
+        public static int IsTimelineInFinished(Interval TL, double Global_T)
+        {
+            if (!TL.IsValid ||
+                double.IsNaN(Global_T) ||
+                double.IsInfinity(Global_T))
+                return -2;
+
+            if (Global_T < TL.Min)
+                return -1;
+
+            if (TL.IncludesParameter(Global_T))
+                return 0;
+
+            if (Global_T > TL.Max)
+                return 1;
+
+            return -2;
+        }
+        public static void IsActiveInChannel(
+    List<Interval> TLs,
+    double Global_T,
+    bool retainValue,
+    ref List<int> Channel)
+        {
+            var updateChannelList = new List<int>();
+
+            if (TLs == null || TLs.Count == 0)
+            {
+                Channel = updateChannelList;
+                return;
+            }
+
+            double min = 0;
+            double max = 1;
+            IntervalRange(TLs, ref min, ref max);
+
+            if (Global_T < min)
+            {
+                Channel = updateChannelList;
+                return;
+            }
+
+            for (int i = 0; i < TLs.Count; i++)
+            {
+                if (TLs[i].IncludesParameter(Global_T))
+                    updateChannelList.Add(i);
+            }
+
+            if (retainValue && updateChannelList.Count == 0)
+            {
+                int candidate = -1;
+                double closestDistance = double.PositiveInfinity;
+
+                for (int i = 0; i < TLs.Count; i++)
+                {
+                    double distance = Global_T - TLs[i].Max;
+
+                    if (distance >= 0 && distance < closestDistance)
+                    {
+                        candidate = i;
+                        closestDistance = distance;
+                    }
+                }
+
+                if (candidate >= 0)
+                    updateChannelList.Add(candidate);
+            }
+
+            Channel = updateChannelList;
+        }
+
         public static double ActivativeCircularTimeline(Interval TLin, Interval TLout, double G_T, int round = 4)
         {
-            if(TLin.IncludesParameter(G_T) || TLout.IncludesParameter(G_T))
-            return ActivativeTimeline(TLin, TLout, G_T, round);
+            if (TLin.IncludesParameter(G_T) || TLout.IncludesParameter(G_T))
+                return ActivativeTimeline(TLin, TLout, G_T, round);
             else
             {
                 var period = TLin.Length + TLout.Length + TLout.Min - TLin.Max;
-                if(G_T > TLin.Max && G_T < TLout.Min)
+                if (G_T > TLin.Max && G_T < TLout.Min)
                 {
                     return 1;
                 }
-                if(G_T < TLin.Min)
+                if (G_T < TLin.Min)
                 {
                     G_T += period;
                     return ActivativeCircularTimeline(TLin, TLout, G_T, round);
                 }
-                if(G_T > TLout.Max)
+                if (G_T > TLout.Max)
                 {
                     G_T -= period;
                     return ActivativeCircularTimeline(TLin, TLout, G_T, round);
@@ -259,24 +345,24 @@ namespace Woodpecker.Animation.Control.Timeline
                 return -1;
             }
         }
-        
+
         public static double ActivativeCircularTimeline(Interval TLin, double G_T, int round = 4)
         {
-            if(TLin.IncludesParameter(G_T))
+            if (TLin.IncludesParameter(G_T))
             {
                 return ActivativeTimeline(TLin, G_T, round);
             }
             else
             {
-                if(G_T < TLin.Min)
+                if (G_T < TLin.Min)
                 {
                     G_T += TLin.Length;
-                    return  ActivativeCircularTimeline(TLin, G_T, round);
+                    return ActivativeCircularTimeline(TLin, G_T, round);
                 }
-                if(G_T > TLin.Max)
+                if (G_T > TLin.Max)
                 {
                     G_T -= TLin.Length;
-                    return  ActivativeCircularTimeline(TLin, G_T, round);
+                    return ActivativeCircularTimeline(TLin, G_T, round);
                 }
                 return -1;
             }

@@ -65,9 +65,8 @@ namespace Woodpecker.Animation.Control.Camera
                     KeyCamera.viewportInfo,
                     false);
 
-                // Parallel zoom is currently stored separately.
                 if (KeyCamera.IsParallel)
-                    avp.ZoomWindow(KeyCamera.WindowRect);
+                    ZoomParallelWindows(this);
             }
 
 
@@ -92,6 +91,45 @@ namespace Woodpecker.Animation.Control.Camera
         public bool IsEnd(double t)
         {
             return t >= this.timeline.Max;
+        }
+        protected static void ZoomParallelWindows(CameraMotionAbstract cameraMotion)
+        {
+            if (cameraMotion == null)
+                throw new ArgumentNullException(nameof(cameraMotion));
+            if (cameraMotion.avp == null)
+                throw new InvalidOperationException("The active viewport has not been initialised.");
+
+            var camera = cameraMotion.MotionCamera ?? cameraMotion.KeyCamera;
+            if (camera == null || !camera.IsParallel)
+                return;
+
+            var values = camera.parallelParameters;
+            var bounds = cameraMotion.avp.Bounds;
+            var viewportAspect = bounds.Height > 0
+                ? bounds.Width / (double)bounds.Height
+                : values.AspectRatio;
+
+            var halfHeight = Math.Max(values.ParallelHeight, 1e-9) * 0.5;
+            var halfWidth = halfHeight * Math.Max(viewportAspect, 1e-9);
+
+            var projection = new Rhino.DocObjects.ViewportInfo(cameraMotion.avp);
+            projection.GetFrustum(
+                out _,
+                out _,
+                out _,
+                out _,
+                out var near,
+                out var far);
+
+            projection.SetFrustum(
+                values.OffsetX - halfWidth,
+                values.OffsetX + halfWidth,
+                values.OffsetY - halfHeight,
+                values.OffsetY + halfHeight,
+                near,
+                far);
+
+            cameraMotion.avp.SetViewProjection(projection, false);
         }
     }
 }

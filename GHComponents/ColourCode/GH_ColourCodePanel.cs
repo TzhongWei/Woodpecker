@@ -50,23 +50,34 @@ namespace Woodpecker.Animation.GHComponents
             if (!DA.GetDataTree<GH_String>(0, out var CC) || CC == null || CC.Branches.Count == 0)
             {
                 this.ColourCodeDic = new Dictionary<string, List<Color>>();
-                ((ColourDisplayAttributes)this.m_attributes).UpdateColourCode(this.ColourCodeDic);
-                this.Attributes?.ExpireLayout();
-                this.OnDisplayExpired(true);
+                UpdateAttributes();
                 return;
             }
 
             var CCDic = new Dictionary<string, List<string>>();
             for (int i = 0; i < CC.Branches.Count; i++)
             {
-                CCDic[CC.Branches[i][0].Value] = CC.Branches[i].ToList().Skip(1).Select(x => x.Value).ToList();
+                var branch = CC.Branches[i];
+                if (branch == null || branch.Count == 0)
+                    continue;
+
+                CCDic[branch[0].Value] = branch.Skip(1).Select(x => x.Value).ToList();
             }
             this.ColourCodeDic = ColourCodeUtil.StringToColourDictionary(CCDic);
-            
-            ((ColourDisplayAttributes)this.m_attributes).UpdateColourCode(this.ColourCodeDic);
-            this.Attributes?.ExpireLayout();
-            this.OnDisplayExpired(true);
+
+            UpdateAttributes();
         }
+
+        private void UpdateAttributes()
+        {
+            if (!(m_attributes is ColourDisplayAttributes attributes) ||
+                !attributes.UpdateColourCode(ColourCodeDic))
+                return;
+
+            attributes.ExpireLayout();
+            OnDisplayExpired(false);
+        }
+
         public override Guid ComponentGuid => new Guid("A1B2C3D4-5678-90AB-CDEF-1234567890AB");
         protected override Bitmap Icon => Properties.Resources.GH_Colour_Panel;
     }

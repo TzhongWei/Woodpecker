@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IHblog2gbLQ=",
+  "dgSpecHash": "PIUUvmR6Q0U=",
   "success": true,
-  "projectFilePath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.GHC.csproj",
+  "projectFilePath": "/Volumes/File/IBOIS/Exhibition/03_Program/02_Code/IBOIS.Animation/Woodpecker.Animation.Core.csproj",
   "expectedPackageFiles": [
     "/Users/tsungweicheng/.nuget/packages/grasshopper/8.0.23304.9001/grasshopper.8.0.23304.9001.nupkg.sha512",
     "/Users/tsungweicheng/.nuget/packages/microsoft.netframework.referenceassemblies/1.0.3/microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",

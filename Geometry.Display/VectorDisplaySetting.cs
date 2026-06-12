@@ -22,9 +22,10 @@ namespace Woodpecker.Animation.Geometry.Display
         public double ArrowheadSize { get; set; }
         // public VectorDisplayType DisplayType { get; set; }
         public double ArrowRelativeSize {get; set;}
+        [Obsolete]
         public VectorDisplay VectorDisplay { get; set; }
-        private Color _color;
-        public Color CurrentColor => _color;
+        private Color _colour;
+        public Color Colour => _colour;
         public static VectorDisplaySetting Unset => new VectorDisplaySetting();
         public VectorDisplaySetting()
         {
@@ -32,7 +33,7 @@ namespace Woodpecker.Animation.Geometry.Display
             ArrowheadSize = 2;
             ArrowRelativeSize = 1;
             Width = 1;
-            _color = Color.Black;
+            _colour = Color.Black;
             // DisplayType = VectorDisplayType.DirectionArrow;
             //_arrowGeometries = new List<GeometryBase>();
         }
@@ -41,7 +42,7 @@ namespace Woodpecker.Animation.Geometry.Display
             Length = length;
             ArrowheadSize = arrowheadSize;
             Width = width;
-            _color = color;
+            _colour = color;
             // DisplayType = VectorDisplayType.DirectionArrow;
             // _arrowGeometries = new List<GeometryBase>();
         }
@@ -103,6 +104,7 @@ namespace Woodpecker.Animation.Geometry.Display
         //             break;
         //     }
         // }
+        [Obsolete]
         public Curve DrawArrowCurve(Curve baseCurve)
         {
             baseCurve.ClosestPoint(this.VectorDisplay.ArrowheadLocation, out double param);
@@ -124,6 +126,7 @@ namespace Woodpecker.Animation.Geometry.Display
         /// Draw linear body of the arrow, which is a line from the location in the direction of the vector with the specified length.
         /// </summary>
         /// <returns></returns>
+        [Obsolete]
         public Curve DrawArrowLine()
         {
             var arrowLine = new LineCurve(this.VectorDisplay.ArrowheadLocation - this.VectorDisplay.Direction * Length, this.VectorDisplay.ArrowheadLocation);

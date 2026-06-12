@@ -64,7 +64,7 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
         }
         protected override void AfterSolveInstance()
         {
-            if(_t == 1 || _t < 0)
+            if(_t == 1 || _t < 0 || _applyCameraMotion || !this.Locked)
             {
                 _isActive = false;
             }
@@ -72,15 +72,6 @@ namespace Woodpecker.Animation.GHComponents.CustomGHComponents
             {
                 _isActive = true;
             }
-            // if(!this.Locked)
-            // {
-            //     _isActive = false;
-            // }
-
-            // if(_isActive && HasMultipleActiveInstance())
-            // {
-            //     this.AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "More than one CameraMotion setting is active");
-            // }
         }
     }
 }

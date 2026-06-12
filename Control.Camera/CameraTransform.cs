@@ -9,6 +9,485 @@ namespace Woodpecker.Animation.Control.Camera
 {
     public static class CameraTransform
     {
+        private const double Tolerance = 1e-9;
+
+        private static CameraParameter GetWorkingCamera(
+            CameraParameter camera,
+            string functionName)
+        {
+            if (camera == null)
+                throw new ArgumentNullException(
+                    nameof(camera),
+                    $"CameraParameter cannot be null in {functionName}.");
+
+            return camera.SourceType == CameraReference.RhinoReference
+                ? camera.Duplicate(camera.Name + ".P_" + functionName, false)
+                : camera;
+        }
+        public static bool SetCameraPoseParallel(
+            ref CameraParameter camera,
+            Point3d cameraLocation,
+            Vector3d cameraUp,
+            Vector3d cameraDirection,
+            double factor = -1
+        )
+        {
+            if (!TryGetCameraFrame(
+                cameraLocation,
+                cameraUp,
+                cameraDirection,
+                out var direction,
+                out var up))
+            {
+                return false;
+            }
+
+            var workingCamera = GetWorkingCamera(
+                camera,
+                nameof(SetCameraPoseParallel));
+
+            var targetDistance = GetTargetDistance(workingCamera);
+
+            if (!workingCamera.IsParallel)
+            {
+                workingCamera.SetParallel(true);
+            }
+
+            workingCamera.viewportInfo.SetCameraLocation(cameraLocation);
+            workingCamera.viewportInfo.SetCameraDirection(direction);
+            workingCamera.viewportInfo.SetCameraUp(up);
+            workingCamera.viewportInfo.TargetPoint =
+                cameraLocation + direction * targetDistance;
+
+            if (factor > 0)
+            {
+                if (!IsValidFactor(factor))
+                    return false;
+
+                var newHeight =
+                    workingCamera.parallelParameters.ParallelHeight / factor;
+
+                if (newHeight <= Tolerance)
+                    return false;
+
+                workingCamera.parallelParameters.ParallelHeight = newHeight;
+            }
+
+            if (!SynchronizeParallelFrustum(workingCamera))
+                return false;
+
+            camera = workingCamera;
+            return true;
+        }
+
+        public static bool SetCameraPosePerspective(
+            ref CameraParameter camera,
+            Point3d cameraLocation,
+            Vector3d cameraUp,
+            Vector3d cameraDirection,
+            double lensLength = -1
+        )
+        {
+            if (!TryGetCameraFrame(
+                cameraLocation,
+                cameraUp,
+                cameraDirection,
+                out var direction,
+                out var up))
+            {
+                return false;
+            }
+
+            var workingCamera = GetWorkingCamera(
+                camera,
+                nameof(SetCameraPosePerspective));
+
+            var targetDistance = GetTargetDistance(workingCamera);
+            var newLensLength = lensLength > 0
+                ? lensLength
+                : workingCamera.CameraLength;
+
+            if (!IsValidFactor(newLensLength))
+                return false;
+
+            if (workingCamera.IsParallel)
+            {
+                workingCamera.viewportInfo.ChangeToPerspectiveProjection(
+                    targetDistance,
+                    true,
+                    newLensLength);
+            }
+
+            workingCamera.viewportInfo.SetCameraLocation(cameraLocation);
+            workingCamera.viewportInfo.SetCameraDirection(direction);
+            workingCamera.viewportInfo.SetCameraUp(up);
+            workingCamera.viewportInfo.TargetPoint =
+                cameraLocation + direction * targetDistance;
+            workingCamera.viewportInfo.Camera35mmLensLength = newLensLength;
+
+            camera = workingCamera;
+            return true;
+        }
+
+        private static bool TryGetCameraFrame(
+            Point3d cameraLocation,
+            Vector3d cameraUp,
+            Vector3d cameraDirection,
+            out Vector3d direction,
+            out Vector3d up)
+        {
+            direction = cameraDirection;
+            up = cameraUp;
+
+            if (!cameraLocation.IsValid ||
+                !direction.IsValid ||
+                !direction.Unitize() ||
+                !up.IsValid)
+            {
+                return false;
+            }
+
+            // Remove the component parallel to the viewing direction.
+            up -= direction * (up * direction);
+            return up.IsValid && up.Unitize();
+        }
+
+        private static double GetTargetDistance(CameraParameter camera)
+        {
+            var distance = camera.CameraLocation.DistanceTo(camera.CameraTarget);
+            return distance > Tolerance &&
+                !double.IsNaN(distance) &&
+                !double.IsInfinity(distance)
+                    ? distance
+                    : 1.0;
+        }
+
+        public static bool Dolly(ref CameraParameter camera, double distance)
+        {
+            var workingCamera = GetWorkingCamera(camera, nameof(Dolly));
+
+            if (workingCamera.IsParallel)
+            {
+                var newHeight =
+                    workingCamera.parallelParameters.ParallelHeight -
+                    2.0 * distance;
+
+                if (newHeight <= Tolerance)
+                    return false;
+
+                workingCamera.parallelParameters.ParallelHeight = newHeight;
+            }
+            else
+            {
+                var direction = workingCamera.CameraDirection;
+                if (!direction.Unitize())
+                    return false;
+
+                workingCamera.viewportInfo.SetCameraLocation(
+                    workingCamera.CameraLocation + direction * distance);
+                workingCamera.viewportInfo.TargetPoint =
+                    workingCamera.CameraTarget + direction * distance;
+            }
+
+            camera = workingCamera;
+            return true;
+        }
+
+        public static bool Zoom(ref CameraParameter camera, double factor)
+        {
+            var workingCamera = GetWorkingCamera(camera, nameof(Zoom));
+            if (!IsValidFactor(factor))
+                return false;
+
+            if (workingCamera.IsParallel)
+            {
+                var values = workingCamera.parallelParameters;
+                var newHeight = values.ParallelHeight / factor;
+
+                if (newHeight <= Tolerance)
+                    return false;
+
+                values.ParallelHeight = newHeight;
+
+                if (!SynchronizeParallelFrustum(workingCamera))
+                    return false;
+            }
+            else
+            {
+                workingCamera.viewportInfo.Camera35mmLensLength *= factor;
+            }
+
+            camera = workingCamera;
+            return true;
+        }
+
+        public static bool ScaleZoomToTarget(
+    ref CameraParameter camera,
+    double factor,
+    Point3d target)
+        {
+            if (!target.IsValid)
+                return Zoom(ref camera, factor);
+
+            var workingCamera = GetWorkingCamera(camera, nameof(ScaleZoomToTarget));
+            if (!IsValidFactor(factor))
+                return false;
+
+            if (workingCamera.IsParallel)
+            {
+                // Parallel zoom-to-target is equivalent to scaling the frustum window
+                // around the target projected into camera X/Y coordinates.
+                var xAxis = workingCamera.viewportInfo.CameraX;
+                var yAxis = workingCamera.viewportInfo.CameraY;
+                if (!xAxis.Unitize() || !yAxis.Unitize())
+                    return false;
+
+                var values = workingCamera.parallelParameters;
+                var targetFromCamera = target - workingCamera.CameraLocation;
+                var targetX = targetFromCamera * xAxis;
+                var targetY = targetFromCamera * yAxis;
+                var newHeight = values.ParallelHeight / factor;
+
+                if (newHeight <= Tolerance)
+                    return false;
+
+                var oldOffsetX = values.OffsetX;
+                var oldOffsetY = values.OffsetY;
+
+                var newOffsetX = targetX + (oldOffsetX - targetX) / factor;
+                var newOffsetY = targetY + (oldOffsetY - targetY) / factor;
+
+                var panDelta =
+                    (newOffsetX - oldOffsetX) * xAxis +
+                    (newOffsetY - oldOffsetY) * yAxis;
+
+                var newCameraLocation = workingCamera.CameraLocation + panDelta;
+                var newCameraTarget = workingCamera.CameraTarget + panDelta;
+                var newDirection = newCameraTarget - newCameraLocation;
+
+                if (!newDirection.IsValid || newDirection.IsZero || !newDirection.Unitize())
+                    return false;
+
+                workingCamera.viewportInfo.SetCameraLocation(newCameraLocation);
+                workingCamera.viewportInfo.TargetPoint = newCameraTarget;
+                workingCamera.viewportInfo.SetCameraDirection(newDirection);
+                workingCamera.viewportInfo.SetCameraUp(workingCamera.CameraUp);
+
+                values.SetValue(
+                    ParallelHeight: newHeight,
+                    OffsetX: oldOffsetX,
+                    OffsetY: oldOffsetY);
+
+
+
+
+                if (!SynchronizeParallelFrustum(workingCamera))
+                    return false;
+
+                camera = workingCamera;
+                return true;
+            }
+            else
+            {
+                // Perspective scale zoom keeps the current camera orientation.
+                // Both camera location and target point are scaled around the given anchor.
+                var scale = 1.0 / factor;
+                var newCameraLocation = ScalePointAround(
+                    workingCamera.CameraLocation,
+                    target,
+                    scale);
+                var newCameraTarget = ScalePointAround(
+                    workingCamera.CameraTarget,
+                    target,
+                    scale);
+
+                var newDirection = newCameraTarget - newCameraLocation;
+                if (!newDirection.IsValid || newDirection.IsZero || !newDirection.Unitize())
+                    return false;
+
+                workingCamera.viewportInfo.SetCameraLocation(newCameraLocation);
+                workingCamera.viewportInfo.TargetPoint = newCameraTarget;
+                workingCamera.viewportInfo.SetCameraDirection(newDirection);
+                workingCamera.viewportInfo.SetCameraUp(workingCamera.CameraUp);
+
+                camera = workingCamera;
+                return true;
+            }
+        }
+
+        private static Point3d ScalePointAround(
+Point3d point,
+Point3d center,
+double scale)
+        {
+            return center + (point - center) * scale;
+        }
+
+
+        public static bool Rotate(
+            ref CameraParameter camera,
+            double radians,
+            Vector3d axis)
+        {
+            var workingCamera = GetWorkingCamera(camera, nameof(Rotate));
+            if (!axis.IsValid || !axis.Unitize())
+                return false;
+
+            var rotation = Transform.Rotation(
+                radians,
+                axis,
+                workingCamera.CameraLocation);
+
+            var direction = workingCamera.CameraDirection;
+            var up = workingCamera.CameraUp;
+            var target = workingCamera.CameraTarget;
+
+            direction.Transform(rotation);
+            up.Transform(rotation);
+            target.Transform(rotation);
+
+            workingCamera.viewportInfo.SetCameraDirection(direction);
+            workingCamera.viewportInfo.SetCameraUp(up);
+            workingCamera.viewportInfo.TargetPoint = target;
+
+            camera = workingCamera;
+            return true;
+        }
+
+        public static bool Pan(
+            ref CameraParameter camera,
+            Vector3d panVector)
+        {
+            var workingCamera = GetWorkingCamera(camera, nameof(Pan));
+            if (!panVector.IsValid || panVector.IsZero)
+                return false;
+
+            workingCamera.viewportInfo.SetCameraLocation(
+                workingCamera.CameraLocation + panVector);
+            workingCamera.viewportInfo.TargetPoint =
+                workingCamera.CameraTarget + panVector;
+
+            camera = workingCamera;
+            return true;
+        }
+
+        public static bool Orbit(
+            ref CameraParameter camera,
+            double radians,
+            Vector3d axis,
+            Point3d center)
+        {
+            var workingCamera = GetWorkingCamera(camera, nameof(Orbit));
+            if (!axis.IsValid || !axis.Unitize() || !center.IsValid)
+                return false;
+
+            var rotation = Transform.Rotation(radians, axis, center);
+            var location = workingCamera.CameraLocation;
+            var direction = workingCamera.CameraDirection;
+            var up = workingCamera.CameraUp;
+            var target = workingCamera.CameraTarget;
+
+            location.Transform(rotation);
+            direction.Transform(rotation);
+            up.Transform(rotation);
+            target.Transform(rotation);
+
+            workingCamera.viewportInfo.SetCameraLocation(location);
+            workingCamera.viewportInfo.SetCameraDirection(direction);
+            workingCamera.viewportInfo.SetCameraUp(up);
+            workingCamera.viewportInfo.TargetPoint = target;
+
+            camera = workingCamera;
+            return true;
+        }
+
+        public static bool LookAt(
+            ref CameraParameter camera,
+            Point3d targetPoint,
+            Vector3d upDirection,
+            double lensLength)
+        {
+            var workingCamera = GetWorkingCamera(camera, nameof(LookAt));
+            if (!targetPoint.IsValid ||
+                !upDirection.IsValid ||
+                !upDirection.Unitize())
+            {
+                return false;
+            }
+
+            var direction = targetPoint - workingCamera.CameraLocation;
+            if (!direction.Unitize())
+                return false;
+
+            workingCamera.viewportInfo.TargetPoint = targetPoint;
+            workingCamera.viewportInfo.SetCameraDirection(direction);
+            workingCamera.viewportInfo.SetCameraUp(upDirection);
+
+            if (!workingCamera.IsParallel)
+            {
+                if (lensLength <= 0)
+                    return false;
+
+                workingCamera.viewportInfo.Camera35mmLensLength = lensLength;
+            }
+
+            camera = workingCamera;
+            return true;
+        }
+
+        private static bool IsValidFactor(double factor)
+        {
+            return factor > Tolerance &&
+                !double.IsNaN(factor) &&
+                !double.IsInfinity(factor);
+        }
+
+        private static bool SynchronizeParallelFrustum(
+            CameraParameter camera)
+        {
+            if (camera == null || !camera.IsParallel)
+                return false;
+
+            var values = camera.parallelParameters;
+            if (values == null ||
+                values.ParallelHeight <= Tolerance ||
+                values.AspectRatio <= Tolerance)
+            {
+                return false;
+            }
+
+            var halfHeight = values.ParallelHeight * 0.5;
+            var halfWidth = halfHeight * values.AspectRatio;
+
+            var near = values.Near;
+            var far = values.Far;
+
+            if (near <= Tolerance || far <= near)
+            {
+                camera.viewportInfo.GetFrustum(
+                    out _,
+                    out _,
+                    out _,
+                    out _,
+                    out near,
+                    out far);
+            }
+
+            if (near <= Tolerance || far <= near)
+                return false;
+
+            return camera.viewportInfo.SetFrustum(
+                values.OffsetX - halfWidth,
+                values.OffsetX + halfWidth,
+                values.OffsetY - halfHeight,
+                values.OffsetY + halfHeight,
+                near,
+                far);
+        }
+    }
+    [Obsolete("Use CameraTransform. The old implementation is rectangle-based and should not be used for parallel camera animation.", false)]
+    public static class CameraTransform_Old
+    {
         private static CameraParameter DuplicateCameraParameter(CameraParameter cameraParameter, string FunctionName)
         {
             if (cameraParameter == null)
@@ -51,7 +530,7 @@ namespace Woodpecker.Animation.Control.Camera
                     pixelsPerUnit = 1;
                 var pixelScale = (int)-Math.Round(distance * pixelsPerUnit);
                 viewRect.Inflate(pixelScale, pixelScale);
-                if(_camera.SourceType == CameraReference.RhinoReference)
+                if (_camera.SourceType == CameraReference.RhinoReference)
                     _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
@@ -163,7 +642,7 @@ namespace Woodpecker.Animation.Control.Camera
         {
             var _camera = DuplicateCameraParameter(camera, "Rotate");
             var rot = Transform.Rotation(radians, axis, _camera.CameraLocation);
-            if(_camera.IsParallel)
+            if (_camera.IsParallel)
             {
                 var viewRect = CameraUtil.ViewRect(_camera.viewportInfo);
                 var newCamDir = _camera.CameraDirection;
@@ -176,13 +655,13 @@ namespace Woodpecker.Animation.Control.Camera
                 _camera.viewportInfo.SetCameraUp(newCamUp);
                 _camera.viewportInfo.SetCameraDirection(newCamDir);
                 _camera.viewportInfo.TargetPoint = newCamTar;
-                if(_camera.SourceType == CameraReference.RhinoReference)
+                if (_camera.SourceType == CameraReference.RhinoReference)
                     _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
             }
             else
-            {                
+            {
                 var newCamDir = _camera.CameraDirection;
                 newCamDir.Transform(rot);
                 var newCamUp = _camera.CameraUp;
@@ -196,17 +675,15 @@ namespace Woodpecker.Animation.Control.Camera
                 camera = _camera;
                 return true;
             }
-                
-            
         }
         public static bool Pan(ref CameraParameter camera, Vector3d panVector)
         {
             var _camera = DuplicateCameraParameter(camera, "Pan");
-            if(!panVector.IsValid || panVector.IsZero)
+            if (!panVector.IsValid || panVector.IsZero)
             {
                 return false;
             }
-            if(_camera.IsParallel)
+            if (_camera.IsParallel)
             {
                 var viewRect = CameraUtil.ViewRect(_camera.viewportInfo);
                 var camLoc = _camera.CameraLocation;
@@ -215,7 +692,7 @@ namespace Woodpecker.Animation.Control.Camera
                 camTar += panVector;
                 _camera.viewportInfo.SetCameraLocation(camLoc);
                 _camera.viewportInfo.TargetPoint = camTar;
-                if(_camera.SourceType == CameraReference.RhinoReference)
+                if (_camera.SourceType == CameraReference.RhinoReference)
                     _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
@@ -236,7 +713,7 @@ namespace Woodpecker.Animation.Control.Camera
         {
             var _camera = DuplicateCameraParameter(camera, "Orbit");
             var rot = Transform.Rotation(radians, axis, center);
-            if(_camera.IsParallel)
+            if (_camera.IsParallel)
             {
                 var viewRect = CameraUtil.ViewRect(_camera.viewportInfo);
                 var newCamLoc = _camera.CameraLocation;
@@ -251,13 +728,13 @@ namespace Woodpecker.Animation.Control.Camera
                 _camera.viewportInfo.SetCameraDirection(newCamDir);
                 _camera.viewportInfo.SetCameraUp(newCamUp);
                 _camera.viewportInfo.TargetPoint = newCamTar;
-                if(_camera.SourceType == CameraReference.RhinoReference)
+                if (_camera.SourceType == CameraReference.RhinoReference)
                     _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;
             }
             else
-            {                
+            {
                 var newCamLoc = _camera.CameraLocation;
                 newCamLoc.Transform(rot);
                 var newCamDir = _camera.CameraDirection;
@@ -276,40 +753,40 @@ namespace Woodpecker.Animation.Control.Camera
         }
         public static bool LookAt(ref CameraParameter camera, Point3d targetPoint, Vector3d upDirection, double lensLength)
         {
-            
+
             var _camera = DuplicateCameraParameter(camera, "LookAt");
-            if(!targetPoint.IsValid)
+            if (!targetPoint.IsValid)
             {
                 return false;
             }
-            if(!upDirection.IsValid || upDirection.IsZero)
+            if (!upDirection.IsValid || upDirection.IsZero)
             {
                 return false;
             }
-            if(lensLength <= 0)
+            if (lensLength <= 0)
             {
                 return false;
             }
 
             var camLoc = _camera.CameraLocation;
             var camDir = targetPoint - camLoc;
-            if(!camDir.IsValid || camDir.IsZero)
+            if (!camDir.IsValid || camDir.IsZero)
             {
                 return false;
             }
             camDir.Unitize();
             upDirection.Unitize();
 
-             _camera.viewportInfo.SetCameraLocation(camLoc);
+            _camera.viewportInfo.SetCameraLocation(camLoc);
             _camera.viewportInfo.TargetPoint = targetPoint;
             _camera.viewportInfo.SetCameraDirection(camDir);
             _camera.viewportInfo.SetCameraUp(upDirection);
             _camera.viewportInfo.Camera35mmLensLength = lensLength;
-            
-            if(_camera.IsParallel)
+
+            if (_camera.IsParallel)
             {
                 var viewRect = CameraUtil.ViewRect(_camera.viewportInfo);
-                if(_camera.SourceType == CameraReference.RhinoReference)
+                if (_camera.SourceType == CameraReference.RhinoReference)
                     _camera.WindowRect = viewRect;
                 camera = _camera;
                 return true;

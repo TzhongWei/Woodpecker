@@ -12,6 +12,7 @@ namespace Woodpecker.Animation.Geometry.Display
     /// <summary>
     /// Display Geometry with multicols 
     /// </summary>
+    [Obsolete]
     public class DisplayGeometryCols
     {
         private bool _linear;

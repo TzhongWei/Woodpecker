@@ -639,4 +639,171 @@ Split this project into two compile files
 Woodpecker.Animation.Core.csproj => Woodpecker.Animation.Core.dll
 Woodpecker.Animation.GHC.csproj  => Woodpecker.Animation.GHC.gha
 
-Update camera structure
+Update camera structure -> Create the new structure to replace the windowRect
+
+Implemented the new parallel-camera path.
+
+Active camera motions now use CameraTransform, not CameraTransform_Old.
+CameraTransform_Old is marked obsolete with compile-time error.
+Parallel application uses ParallelHeight, offsets, and current viewport aspect.
+Camera wireframes use stored height, aspect, offsets, near, and far, independent of the active viewport.
+Parallel values are preserved through Duplicate() and ToPhantom().
+Build passes for all targets with warnings only.
+WindowRect and BaseWindowRect remain temporarily for obsolete compatibility code, but the active pipeline no longer depends on them. The next useful check is visual testing in Rhino: zoom a phantom camera, resize the Rhino viewport, then rotate it and compare both the view and wireframe.
+
+
+# --- 0906---
+Start create a new architecture for the display pipeline.
+DisplayGeometryConduit : Render the geometry into Rhino Viewport with three different modes; 
+    PreDrawObjects
+    PostDrawObjects
+    DrawForeground
+RenderPipelineAbstract : The render setting for different type of objects and geometry
+* RenderAnnotationPipeline
+* RenderGeometryPipeline
+* RenderInstancePipeline : Debug pending list
+* RenderVectorPipeline 
+* RenderAnnotationPipeline
+DisplayContentAbstract
+* DisplayAnnotationContent
+* DisplayGeometryContent
+* DisplayGeometryContentCols
+* DisplayInstanceContent
+* DisplayVectorContent
+* DisplayInstanceContent
+
+
+# --- 1006 ---
+Debug the display pipeline. 
+
+Update GH_DisplayGeometryAbstract:
+* Centralise DisplayGeometryConduit registration and preview lifecycle.
+* Apply the shared structure to GH_DisplayAnnotation and GH_DisplayInstance.
+
+ColourCodePanel:
+* Fix ColourDisplayAttributes repeated layout and redraw loop.
+* Remove the standard component icon from the custom panel rendering.
+* Restore the input node and separate the component title, input parameter, and colour rows.
+
+Annotation display:
+* Create GH_AnnotationSetting.
+* Add Tag.OnWindow and Tag.OnPlane modes through AppendAdditionalMenuItems.
+* Tag.OnWindow settings: Height, FontFace, and MiddleJustified.
+* Tag.OnPlane settings: Height, FontFace, Bold, Italic, HorizontalAlignment, and VerticalAlignment.
+* Automatically create alignment value lists for Tag.OnPlane.
+* Store the selected annotation mode in the Grasshopper file.
+* Fix DisplayAnnotationContent ClippingBox for Tag.OnPlane by creating a matching TextEntity and calculating the real world-space text bounding box.
+* Tag.OnWindow remains point-based because its text size is defined in screen pixels.
+
+
+# --- 1106 ---
+1. Rhino 8 selective clipping: best option
+
+Rhino 8 clipping planes can clip only specified object IDs or layers:
+
+clippingPlane.ParticipationListsEnabled = true;
+
+clippingPlane.SetClipParticipation(
+    objectIds: targetObjectIds,
+    layerIndices: Array.Empty<int>(),
+    isExclusionList: false);
+With isExclusionList: false, only the listed objects are clipped. Unrelated Rhino geometry remains visible.
+
+This is implemented by:
+
+ClippingPlaneSurface.SetClipParticipation(...)
+It also supports:
+
+Multiple clipping planes
+Object or layer participation
+Inclusion or exclusion lists
+Clipping depth
+Native clipping fills and edges
+2. Temporary clipping inside your display conduit
+
+For geometry managed by your custom display architecture, add the clipping plane immediately before drawing the selected pipeline, then remove it:
+
+protected override void PostDrawObjects(DrawEventArgs e)
+{
+    var clipIndices = new List<int>();
+
+    try
+    {
+        foreach (var plane in _clippingPlanes)
+        {
+            int index = e.Display.AddClippingPlane(
+                plane.Origin,
+                plane.Normal);
+
+            clipIndices.Add(index);
+        }
+
+        _targetPipeline.Render(e.Display);
+    }
+    finally
+    {
+        for (int i = clipIndices.Count - 1; i >= 0; i--)
+            e.Display.RemoveClippingPlane(clipIndices[i]);
+    }
+}
+Because the clipping planes exist only around _targetPipeline.Render(), other display pipelines are unaffected. This is GPU clipping: no mesh reconstruction is required.
+
+However, this produces only a visual opening. It does not automatically produce:
+
+A real section curve
+A reusable clipped mesh
+A section cap
+For those, you still need geometric intersection or mesh processing.
+
+Suggested architecture
+
+ClippingDisplaySetting
+├── List<Plane> Planes
+├── bool ShowSectionFill
+├── Color SectionColour
+└── ClipMode
+
+RenderGeometryPipeline
+└── ClippingDisplaySetting
+
+DisplayGeometryConduit
+├── Add temporary clipping planes
+├── Render selected pipeline
+└── Remove clipping planes
+
+DisplayPipeline debug -> Rhino and Grasshopper viewport clear and display setting in grasshopper.
+
+
+Debugging camera setting -> zoom(ref CamareParameter Cam, dobule Factor, Point3d Target) => new name, ScaleZoomToTarget(
+    ref CameraParameter camera,
+    double factor,
+    Point3d target)
+
+# --- 1206 ---
+Camera motion:
+* Finish CM_CamMoveAlongCrv and GH_CameraAlongCurve.
+* Treat the input curve as a displacement path from the source camera location.
+* Add key camera frame settings for LookAt, ZoomFactor, and CameraUp.
+* Interpolate CameraUp between keyframes and use the source camera up vector when it is unset.
+* Apply the same CameraUp logic to evaluated cameras and keyframe wire previews.
+
+Clipping display:
+* Finish DisplayClippingContent and RenderClippingPipeline.
+* Apply temporary clipping planes only while rendering the selected display content.
+* Support multiple clipping planes without clipping unrelated Rhino geometry.
+* Create section fill meshes from mesh-plane intersections.
+* Group section fills by their source clipping plane and trim each fill with the remaining clipping planes.
+* Improve section generation by combining Brep face meshes, welding vertices, joining intersection fragments, using scale-aware tolerance, and projecting loops onto the clipping plane.
+* Use planar boolean regions to preserve outer boundaries, holes, and nested section loops.
+* Keep CreatePlanarBreps as a fallback for imperfect section curves.
+
+Clipping wire display:
+* Finish GH_DisplayClippingGeometryWire.
+* Add optional clipping section wire display and line width control.
+* Cache section curves in DisplayClippingContent using the same intersection calculation as section fills.
+* Trim each section wire with all clipping planes except its own source plane.
+* Add Pointer_t alignment, stale-preview clearing, clipping box, and preview lifecycle synchronization.
+
+Verification:
+* Woodpecker.Animation.Core builds with no errors.
+* GHC compilation and Rhino viewport testing remain manual.

@@ -135,7 +135,10 @@ namespace Woodpecker.Animation.Properties
         {
             get { return LoadBitmap("GH_Animation_Compile"); }
         }
-
+        internal static System.Drawing.Bitmap GH_Display_Dash_Vect
+        {
+            get { return LoadBitmap("GH_Display_Dash_Vec");}
+        }
         internal static System.Drawing.Bitmap GH_Animation_Compile_Setting
         {
             get { return LoadBitmap("GH_Animation_Compile_Setting"); }

@@ -11,6 +11,7 @@ using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.Geometry.Display
 {
+    [Obsolete]
     public class DisplayGeometry
     {
         private DataTree<Color> _iColors;
@@ -88,9 +89,9 @@ namespace Woodpecker.Animation.Geometry.Display
                         var Crv = new List<Curve>();
                         for (int k = 0; k < _iGM.TopologyEdges.Count; k++)
                         {
-                            if (_iGM.TopologyEdges.IsEdgeUnwelded(i))
+                            if (_iGM.TopologyEdges.IsEdgeUnwelded(k))
                                 Crv.Add(
-                                    new LineCurve(_iGM.TopologyEdges.EdgeLine(i))
+                                    new LineCurve(_iGM.TopologyEdges.EdgeLine(k))
                                 );
                         }
                         iGsCrvs.AddRange(Crv, pathSetting);

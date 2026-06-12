@@ -14,7 +14,7 @@ namespace Woodpecker.Animation.GHComponents
         public override Guid ComponentGuid => new Guid("ebfa8089-0e5e-4b67-92f3-99d36c17aff0");
         protected override System.Drawing.Bitmap Icon => Properties.Resources.GH_Orient_Action;
 
-        protected override GeometryActionAbstract _geometryActionAbstract { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        protected override GeometryActionAbstract _geometryActionAbstract { get; set; }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

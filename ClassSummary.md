@@ -26,8 +26,7 @@ This file maps the main classes in the project by folder. It is intended as a qu
 
 - `CameraExecution` - Applies camera motion results to Rhino views.
 - `CameraMotionAbstract` - Base class for camera motion actions evaluated over time.
-- `CameraParameter` - Serializable camera state, including view type, camera vectors, frustum, and window rectangle.
-- `CameraSetting` - Settings object for camera display or camera capture workflows.
+- `CameraParameter` - Serializable camera state containing camera vectors, projection data, viewport information, and parallel-window values.
 - `CameraTransform` - Static camera transformation helpers such as zooming and motion interpolation.
 - `CameraUtil` - Camera construction, display, frustum, and Rhino view helper methods.
 - `CM_CamAToCamB` - Camera motion interpolating from one camera parameter to another.
@@ -40,10 +39,10 @@ This file maps the main classes in the project by folder. It is intended as a qu
 - `CM_Zoom_Target` - Camera motion zooming toward a specified target point.
 - `ICameraMotion` - Interface for time-evaluated camera motion actions.
 - `IMultiCamsTransform` - Interface for actions that need multiple camera parameters.
+- `ParallelWindowValues` - Viewport-independent parallel projection height, aspect ratio, and offset values.
 
 ## Control.Timeline
 
-- `RemoteTime` - Tagged remote timeline value container.
 - `SequetialTimeline` - Timeline made from sequential time points and flip state.
 - `TimelineSetting` - Timeline utilities for easing, activation, interval mapping, and timeslot segmentation.
 
@@ -79,15 +78,12 @@ This file maps the main classes in the project by folder. It is intended as a qu
 
 - `GH_ColourCodeAbstract` - Base component for colour-code components with dependent update behaviour.
 - `GH_ColourCodePanel` - Component for displaying or editing colour-code data.
-- `GH_ColourCode_Old` - Legacy colour-code loading component.
 - `GH_CreateColourCode` - Component that creates a colour-code entry.
 - `GH_CreateNewColourCodeFile` - Component that creates a new colour-code file.
 - `GH_GetColour` - Component that retrieves colours from a colour-code source.
 - `GH_LoadColourCode` - Singleton component that loads colour-code data from file.
 - `GH_SaveColourCode` - Component that saves colour-code data.
-- `GH_SaveColourCode_old` - Legacy colour-code save component.
 - `GH_SelectedColour` - Component that selects colours from loaded colour-code data.
-- `GH_SelectedColour_old` - Legacy selected-colour component.
 
 ## GHComponents.CustomGHComponents
 
@@ -117,16 +113,19 @@ This file maps the main classes in the project by folder. It is intended as a qu
 
 ## GHComponents.Display
 
-- `GH_DisplayGeometry` - Component for drawing preview geometry with display settings.
-- `GH_DisplayGeometryCols` - Component for displaying geometry with colour data.
-- `GH_DisplayGeometryWire` - Component for displaying geometry wireframes.
+- `GH_AnnotationSetting` - Creates screen-facing or plane-oriented annotation display settings.
+- `GH_DisplayAnnotation` - Displays screen-facing or plane-oriented text through the custom render conduit.
+- `GH_DisplayCurveVector` - Displays vector information using curve-based arrow geometry.
+- `GH_DisplayDashCurveVector` - Displays curve-based vectors using configurable dash patterns.
+- `GH_DisplayGeometry` - Displays shaded geometry through a selectable Rhino render stage.
+- `GH_DisplayGeometryAbstract` - Shared base component for conduit registration, render-stage selection, and preview lifecycle.
+- `GH_DisplayGeometryCols` - Displays geometry with per-object or animated colour content.
+- `GH_DisplayGeometryWire` - Displays geometry edges and wires through the custom display pipeline.
+- `GH_DisplayInstance` - Displays Rhino instance-reference geometry without converting it into ordinary geometry.
+- `GH_DisplayVector` - Displays vector content through the custom render pipeline.
 - `GH_GlobalDashSetting` - Singleton editable component for global dash-pattern settings.
 - `ListItemState` - Internal state object for dash-setting list UI.
-- `GH_VectorCurveDisplay` - Component for displaying vector-defined curves.
-- `GH_VectorDashCurveDisplay` - Component for displaying dashed vector curves.
-- `GH_VectorDisplay` - Component for displaying vector annotations.
 - `GH_VectorDisplaySetting` - Component that creates vector display settings.
-- `GH_VectorsDisplay` - Component for displaying multiple vectors.
 
 ## GHComponents.GeometryCode
 
@@ -135,9 +134,7 @@ This file maps the main classes in the project by folder. It is intended as a qu
 - `GH_DeleteGeometryCode` - Component that deletes geometry-code entries.
 - `GH_GeometryCodeAbstract` - Base component for geometry-code file workflows.
 - `GH_LoadGeometry` - Singleton component that loads geometry-code data from file.
-- `GH_LoadGeometry_Old` - Legacy geometry loading component.
 - `GH_SaveGeometryCode` - Component that saves geometry-code data.
-- `GH_SaveGeometry_Old` - Legacy geometry saving component.
 - `GH_SelectGeometry` - Component that selects geometry from loaded geometry-code data.
 
 ## GHComponents.Process
@@ -147,7 +144,6 @@ This file maps the main classes in the project by folder. It is intended as a qu
 - `GH_FixedPivotRotationAction` - Component that creates a fixed-pivot rotation geometry action.
 - `GH_GeometryActionAbstract` - Base component for geometry action components.
 - `GH_GeometryAnimation` - Component that evaluates geometry animation actions.
-- `GH_GeometryAnimation_Old` - Legacy geometry animation component.
 - `GH_IterativeOffset` - Component for iterative curve or geometry offset workflows.
 - `GH_LinkPath` - Path utility component that links path segments.
 - `GH_MovingPivotRotationAction` - Component that creates moving-pivot rotation actions.
@@ -163,10 +159,6 @@ This file maps the main classes in the project by folder. It is intended as a qu
 - `GH_CreateTimeline` - Component that creates a timeline from time values.
 - `GH_CreateTimelineByAccumulatedTime` - Component that creates a timeline by accumulating durations.
 - `GH_IntervalRange` - Component that computes interval ranges.
-- `GH_IntervalRange_old` - Legacy interval range component.
-- `GH_RemoteTimeSpot_IN` - Component that publishes a remote time spot value.
-- `GH_RemoteTimeSpotAbstract` - Base component for remote time spot components.
-- `GH_RemoteTimeSpot_OUT` - Component that reads a remote time spot value.
 - `GH_RedefineTimeline` - Component that remaps or redefines a timeline.
 - `GH_SegmentiseTimeslotLinear` - Component that divides timeslots with linear behaviour.
 - `GH_SegmentiseTimeslotNonlinear` - Component that divides timeslots with non-linear behaviour.
@@ -192,8 +184,6 @@ This file maps the main classes in the project by folder. It is intended as a qu
 
 - `GH_CreateLayers` - Variable-parameter component that creates nested Rhino layers.
 - `GH_DashCurve` - Component that creates dashed curve display data.
-- `GH_DashCurve_OLD` - Legacy dashed curve component.
-- `GH_DelGeometry` - Component that deletes Rhino geometry by input references.
 - `GH_Easing` - Component that applies easing functions to timeline values.
 - `GH_GetSequentialGeometryDataFromLayer` - Component that collects geometry from sequentially named layers.
 - `GH_MatchList` - Variable-output component that splits a list into matched branches.
@@ -203,14 +193,29 @@ This file maps the main classes in the project by folder. It is intended as a qu
 
 ## Geometry.Display
 
+- `AnnotationDisplaySetting` - Settings for screen-facing and plane-oriented text display.
 - `CurveDisplay` - Display helper for curve preview data.
 - `DashCodeParam` - Collection and tag-channel wrapper for dash-type definitions.
 - `DashType` - Dash pattern definition.
+- `DisplayAnnotationContent` - Text, location, plane, colour, and clipping-box data for annotation rendering.
+- `DisplayContentAbstract<T>` - Generic base for valid, visible display content with colour and clipping bounds.
 - `DisplayDefaultColour` - Default display colour constants.
-- `DisplayGeometry` - Geometry display container and preview pipeline.
-- `DisplayGeometryCols` - Geometry display container with per-geometry colour data.
+- `DisplayGeometryConduit` - Rhino display conduit that dispatches registered pipelines to pre-draw, post-draw, or foreground stages.
+- `DisplayGeometryContent` - Geometry, display mesh, colour, transparency, and clipping data.
+- `DisplayGeometryContentCols` - Geometry display content supporting multiple or animated colours.
+- `DisplayInstanceContent` - Instance-reference display data with transformed definition geometry and clipping bounds.
+- `DisplayVectorContent` - Vector display data used by the vector render pipeline.
 - `DisplayUtil` - Shared display utility methods.
-- `VectorDisplay` - Vector display data model.
+- `GeometryRenderMode` - Geometry rendering mode selection.
+- `IDisplayContent` - Common validity, visibility, and clipping-box contract for display content.
+- `IRenderPipeline` - Non-generic contract used by the display conduit.
+- `RenderAnnotationPipeline` - Draws screen-facing and plane-oriented text annotations.
+- `RenderGeometryPipeline` - Draws shaded geometry content through the selected render stage.
+- `RenderInstancePipeline` - Draws Rhino instance-reference geometry.
+- `RenderPipelineAbstract<TContent>` - Generic collection and rendering base for display pipelines.
+- `RenderStage` - Selects pre-draw, post-draw, or foreground rendering.
+- `RenderVectorPipeline` - Draws vector display content.
+- `VectorRenderMode` - Vector rendering mode selection.
 - `VectorDisplaySetting` - Settings object for vector display appearance.
 
 ## Geometry.Processing
@@ -255,3 +260,63 @@ This file maps the main classes in the project by folder. It is intended as a qu
 - `JsonWrite` - Generic JSON write helper.
 - `ProjectAppManager` - Project/application path and data-location helper.
 - `VersionControl` - Version metadata helper for saved project data.
+
+# Obsolete Types
+
+The following types remain in the project for compatibility or migration. They should not be used for new development.
+
+## Obsolete Control.Camera
+
+- `CameraSetting` - Superseded camera settings container.
+- `CameraTransform_Old` - Rectangle-based camera transformation implementation replaced by `CameraTransform`.
+- `CM_CamAToCamB_Old` - Previous camera interpolation implementation replaced by `CM_CamAToCamB`.
+
+## Obsolete Control.Timeline
+
+- `RemoteTime` - Previous remote timeline channel replaced by `TimeSlotTagChannel`.
+
+## Obsolete Geometry.Display
+
+- `DisplayGeometry` - Previous geometry display container replaced by display content and render pipelines.
+- `DisplayGeometryCols` - Previous multi-colour geometry display container.
+- `VectorDisplay` - Previous vector data model replaced by `DisplayVectorContent` and `RenderVectorPipeline`.
+
+## Obsolete GHComponents.ColourCode
+
+- `GH_ColourCode_Old` - Previous colour-code loading component replaced by `GH_LoadColourCode`.
+- `GH_SaveColourCode_old` - Previous colour-code saving component replaced by `GH_SaveColourCode`.
+- `GH_SelectedColour_old` - Previous colour selection component replaced by `GH_SelectedColour`.
+
+## Obsolete GHComponents.Display
+
+- `GH_DisplayGeometry_Old` - Previous standard Grasshopper geometry preview component.
+- `GH_DisplayGeometryCols_Old` - Previous multi-colour geometry preview component.
+- `GH_DisplayGeometryWire_Old` - Previous geometry wire preview component.
+- `GH_VectorCurveDisplay` - Previous curve-vector preview component.
+- `GH_VectorDisplay` - Previous single-vector preview component.
+- `GH_VectorsDisplay` - Previous multi-vector preview component.
+
+## Obsolete GHComponents.GeometryCode
+
+- `GH_LoadGeometry_Old` - Previous geometry-code loading component replaced by `GH_LoadGeometry`.
+- `GH_SaveGeometry_Old` - Previous geometry-code saving component replaced by `GH_SaveGeometryCode`.
+
+## Obsolete GHComponents.Process
+
+- `GH_GeometryAnimation_Old` - Previous geometry animation evaluator replaced by `GH_GeometryAnimation` and the `GeometryContent` pipeline.
+
+## Obsolete GHComponents.Timeline
+
+- `GH_IntervalRange_old` - Previous interval-range component replaced by `GH_IntervalRange`.
+- `GH_RemoteTimeSpotAbstract` - Previous base class for remote timeline components.
+- `GH_RemoteTimeSpot_IN` - Previous remote timeline publisher replaced by `GH_TimeSlotChannel_IN`.
+- `GH_RemoteTimeSpot_OUT` - Previous remote timeline reader replaced by `GH_TimeSlotChannel_OUT`.
+
+## Obsolete GHComponents.Util
+
+- `GH_DashCurve_OLD` - Previous dash-curve component replaced by `GH_DashCurve`.
+- `GH_DelGeometry` - Previous geometry database deletion component.
+
+## Obsolete Util.IO
+
+- `GeometryData` - Previous serialized geometry record replaced by `GeometryDataPair` and `GeometryCodeParameters`.

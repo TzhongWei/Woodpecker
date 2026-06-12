@@ -68,5 +68,16 @@ namespace Woodpecker.Animation.Geometry.Display
                 throw new Exception("Silhouette failed");
             return result;
         }
+        public static int GetWorldWidthFromScreenWidth(int lineWidth, Point3d referencePt)
+        {
+            var avp = RhinoDoc.ActiveDoc.Views.ActiveView.ActiveViewport;
+            if(!avp.GetWorldToScreenScale(referencePt, out var pixelsPerUnit))
+            {
+                return lineWidth;
+            }
+            if(pixelsPerUnit <= 0 || double.IsNaN(pixelsPerUnit) || double.IsInfinity(pixelsPerUnit))
+                return lineWidth;
+            return Math.Max(1, (int)Math.Round(lineWidth / pixelsPerUnit));
+        }
     }
 }

@@ -58,7 +58,7 @@ namespace Woodpecker.Animation.Control.Camera
             avp.CameraUp = this.MotionCamera.CameraUp;
             if (this.MotionCamera.IsParallel)
             {
-                avp.ZoomWindow(this.MotionCamera.WindowRect);
+                ZoomParallelWindows(this);
             }
             else
             {
