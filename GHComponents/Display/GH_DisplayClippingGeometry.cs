@@ -7,13 +7,15 @@ using Rhino.Geometry;
 using System.Drawing;
 using Woodpecker.Animation.Util.IO;
 using Grasshopper;
+using Rhino.Display;
+using Woodpecker.Animation.GHComponents.CustomGHComponents;
 
 namespace Woodpecker.Animation.GHComponents
 {
     public class GH_DisplayClippingGeometry : GH_DisplayGeometryAbstract
     {
-        public GH_DisplayClippingGeometry():
-        base("Display Clipping Geometry", 
+        public GH_DisplayClippingGeometry() :
+        base("Display Clipping Geometry",
         "DispCGeo", "")
         {
             _renderClippingPipeline = new RenderClippingPipeline(
@@ -41,18 +43,66 @@ namespace Woodpecker.Animation.GHComponents
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            
+
         }
         public override BoundingBox ClippingBox => _renderClippingPipeline?.ClippingBox ?? BoundingBox.Empty;
+        protected override List<Color> optionColours { get; set; } = new List<Color>
+        {
+            Color.FromArgb(70, 255, 81, 81),
+            Color.FromArgb(70, 220, 255, 81),
+            Color.FromArgb(70, 81, 101, 255),
+            Color.FromArgb(70, 203, 52, 249)
+        };
+
+        protected override RenderStage SelectedRenderStage
+        {
+            get
+            {
+                switch (state)
+                {
+                    case 0: return RenderStage.PreDrawObjects;
+                    case 1: return RenderStage.Foreground;
+                    case 2: return RenderStage.PostDrawObjects;
+                    default: return RenderStage.Grasshopper;
+                }
+            }
+        }
+
+        public override void Switcher()
+        {
+            state = (state + 1) % 4;
+            (Attributes as ButtonUIAttributesState)?.UpdateSelectedIndex(state);
+            Attributes?.ExpireLayout();
+            OnDisplayExpired(true);
+            ExpireSolution(true);
+        }
+
+        public override void CreateAttributes()
+        {
+            m_attributes = new ButtonUIAttributesState(
+                this,
+                new List<string>
+                {
+                    "PreDraw",
+                    "Foreground",
+                    "PostDraw",
+                    "Grasshopper"
+                },
+                Switcher,
+                optionColours,
+                initialstate: state);
+            (m_attributes as ButtonUIAttributesState)?.UpdateSelectedIndex(state);
+        }
+
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var cliplist = new List<Plane>();
-            if(!DA.GetDataTree<IGH_GeometricGoo>("Geometry", out var geometryTree) || geometryTree == null)
+            if (!DA.GetDataTree<IGH_GeometricGoo>("Geometry", out var geometryTree) || geometryTree == null)
             {
                 ClearDisplayContents();
                 return;
             }
-            if(!DA.GetDataList("Clipping Planes", cliplist) || cliplist.Count == 0 || cliplist == null)
+            if (!DA.GetDataList("Clipping Planes", cliplist) || cliplist.Count == 0 || cliplist == null)
             {
                 ClearDisplayContents();
                 return;
@@ -70,7 +120,7 @@ namespace Woodpecker.Animation.GHComponents
             var geomList = geomTree.AllData();
             var tList = _tTree.AllData();
             var contents = new List<DisplayClippingContent>();
-            for(int i = 0; i < geomList.Count; i++)
+            for (int i = 0; i < geomList.Count; i++)
             {
                 var content = new DisplayClippingContent(
                     geomList[i], colour, cliplist, showSect
@@ -82,6 +132,11 @@ namespace Woodpecker.Animation.GHComponents
             _renderClippingPipeline.Stage = SelectedRenderStage;
             _renderClippingPipeline.SetContents(contents);
             SynchronizePreviewState();
+        }
+        public override void DrawViewportMeshes(IGH_PreviewArgs args)
+        {
+            if (SelectedRenderStage == RenderStage.Grasshopper)
+                _renderClippingPipeline.Render(args.Display);
         }
     }
 }

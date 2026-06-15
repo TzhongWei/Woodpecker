@@ -48,7 +48,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             var activeTimeline = _activechannel.Count == 0
                 ? "None"
-                : string.Join("\n", _activechannel.Select(TimelineSetting.TimelineDescription));
+                : string.Join("\n", _activechannel.Select(x => TimelineSetting.TimelineDescription(x, 4)));
 
             return $"Global T: {_global_t}\n" +
                    $"Retain Value: {_retainValue}\n" +

@@ -13,8 +13,8 @@ namespace Woodpecker.Animation.GHComponents
         public GH_DisplayGeometryAbstract(string Name, string NickName, string Description) : base(Name, NickName, Description, "Woodpecker", "Display")
         {
         }
-        private int state = 0;
-        protected RenderStage SelectedRenderStage
+        protected int state = 0;
+        protected virtual RenderStage SelectedRenderStage
         {
             get
             {
@@ -27,9 +27,9 @@ namespace Woodpecker.Animation.GHComponents
             }
         }
 
-        protected List<Color> optionColours = new List<Color> { Color.FromArgb(70, 255, 81, 81), Color.FromArgb(70, 220, 255, 81), Color.FromArgb(70, 81, 101, 255) }; // rgba(255, 81, 81, 0.7) rgba(220, 255, 81, 0.7) rgba(81, 101, 255, 0.7)
+        protected virtual List<Color> optionColours {get; set;} = new List<Color> { Color.FromArgb(70, 255, 81, 81), Color.FromArgb(70, 220, 255, 81), Color.FromArgb(70, 81, 101, 255) }; // rgba(255, 81, 81, 0.7) rgba(220, 255, 81, 0.7) rgba(81, 101, 255, 0.7)
 
-        public void Switcher()
+        public virtual void Switcher()
         {
             state = (state + 1) % 3;
             (this.Attributes as ButtonUIAttributesState).UpdateSelectedIndex(state);

@@ -8,8 +8,10 @@ using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
+using Rhino.Display;
 using Rhino.Geometry;
 using Woodpecker.Animation.Geometry.Display;
+using Woodpecker.Animation.GHComponents.CustomGHComponents;
 using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
@@ -116,6 +118,52 @@ namespace Woodpecker.Animation.GHComponents
             _renderGeometryPipeline.Stage = SelectedRenderStage;
             _renderGeometryPipeline.SetContents(contents);
             SynchronizePreviewState();
+        }
+        // rgba(255, 81, 81, 0.7) rgba(220, 255, 81, 0.7) rgba(81, 101, 255, 0.7) rgba(203, 52, 249, 0.7)}
+        protected override List<Color> optionColours { get; set; } = new List<Color>
+        {
+            Color.FromArgb(70, 255, 81, 81),
+            Color.FromArgb(70, 220, 255, 81),
+            Color.FromArgb(70, 81, 101, 255),
+            Color.FromArgb(70, 203, 52, 249)
+        };
+
+        protected override RenderStage SelectedRenderStage
+        {
+            get
+            {
+                switch (state)
+                {
+                    case 0: return RenderStage.PreDrawObjects;
+                    case 1: return RenderStage.Foreground;
+                    case 2: return RenderStage.PostDrawObjects;
+                    default: return RenderStage.Grasshopper;
+                }
+            }
+        }
+        public override void Switcher()
+        {
+            state = (state + 1) % 4;
+            (Attributes as ButtonUIAttributesState)?.UpdateSelectedIndex(state);
+            Attributes?.ExpireLayout();
+            OnDisplayExpired(true);
+            ExpireSolution(true);
+        }
+        public override void CreateAttributes()
+        {
+            m_attributes = new ButtonUIAttributesState(this, new List<string>{
+                "PreDraw",
+                "Foreground",
+                "PostDraw",
+                "Grasshopper"
+            }, Switcher, optionColours, initialstate: state
+           );
+            (m_attributes as ButtonUIAttributesState)?.UpdateSelectedIndex(state);
+        }
+        public override void DrawViewportWires(IGH_PreviewArgs args)
+        {
+            if (SelectedRenderStage == RenderStage.Grasshopper)
+                _renderGeometryPipeline.Render(args.Display);
         }
         public override BoundingBox ClippingBox => _renderGeometryPipeline?.ClippingBox ?? BoundingBox.Empty;
     }

@@ -13,6 +13,7 @@ namespace Woodpecker.Animation.Geometry.Display
         PreDrawObjects,
         PostDrawObjects,
         Foreground,
+        Grasshopper
     }
 
     public interface IRenderPipeline

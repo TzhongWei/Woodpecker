@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using Woodpecker.Animation.Geometry.Display;
+using Woodpecker.Animation.GHComponents.CustomGHComponents;
 using Woodpecker.Animation.Util.IO;
 
 namespace Woodpecker.Animation.GHComponents
@@ -35,6 +37,8 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddPlaneParameter("Clipping Planes", "CLs", "the planes to clip the geometry", GH_ParamAccess.list);
             pManager.AddColourParameter("Colour", "Col", "Color of the geometry.", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Show Clipping Section Wire", "S", "Draw the intersection curves on the clipping planes.", GH_ParamAccess.item, true);
+            pManager.AddGenericParameter("Dash Pattern", "Pattern", "Dash pattern setting used for wire display.", GH_ParamAccess.item);
+            pManager[4].Optional = true;
             pManager.AddIntegerParameter("Width", "W", "Line width for the clipped geometry and section curves.", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("Pointer_t", "t", "Time parameter for fade effect (0 to 1).", GH_ParamAccess.tree, 1.0);
         }
@@ -62,6 +66,8 @@ namespace Woodpecker.Animation.GHComponents
                 ClearDisplayContents();
                 return;
             }
+            var dashType = DashType.Continuous;
+            DA.GetData("Dash Pattern", ref dashType);
 
             var colour = Color.Black;
             var showSectionWire = true;
@@ -104,6 +110,9 @@ namespace Woodpecker.Animation.GHComponents
                         false,
                         showSectionWire);
                 content.Width = width;
+                content.DoSilhouette = _silhouette;
+                content.WidthChangeFromView = _widthChangeByView;
+                content.dashType = dashType;
                 content.SetT(pointerValues[i]);
                 contents.Add(content);
             }
@@ -119,5 +128,68 @@ namespace Woodpecker.Animation.GHComponents
         public override BoundingBox ClippingBox =>
             _renderClippingPipeline?.ClippingBox ??
             BoundingBox.Empty;
+        // rgba(255, 81, 81, 0.7) rgba(220, 255, 81, 0.7) rgba(81, 101, 255, 0.7) rgba(203, 52, 249, 0.7)}
+        protected override List<Color> optionColours { get; set; } = new List<Color>
+        {
+            Color.FromArgb(70, 255, 81, 81),
+            Color.FromArgb(70, 220, 255, 81),
+            Color.FromArgb(70, 81, 101, 255),
+            Color.FromArgb(70, 203, 52, 249)
+        };
+
+        protected override RenderStage SelectedRenderStage
+        {
+            get
+            {
+                switch (state)
+                {
+                    case 0: return RenderStage.PreDrawObjects;
+                    case 1: return RenderStage.Foreground;
+                    case 2: return RenderStage.PostDrawObjects;
+                    default: return RenderStage.Grasshopper;
+                }
+            }
+        }
+        public override void Switcher()
+        {
+            state = (state + 1) % 4;
+            (Attributes as ButtonUIAttributesState)?.UpdateSelectedIndex(state);
+            Attributes?.ExpireLayout();
+            OnDisplayExpired(true);
+            ExpireSolution(true);
+        }
+        public override void CreateAttributes()
+        {
+            m_attributes = new ButtonUIAttributesState(this, new List<string>{
+                "PreDraw",
+                "Foreground",
+                "PostDraw",
+                "Grasshopper"
+            }, Switcher, optionColours, initialstate: state
+           );
+            (m_attributes as ButtonUIAttributesState)?.UpdateSelectedIndex(state);
+        }
+        public override void DrawViewportWires(IGH_PreviewArgs args)
+        {
+            if (SelectedRenderStage == RenderStage.Grasshopper)
+                _renderClippingPipeline.Render(args.Display);
+        }
+        protected override void AppendAdditionalComponentMenuItems(ToolStripDropDown menu)
+        {
+            base.AppendAdditionalComponentMenuItems(menu);
+            Menu_AppendSeparator(menu);
+            Menu_AppendItem(menu, "Draw Outline", ActivativeSilhouette, true, _silhouette);
+            Menu_AppendItem(menu, "Width Changed from view", WidthChangedByView, true, _widthChangeByView);
+        }
+               private void WidthChangedByView(object sender, EventArgs e)
+        {
+            _widthChangeByView = !_widthChangeByView;
+        }
+        private void ActivativeSilhouette(object sender, EventArgs e)
+        {
+            _silhouette = !_silhouette;
+        }
+        private bool _silhouette;
+        private bool _widthChangeByView;
     }
 }
