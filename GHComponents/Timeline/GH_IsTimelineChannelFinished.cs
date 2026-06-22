@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using System.Collections.Generic;
 using System.Linq;
 using Woodpecker.Animation.Control.Timeline;
+using System.Drawing;
 
 namespace Woodpecker.Animation.GHComponents
 {
@@ -48,6 +49,7 @@ namespace Woodpecker.Animation.GHComponents
                 "True when the corresponding timeline channel has finished.",
                 GH_ParamAccess.list);
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Is_Channel_Finish;
 
         private readonly List<int> _states = new List<int>();
         private double _globalT;

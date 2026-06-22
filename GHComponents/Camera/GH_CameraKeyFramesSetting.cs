@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using Woodpecker.Animation.Control.Camera;
@@ -9,6 +10,8 @@ namespace Woodpecker.Animation.GHComponents
     {
         public GH_CameraKeyFramesSetting():base("Camera Key Frames setting", "CamFrameS", "", "Woodpecker", "Camera"){}
         public override Guid ComponentGuid => new Guid("117f249e-f162-49f1-8a1e-f016a76579ed");
+                protected override Bitmap Icon => Properties.Resources.GH_Cam_On_Path_Setting;
+
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {

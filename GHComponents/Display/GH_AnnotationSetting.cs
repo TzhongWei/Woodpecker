@@ -21,6 +21,8 @@ namespace Woodpecker.Animation.GHComponents
     {
         private const string HorizontalListName = "Annotation Horizontal Alignment";
         private const string VerticalListName = "Annotation Vertical Alignment";
+        protected override Bitmap Icon => Properties.Resources.GH_DisAnnotation_Setting;
+
 
         private RenderTagMode _mode = RenderTagMode.OnWindow;
 

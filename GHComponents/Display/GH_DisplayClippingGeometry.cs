@@ -29,6 +29,8 @@ namespace Woodpecker.Animation.GHComponents
         }
 
         public override Guid ComponentGuid => new Guid("8e849219-973e-4aac-bebd-d8a477e89e67");
+        protected override Bitmap Icon => Properties.Resources.GH_DisGeo_Clipping;
+
 
         protected override IRenderPipeline renderPipeline => _renderClippingPipeline;
         private readonly RenderClippingPipeline _renderClippingPipeline;

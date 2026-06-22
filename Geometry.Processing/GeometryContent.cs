@@ -11,7 +11,7 @@ namespace Woodpecker.Animation.Geometry.Processing
         private readonly List<GeometryBase> _currentGeoms = new List<GeometryBase>();
         public List<Transform> HistoryTransform { get; private set; } = new List<Transform>();
         public Stack<Transform> StackTransform { get; private set; } = new Stack<Transform>();
-        private Transform CurrentTS { get; set; }
+        private Transform _currentTS { get; set; }
         public List<string> Message = new List<string>();
         public GeometryAnimationPipeline geometryAnimationPipeline { get; private set; }
         public IReadOnlyList<GeometryBase> SourceGeoms => _sourceGeoms;
@@ -23,13 +23,13 @@ namespace Woodpecker.Animation.Geometry.Processing
             {
                 _currentGeoms.Add(_sourceGeoms[i].Duplicate());
             }
-            CurrentTS = Transform.Identity;
+            _currentTS = Transform.Identity;
             HistoryTransform = new List<Transform>();
-            HistoryTransform.Add(CurrentTS);
+            HistoryTransform.Add(_currentTS);
             StackTransform = new Stack<Transform>();
             Message = new List<string>();
         }
-        public Transform GetCurrentTransform() => CurrentTS;
+        public Transform GetCurrentTransform() => _currentTS;
         public List<GeometryBase> GetCurrentGeometry() => _currentGeoms.Select(x => x.Duplicate()).ToList();
 
         public GeometryContent(GeometryAnimationPipeline geometryAnimationPipeline, GeometryBase Geom)
@@ -50,7 +50,7 @@ namespace Woodpecker.Animation.Geometry.Processing
         {
             _sourceGeoms.Add(newGeom.Duplicate());
             var Last = _sourceGeoms.LastOrDefault().Duplicate();
-            Last.Transform(CurrentTS);
+            Last.Transform(_currentTS);
             _currentGeoms.Add(Last);
         }
         public bool RemoveGeometry(GeometryBase newGeom)
@@ -61,7 +61,7 @@ namespace Woodpecker.Animation.Geometry.Processing
             foreach (var sourceGeom in _sourceGeoms)
             {
                 var duX = sourceGeom.Duplicate();
-                duX.Transform(CurrentTS);
+                duX.Transform(_currentTS);
                 _currentGeoms.Add(duX);
             }
         }
@@ -87,14 +87,14 @@ namespace Woodpecker.Animation.Geometry.Processing
         }
         public bool NewTransformation(Transform transform, string Message, bool IsFinished = false)
         {
-            this.CurrentTS = transform * CurrentTS;
+            this._currentTS = transform * _currentTS;
             if (IsFinished)
             {
-                this.HistoryTransform.Add(this.CurrentTS);
+                this.HistoryTransform.Add(this._currentTS);
                 
                 //ApplyGeometry();
             }
-            ApplyGeometry(CurrentTS);
+            ApplyGeometry(_currentTS);
             
             this.Message.Add(Message);
             return true;

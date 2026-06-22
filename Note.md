@@ -807,3 +807,26 @@ Clipping wire display:
 Verification:
 * Woodpecker.Animation.Core builds with no errors.
 * GHC compilation and Rhino viewport testing remain manual.
+
+# ---1506 ---
+Debug display setting and set up the grasshopper display mode for 
+DisplayGeometry, DislayGeometryCols, DisplayGeometryWire, DisplayClippingGeometry, and DisplayClippingGeometryWire
+
+# ---1606 ---
+Pending:
+* GH_TagChannel_Out startup persistence:
+    * Write and read only the output schema, not the live tag or channel value.
+    * Persist output count and output nicknames / channel keys so existing downstream wires survive when a GH file opens.
+    * If the matching input channel is not ready during file initialization, keep the restored output structure and output empty trees instead of unregistering outputs.
+    * Move output parameter registration, unregistration, and nickname matching out of SolveInstance and into a scheduled solution callback.
+    * Avoid ExpireSolution(true) during MatchOutput while the document is already solving.
+
+* GH_TagChannel_IN:
+    * Keep GH_TagChannel_IN as the live source of truth for the actual tag channel data.
+    * It does not need to write or read the tag channel value; Grasshopper input parameters already store the tag and source data.
+
+* New sequential tag channel components:
+    * Create Tag_SequentialChannel_In.
+    * Create Tag_SequentialChannel_Out.
+    * Purpose: when input and output parameters share the same data type but use different tags, allow tree-based / sequential retrieval of channel data.
+    * Useful for ordered animation data where the output should collect data across multiple tags as a tree rather than by matching one tag directly.

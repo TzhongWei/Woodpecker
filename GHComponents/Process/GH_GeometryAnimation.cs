@@ -21,6 +21,7 @@ namespace Woodpecker.Animation.GHComponents
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddGeometryParameter("Geometry", "G", "Source geometry to animate.", GH_ParamAccess.item);
+            pManager[0].Optional = true;
             pManager.AddNumberParameter("Pointer_t", "t", "pointer t is a value between [0,1]", GH_ParamAccess.item);
             pManager.AddGenericParameter("Actions", "As", "Timed geometry actions to apply in timeline order.", GH_ParamAccess.list);
         }
@@ -29,6 +30,7 @@ namespace Woodpecker.Animation.GHComponents
         {
             pManager.AddGeometryParameter("Geometry", "G", "Animated geometry evaluated at the current pointer time.", GH_ParamAccess.item);
             pManager.AddTextParameter("Message", "M", "Status messages reported by the evaluated action pipeline.", GH_ParamAccess.list);
+            pManager.AddTransformParameter("Transform", "TS", "The current transformation", GH_ParamAccess.item);
         }
         protected override void SolveInstance(IGH_DataAccess DA)
         {
@@ -39,13 +41,17 @@ namespace Woodpecker.Animation.GHComponents
             DA.GetData("Pointer_t", ref t);
             DA.GetDataList("Actions", actionList);
 
+            if(geom == null)
+                geom = new Brep();
+
             var geomanimation = new GeometryAnimation(geom);
             geomanimation.AddRangeAction(actionList);
 
             var geomPipeline = new GeometryAnimationPipeline(geomanimation);
             geomPipeline.Animate(t);
-
-            DA.SetData("Geometry", geomPipeline.GeomObject);
+            
+            DA.SetData("Transform", geomPipeline.GeometryContent.GetCurrentTransform());
+            DA.SetData("Geometry", geomPipeline.GeomObject.IsValid ? geomPipeline.GeomObject : null);
             DA.SetDataList("Message", geomPipeline.Message);
         }
     }

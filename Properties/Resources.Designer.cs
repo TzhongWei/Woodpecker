@@ -130,7 +130,38 @@ namespace Woodpecker.Animation.Properties
         {
             get { return LoadBitmap("GH_Add_End_Path"); }
         }
-
+        internal static System.Drawing.Bitmap GH_Cam_On_Path_Setting
+        {
+            get { return LoadBitmap("GH_Cam_On_Path_Setting");}
+        }
+        internal static System.Drawing.Bitmap GH_Cam_On_Path
+        {
+            get {return LoadBitmap("GH_Cam_On_Path"); }
+        }
+        internal static System.Drawing.Bitmap GH_DisGeo_Clipping
+        {
+            get { return LoadBitmap("GH_DisGeo_Clipping");}
+        }
+        internal static System.Drawing.Bitmap GH_DisGeoWire_Clipping
+        {
+            get{ return LoadBitmap("GH_DisGeoWire_Clip");}
+        }
+        internal static System.Drawing.Bitmap GH_Is_Channel_Act
+        {
+            get { return LoadBitmap("GH_Is_Channel_Act");}
+        }
+        internal static System.Drawing.Bitmap GH_Is_Channel_Finish
+        {
+            get { return LoadBitmap("GH_Is_Channel_Finish");}
+        }
+        internal static System.Drawing.Bitmap GH_DisAnnotation
+        {
+            get { return LoadBitmap("GH_DisAnnotation");}
+        }
+        internal static System.Drawing.Bitmap GH_DisAnnotation_Setting
+        {
+            get { return LoadBitmap("GH_DisAnnotation_Setting");}
+        }
         internal static System.Drawing.Bitmap GH_Animation_Compile
         {
             get { return LoadBitmap("GH_Animation_Compile"); }

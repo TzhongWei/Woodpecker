@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GH_IO.Serialization;
@@ -19,6 +20,7 @@ namespace Woodpecker.Animation.GHComponents
     public class GH_CameraAlongCurve : GH_CameraMotionAbstract
     {
         public override Guid ComponentGuid => new Guid("7faab6a6-8ff1-40e4-ba83-eff2f5999bc3");
+        protected override Bitmap Icon => Properties.Resources.GH_Cam_On_Path;
         public GH_CameraAlongCurve() : base(
             "Camera Move On Curve",
             "CameraOnCrv",

@@ -15,6 +15,8 @@ namespace Woodpecker.Animation.GHComponents
     {
         private readonly RenderAnnotationPipeline _pipeline;
         protected override IRenderPipeline renderPipeline => _pipeline;
+        protected override Bitmap Icon => Properties.Resources.GH_DisAnnotation;
+
 
         public GH_DisplayAnnotation()
             : base(

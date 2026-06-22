@@ -123,6 +123,7 @@ namespace Woodpecker.Animation.GHComponents
                 contents);
             SynchronizePreviewState();
         }
+        protected override Bitmap Icon => Properties.Resources.GH_DisGeoWire_Clipping;
         protected override IRenderPipeline renderPipeline => _renderClippingPipeline;
         private readonly RenderClippingPipeline _renderClippingPipeline;
         public override BoundingBox ClippingBox =>

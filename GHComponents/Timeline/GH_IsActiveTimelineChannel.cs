@@ -6,6 +6,7 @@ using System.Linq;
 using Woodpecker.Animation.Control.Timeline;
 using Woodpecker.Animation.GHComponents.CustomGHComponents;
 using System;
+using System.Drawing;
 
 namespace Woodpecker.Animation.GHComponents
 {
@@ -42,6 +43,7 @@ namespace Woodpecker.Animation.GHComponents
             pManager.AddIntegerParameter("Channel", "C", "Input global time in the timeline channels", GH_ParamAccess.list);
             pManager.AddIntervalParameter("Timeline Channel", "TLC", "The selected timeline", GH_ParamAccess.list);
         }
+        protected override Bitmap Icon => Properties.Resources.GH_Is_Channel_Act;
         private List<Interval> _activechannel = new List<Interval>();
         private double _global_t;
         protected override string ShowTimeSetupDescription()
