@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grasshopper.GUI.MRU;
 using Rhino.Geometry;
+using Woodpecker.Animation.Control.Camera;
 using Woodpecker.Animation.Geometry.Display;
 using Woodpecker.Animation.Util.IO;
 
@@ -58,6 +59,61 @@ namespace Woodpecker.Animation.Control.Timeline
     /// </summary>
     public static class TimelineSetting
     {
+        public static double RemapTtoSliderControl(double t, double defaultValue, Interval Range, int Digit)
+        {
+            return Range.IncludesParameter(defaultValue) ? 
+            RemapTtoSliderControl(t, defaultValue, Range.Min, Range.Max, Digit) :
+            RemapTtoSliderControl(t, Range, Digit);
+        }
+        public static double RemapTtoSliderControl(
+    double t,
+    double defaultValue,
+    double minValue,
+    double maxValue, 
+    int Digit)
+        {
+            t = Math.Max(0.0, Math.Min(1.0, t));
+
+            if (maxValue < minValue)
+            {
+                var temp = minValue;
+                minValue = maxValue;
+                maxValue = temp;
+            }
+
+            if (Math.Abs(maxValue - minValue) < 1e-9)
+                return defaultValue;
+
+            defaultValue = Math.Max(minValue, Math.Min(maxValue, defaultValue));
+
+            double d1 = Math.Abs(maxValue - defaultValue);
+            double d2 = Math.Abs(maxValue - minValue);
+            double d3 = Math.Abs(defaultValue - minValue);
+
+            double total = d1 + d2 + d3;
+            if (total < 1e-9)
+                return defaultValue;
+
+            double s1 = d1 / total;
+            double s2 = d2 / total;
+
+            if (t < s1)
+            {
+                double u = t / s1;
+                return Math.Round(CameraUtil.Lerp(defaultValue, maxValue, u), Digit);
+            }
+            else if (t < s1 + s2)
+            {
+                double u = (t - s1) / s2;
+                return Math.Round(CameraUtil.Lerp(maxValue, minValue, u), Digit);
+            }
+            else
+            {
+                double s3 = 1.0 - s1 - s2;
+                double u = s3 < 1e-9 ? 1.0 : (t - s1 - s2) / s3;
+                return Math.Round(CameraUtil.Lerp(minValue, defaultValue, u), Digit);
+            }
+        }
         public static string Version => "1.0.0";
         /// <summary>
         /// Create a timeline interval based on the input start time and period. If the period is positive, the interval is from start to start + period. If the period is negative, the interval is from start + period to start. The interval represents the time zone of the timeline, where the minimum value is the starting time and the maximum value is the ending time. The length of the interval is equal to the absolute value of the period. This method allows you to create a timeline with a specified duration and direction based on the input parameters.

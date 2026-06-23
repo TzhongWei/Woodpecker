@@ -25,7 +25,9 @@ namespace Woodpecker.Animation.GHComponents
             DA.GetData("Parameter Range", ref range);
             _range = range;
             DA.GetData("Digits", ref digit);
-            _value = TimelineSetting.RemapTtoSliderControl(t, range, digit);
+            double defaultVal = -1;
+            DA.GetData("DefaultValue", ref defaultVal);
+            _value = TimelineSetting.RemapTtoSliderControl(t, defaultVal, range, digit);
             DA.SetData("Slider Value", _value);
         }
         private double _t;
@@ -35,6 +37,8 @@ namespace Woodpecker.Animation.GHComponents
         {
             pManager.AddNumberParameter("t", "t", "Normalised timeline value between 0 and 1.", GH_ParamAccess.item, 0);
             pManager.AddIntervalParameter("Parameter Range", "P Range", "Target numeric range for the remapped value.", GH_ParamAccess.item);
+            pManager.AddNumberParameter("DefaultValue", "DVal", "The default parameter of the value", GH_ParamAccess.item);
+            pManager[2].Optional = true;;
             pManager.AddIntegerParameter("Digits", "D", "Number of decimal digits used by the slider-style remap.", GH_ParamAccess.item);
         }
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
