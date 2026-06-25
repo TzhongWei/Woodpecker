@@ -146,6 +146,10 @@ namespace Woodpecker.Animation.Properties
         {
             get{ return LoadBitmap("GH_DisGeoWire_Clip");}
         }
+        internal static Bitmap GH_TagNameList
+        {
+            get { return LoadBitmap("GH_TagNameList");}
+        }
         internal static System.Drawing.Bitmap GH_Is_Channel_Act
         {
             get { return LoadBitmap("GH_Is_Channel_Act");}
