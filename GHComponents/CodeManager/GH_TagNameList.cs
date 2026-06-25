@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using GH_IO.Serialization;
 using Grasshopper.Kernel;
@@ -24,7 +25,7 @@ namespace Woodpecker.Animation.CodeManager
         }
 
         public override RemoteType ChannelType => RemoteType.Process;
-
+        protected override Bitmap Icon => Properties.Resources.GH_TagNameList;
         public override bool IsPrimaryInstance()
         {
             return true;
