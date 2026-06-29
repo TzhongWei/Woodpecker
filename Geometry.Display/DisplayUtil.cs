@@ -61,9 +61,36 @@ namespace Woodpecker.Animation.Geometry.Display
         }
         public static List<Curve> DisplaySilhouette(GeometryBase G)
         {
-            var ActV = Rhino.RhinoDoc.ActiveDoc.Views.ActiveView;
-            var AccDic = ActV.ActiveViewport.CameraDirection;
-            var result = Silhouette.Compute(G, SilhouetteType.Boundary, AccDic, 0.01, RhinoDoc.ActiveDoc.ModelAngleToleranceRadians).Select(x => x.Curve).ToList();
+            var activeView = RhinoDoc.ActiveDoc?.Views.ActiveView;
+            if (activeView == null)
+                return new List<Curve>();
+
+            return DisplaySilhouette(
+                G,
+                activeView.ActiveViewport.CameraDirection);
+        }
+
+        public static List<Curve> DisplaySilhouette(
+            GeometryBase G,
+            Vector3d cameraDirection)
+        {
+            if (G == null || !G.IsValid)
+                return new List<Curve>();
+
+            if (!cameraDirection.IsValid ||
+                !cameraDirection.Unitize())
+                return new List<Curve>();
+
+            var result = Silhouette.Compute(
+                G,
+                SilhouetteType.Boundary,
+                cameraDirection,
+                0.01,
+                RhinoDoc.ActiveDoc?.ModelAngleToleranceRadians ?? 0.017453292519943295)
+                ?.Select(x => x.Curve)
+                .Where(x => x != null && x.IsValid)
+                .ToList();
+
             if(result == null)
                 throw new Exception("Silhouette failed");
             return result;
